@@ -178,9 +178,8 @@ app.put ('/videos/:id', (req:RequestWithBodyUpdate<Params,UpdateVideoType>, res:
   if (v.id === id){return {...v, ...updatedVideoItem}} else {return v}
  });
 
-// res.status(204).send(updatedVideoItem)
-// res.status("201").send(updatedVideoItem)
-res.status("204").send(updatedVideoItem)
+res.sendStatus(204)
+// res.status(201).send(updatedVideoItem)
 })
 
 
@@ -189,6 +188,7 @@ res.status("204").send(updatedVideoItem)
 app.delete('/videos/:id', (req:Request, res:Response): void => {
   const id = +req.params.id
   const deletedVideoItem = videos.find(v=>v.id === id)
+
 
   if (!deletedVideoItem){
     res.sendStatus(404)

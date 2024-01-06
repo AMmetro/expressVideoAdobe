@@ -94,17 +94,17 @@ it ('- PUT the video with correct data', async ()=>{
       "publicationDate": "2024-01-02T16:08:37.028Z",
       "availableResolutions": [ "P144" ]
     },)
-    .expect(201,
-        {
-          "id": 1,
-          "title": "UPDATEDvideo1",
-          "author": "author1",
-          "canBeDownloaded": true,
-          "minAgeRestriction": null,
-          "createdAt": "2024-01-02T16:08:37.028Z",
-          "publicationDate": "2024-01-02T16:08:37.028Z",
-          "availableResolutions": [ "P144" ]
-          }
+    .expect(204,
+        // {
+        //   "id": 1,
+        //   "title": "UPDATEDvideo1",
+        //   "author": "author1",
+        //   "canBeDownloaded": true,
+        //   "minAgeRestriction": null,
+        //   "createdAt": "2024-01-02T16:08:37.028Z",
+        //   "publicationDate": "2024-01-02T16:08:37.028Z",
+        //   "availableResolutions": [ "P144" ]
+        //   }
    )
  })
 
