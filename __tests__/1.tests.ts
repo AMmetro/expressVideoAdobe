@@ -108,7 +108,7 @@ it ('- PUT the video with correct data', async ()=>{
    )
  })
 
-it ('should return 200 and empty array', async ()=>{
+it ('should return 200 and defined array', async ()=>{
     await request(app).delete("/videos/1").expect(201, [
         {
         "id": 2,
