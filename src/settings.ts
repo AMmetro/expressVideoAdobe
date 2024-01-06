@@ -78,11 +78,11 @@ app.post ('/videos', (req:RequestWithBody<CreateVideoType>, res: Response): void
 
     let {title, author, availableResolutions} = req.body
 
-    if (!title || typeof title !== "string" || !title.trim() || title.trim().length > 40) {
+    if (title === null || !title || typeof title !== "string" || !title.trim() || title.trim().length > 40) {
       errors.errorsMessages.push({message:"Incorect title", field:"title"})
      }
 
-    if (!author || typeof author !== "string" || !author.trim() || title.trim().length > 20) {
+    if (!author || typeof author !== "string" || !author.trim() || author.trim().length > 20) {
       errors.errorsMessages.push({message:"Incorect author", field:"author"})
      }
 
@@ -135,11 +135,11 @@ app.put ('/videos/:id', (req:RequestWithBodyUpdate<Params,UpdateVideoType>, res:
     return
    }
 
-  if (!title || typeof title !== "string" || !title.trim() || title.trim().length > 40) {
+  if ( title===null || !title || typeof title !== "string" || !title.trim() || title.trim().length > 40) {
     errors.errorsMessages.push({message:"Incorect Title", field:"title"})
    } else {updatedVideoItem = {...updatedVideoItem, title:title}}
 
-  if (!author || typeof author !== "string" || !author.trim() || title.trim().length > 20) {
+  if (!author || typeof author !== "string" || !author.trim() || author.trim().length > 20) {
     errors.errorsMessages.push({message:"Incorect author", field:"author"})
    } else {updatedVideoItem = {...updatedVideoItem, author:author}}
 
@@ -178,14 +178,26 @@ app.put ('/videos/:id', (req:RequestWithBodyUpdate<Params,UpdateVideoType>, res:
   if (v.id === id){return {...v, ...updatedVideoItem}} else {return v}
  });
 
-res.status(201).send(updatedVideoItem)
-
+res.sendStatus(204)
+// res.status(201).send(updatedVideoItem)
 })
+
+
+
 
 app.delete('/videos/:id', (req:Request, res:Response): void => {
   const id = +req.params.id
+  const deletedVideoItem = videos.find(v=>v.id === id)
+
+
+  if (!deletedVideoItem){
+    res.sendStatus(404)
+    return
+  }
+
   videos = videos.filter(v=>v.id !== id) 
-  res.status(201).send(videos)
+
+  res.sendStatus(204)
 })
 
 app.delete('/testing/all-data', (req:Request, res:Response): void => {videos.length = 0; res.sendStatus(204)})
