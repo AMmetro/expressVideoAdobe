@@ -152,8 +152,8 @@ app.put ('/videos/:id', (req:RequestWithBodyUpdate<Params,UpdateVideoType>, res:
    } else {errors.errorsMessages.push({message:"Incorect age restriction access", field:"minAgeRestriction"})}
 
    const isDate = function(publicationDate:string) {
-    // @ts-ignore
-    return (new Date(publicationDate) !== "Invalid Date");
+      const date = Date.parse(publicationDate);
+      return !isNaN(date) && publicationDate === new Date(date).toISOString();
 }
 
   if (!isDate(publicationDate)) {
