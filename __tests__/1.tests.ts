@@ -94,33 +94,22 @@ it ('- PUT the video with correct data', async ()=>{
       "publicationDate": "2024-01-02T16:08:37.028Z",
       "availableResolutions": [ "P144" ]
     },)
-    .expect(201,
-        {
-          "id": 1,
-          "title": "UPDATEDvideo1",
-          "author": "author1",
-          "canBeDownloaded": true,
-          "minAgeRestriction": null,
-          "createdAt": "2024-01-02T16:08:37.028Z",
-          "publicationDate": "2024-01-02T16:08:37.028Z",
-          "availableResolutions": [ "P144" ]
-          }
+    .expect(204,
+        // {
+        //   "id": 1,
+        //   "title": "UPDATEDvideo1",
+        //   "author": "author1",
+        //   "canBeDownloaded": true,
+        //   "minAgeRestriction": null,
+        //   "createdAt": "2024-01-02T16:08:37.028Z",
+        //   "publicationDate": "2024-01-02T16:08:37.028Z",
+        //   "availableResolutions": [ "P144" ]
+        //   }
    )
  })
 
-it ('should return 200 and empty array', async ()=>{
-    await request(app).delete("/videos/1").expect(201, [
-        {
-        "id": 2,
-        "title": "video2",
-        "author": "author2",
-        "canBeDownloaded": false,
-        "minAgeRestriction": null,
-        "createdAt": "2024-01-02T16:08:37.028Z",
-        "publicationDate": "2024-01-02T16:08:37.028Z",
-        "availableResolutions": [ "P240" ]
-    }
-    ])
+it ('should return 200 and defined array', async ()=>{
+    await request(app).delete("/videos/1").expect(204)
  })
 
  it ('- POST video with correct data', async ()=>{

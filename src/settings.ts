@@ -143,8 +143,8 @@ app.put ('/videos/:id', (req:RequestWithBodyUpdate<Params,UpdateVideoType>, res:
     errors.errorsMessages.push({message:"Incorect author", field:"author"})
    } else {updatedVideoItem = {...updatedVideoItem, author:author}}
 
-  if ((!canBeDownloaded && canBeDownloaded !==false)  || typeof canBeDownloaded !== "boolean") {
-    errors.errorsMessages.push({message:"Incorect downloaded access", field:"downloadedAccess"})
+  if ((!canBeDownloaded && canBeDownloaded !==false) || typeof canBeDownloaded !== "boolean") {
+    errors.errorsMessages.push({message:"Incorect downloaded access", field:"canBeDownloaded"})
    } else {updatedVideoItem = {...updatedVideoItem, canBeDownloaded:canBeDownloaded}}
 
   if ( minAgeRestriction === null || !isNaN(minAgeRestriction) && minAgeRestriction > 0 && minAgeRestriction < 19 ) {
