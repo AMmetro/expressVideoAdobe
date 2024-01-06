@@ -131,7 +131,7 @@ app.put ('/videos/:id', (req:RequestWithBodyUpdate<Params,UpdateVideoType>, res:
 
   if (!updatedVideoItem){
     errors.errorsMessages.push({message:"Video not found", field:"videoId"})
-    res.status(400).send(errors)
+    res.status(404).send(errors)
     return
    }
 
@@ -179,7 +179,8 @@ app.put ('/videos/:id', (req:RequestWithBodyUpdate<Params,UpdateVideoType>, res:
  });
 
 // res.status(204).send(updatedVideoItem)
-res.status(201).send(updatedVideoItem)
+// res.status("201").send(updatedVideoItem)
+res.status("204").send(updatedVideoItem)
 })
 
 
@@ -196,9 +197,7 @@ app.delete('/videos/:id', (req:Request, res:Response): void => {
 
   videos = videos.filter(v=>v.id !== id) 
 
-  // res.sendStatus(201).send(videos)
-  res.status(201).send(videos)
-  // res.send(videos)
+  res.sendStatus(204)
 })
 
 app.delete('/testing/all-data', (req:Request, res:Response): void => {videos.length = 0; res.sendStatus(204)})
