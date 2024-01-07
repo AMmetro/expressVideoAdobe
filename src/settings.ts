@@ -123,7 +123,7 @@ app.post ('/videos', (req:RequestWithBody<CreateVideoType>, res: Response): void
 
 app.put ('/videos/:id', (req:RequestWithBodyUpdate<Params,UpdateVideoType>, res: Response): void => {
   const errors: ErrorType = {errorsMessages: []}
-
+// settings todo
   let {title, author, availableResolutions, canBeDownloaded, minAgeRestriction, publicationDate } = req.body
   const id:number = +req.params.id
 
