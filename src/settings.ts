@@ -45,7 +45,7 @@ app.get('/videos', (req: Request, res: Response): void => {
     res.send(videos)
 })
 
-type RequestWithBody<B> = Request<unknown, unknown, B, unknown>;
+type RequestWithBody<B> = Request<{}, {}, B>;
 type CreateVideoType = { title: string, author: string, availableResolutions?: typeof AvailableResolutions }
 type UpdateVideoType = {
     id: number,
@@ -58,8 +58,8 @@ type UpdateVideoType = {
 }
 type ErrorType = { errorsMessages: { message: string, field: string }[] }
 
-type RequestWithParams<P> = Request<P, unknown, unknown, unknown>
-type RequestWithBodyUpdate<P, B> = Request<P, unknown, B, unknown>;
+type RequestWithParams<P> = Request<P>
+type RequestWithBodyUpdate<P, B> = Request<P, {}, B>;
 type Params = { id: number }
 
 app.get('/videos/:id', (req: RequestWithParams<Params>, res: Response): void => {
@@ -178,7 +178,11 @@ app.put('/videos/:id', (req: RequestWithBodyUpdate<Params, UpdateVideoType>, res
                 return
             }
         })
+
+        updatedVideoItem = {...updatedVideoItem, availableResolutions: availableResolutions }
     }
+
+
 
     if (errors.errorsMessages.length) {
         res.status(400).send(errors)
