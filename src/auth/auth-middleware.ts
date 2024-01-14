@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction} from "express"
 
-const login = "admin"
-const pass = "qwerty"
+const AcsessLogin = "admin"
+const AcsessPass = "qwerty"
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction):void => {
    
@@ -20,11 +20,10 @@ if (basic !== "Basic"){
  const decodedToken = Buffer.from(token, "base64").toString()
  const [login, password] = decodedToken.split(":")
 
-  if (login !==login || password !== pass){
+  if (login !==AcsessLogin || password !== AcsessPass){
     res.sendStatus(401)
     return
     }
-
     return next()
 
 }

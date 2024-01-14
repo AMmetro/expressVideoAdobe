@@ -1,11 +1,15 @@
 import express, {Request, Response} from 'express';
 import { blogRoute } from './routes/blog-routes';
+import { postRoute } from './routes/post-routes';
 
 export const app = express();
 
 app.use(express.json());
 
-app.use("/blog", blogRoute);
+app.use("/blogs", blogRoute);
+app.use("/posts", postRoute);
+
+
 
 // const AvailableResolutions: string[] = ["P144", "P240", "P360", "P480", "P720", "P1080", "P1440", "P2160"]
 // type VideoType =

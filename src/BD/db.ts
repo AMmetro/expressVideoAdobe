@@ -1,37 +1,50 @@
 
-const AvailableResolutions: string[] = ["P144", "P240", "P360", "P480", "P720", "P1080", "P1440", "P2160"]
-type VideoType =
+type BlogsType =
+    {
+        id: number,
+        name: string,
+        description: string,
+        websiteUrl: string,
+    }
+
+type PostsType =
     {
         id: number,
         title: string,
-        author: string,
-        canBeDownloaded: boolean,
-        minAgeRestriction: null | number,
-        createdAt: string,
-        publicationDate: string,
-        availableResolutions?: typeof AvailableResolutions
+        shortDescription: string,
+        content: string,
+        blogId: number,
+        blogName: string,
     }
 
-export let videos: VideoType[] = [
-
+    const blogs: BlogsType[] = [
     {
         "id": 1,
-        "title": "video1",
-        "author": "author1",
-        "canBeDownloaded": true,
-        "minAgeRestriction": null,
-        "createdAt": "2024-01-02T16:08:37.028Z",
-        "publicationDate": "2024-01-02T16:08:37.028Z",
-        "availableResolutions": ["P144"]
+        "name": "blogs1111",
+        "description": "description1111",
+        "websiteUrl": "websiteUrl1111",
     },
     {
         "id": 2,
-        "title": "video2",
-        "author": "author2",
-        "canBeDownloaded": false,
-        "minAgeRestriction": null,
-        "createdAt": "2024-01-02T16:08:37.028Z",
-        "publicationDate": "2024-01-02T16:08:37.028Z",
-        "availableResolutions": ["P240"]
+        "name": "blogs2222",
+        "description": "description22222",
+        "websiteUrl": "websiteUrl22222",
     }
-]
+      ]
+
+     const posts: PostsType[] = [
+    {
+        "id": 1, 
+        "title": "posts111",
+        "shortDescription": "shortDescription111",
+        "content": "content111",
+        "blogId": 1,
+        "blogName": "blogs1111",
+    }
+     ]
+
+
+export const db = {
+    blogs: blogs,
+    posts: posts
+}
