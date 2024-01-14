@@ -50,7 +50,7 @@ export class PostRepository {
         return postAfterUpdate
     }
 
-    static delete (deletePostId: sring){
+    static delete (deletePostId: string){
         const postForDelete = db.posts.find(b=>b.id === deletePostId)
         if (!postForDelete){return null}
         const cleanedPosts = db.posts.filter(b=>b.id !== deletePostId)

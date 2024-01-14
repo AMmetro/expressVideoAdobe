@@ -21,6 +21,6 @@ const blogValidator = body("blogId").custom((value)=>{
 // const blogValidator = body("blogId").isString().withMessage("blogId must be a string").trim().
 // isLength({min:1, max:100}).matches("^https://([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$").withMessage("Incorect description")
 
-export const blogValidation=()=>[titleValidator, shortDescriptionValidator, contentValidator, blogValidator, inputValidationMiddleware]
+export const postValidation=()=>[titleValidator, shortDescriptionValidator, contentValidator, blogValidator, inputValidationMiddleware]
 
 

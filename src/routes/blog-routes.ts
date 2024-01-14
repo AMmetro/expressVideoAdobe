@@ -13,7 +13,7 @@ blogRoute.get ("/:id", authMiddleware, blogValidation(), (req: any, res: any) =>
    const blog =  BlogRepository.getById(req.params.id)
    if (!blog) {
     res.sendStatus(404)
-    return
+    // return
    }
     res.status(200).send(blog)
 })
@@ -44,7 +44,7 @@ blogRoute.put ("/:id", authMiddleware, blogValidation(), (req: Request, res: Res
 })
 
 blogRoute.delete ("/:id", authMiddleware, blogValidation(), (req: Request, res: Response) => {
-    const deleteBlogId = +req.params.id
+    const deleteBlogId = req.params.id
     const deleteBlog = BlogRepository.delete(deleteBlogId)
     if (!deleteBlog){res.sendStatus(404)}
     res.sendStatus(204)

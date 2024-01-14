@@ -21,19 +21,19 @@ postRoute.get ("/:id", authMiddleware, blogValidation(), (req: any, res: any) =>
 postRoute.post ("/", authMiddleware, blogValidation(), (req: Request, res: Response) => {
     const {title, shortDescription, content, blogId } = req.body
     const newPost= {
-        id: +(new Date()),
+        id: String(+(new Date())),
         title: title,
         shortDescription: shortDescription,
         content: content,
-        blogId: blogId
+        blogId: blogId 
     }
     const createdPost = PostRepository.create(newPost)
     if (!createdPost){res.sendStatus(400)}
     res.status(201).send(createdPost)
 })
-// !!!!!
+
 postRoute.put ("/:id", authMiddleware, blogValidation(), (req: Request, res: Response) => {
-    const updatedPostId = +req.params.id
+    const updatedPostId = req.params.id
     const {title, shortDescription, content, blogId } = req.body
     const updatedPostData= {
         title: title,
@@ -47,8 +47,8 @@ postRoute.put ("/:id", authMiddleware, blogValidation(), (req: Request, res: Res
 })
 
 postRoute.delete ("/:id", authMiddleware, blogValidation(), (req: Request, res: Response) => {
-    const deleteBlogId = +req.params.id
-    const deleteBlog = PostRepository.delete(deleteBlogId)
-    if (!deleteBlog){res.sendStatus(404)}
+    const deletePostId = req.params.id
+    const deletePost = PostRepository.delete(deletePostId)
+    if (!deletePostId){res.sendStatus(404)}
     res.sendStatus(204)
 })
