@@ -7,10 +7,11 @@ export type NewPostType = {
     "content": string,
     "blogId": number,
  }
-export type UpdatedBlogDataType = {
-    name: string;
-    description: string;
-    websiteUrl: string;
+export type UpdatedPostDataType = {
+    title: string,
+    shortDescription: string,
+    content: string,
+    blogId: number,
 }
 
 export class PostRepository {
@@ -19,33 +20,34 @@ export class PostRepository {
     }
     static getById (id: string){
         const post = db.posts.find(v => v.id === +id);
-        if (!post){return null}
-        // const appropriateBlogName = db.blogs.find (b => b.id === +post?.blogId)?.name
+        if (!post){
+            return null
+        }
         return post
     }
     static create (newPost:NewPostType){
         let appropriateBlogName = db.blogs.find (b => b.id === +newPost?.blogId)?.name
         if (!appropriateBlogName){
-            appropriateBlogName="no blog Name"
+            return null
         }
         const equippedPost = {...newPost, blogName: appropriateBlogName}
          db.posts.push(equippedPost)
-        return db.posts
+        return equippedPost
     }
 
-    static update (updatedBlogId: number, updatedBlogData: UpdatedBlogDataType){
-        const blogForUpd = db.posts.find(b=>b.id === +updatedBlogId)
-        if (!blogForUpd){return null}
-        const blogAfterUpdate = {...blogForUpd, ...updatedBlogData}
-        const updBlogs = db.posts.map(b => {
-        if (b.id === +updatedBlogId) {
-            return blogAfterUpdate
+    static update (updatedPostId: number, updatedPostData: UpdatedPostDataType){
+        const postForUpd = db.posts.find(p=>p.id === +updatedPostId)
+        if (!postForUpd){return null}
+        const postAfterUpdate = {...postForUpd, ...updatedPostData}
+        const updPosts = db.posts.map(p => {
+        if (p.id === +updatedPostId) {
+            return postAfterUpdate
         } else {
-            return b
+            return p
         }
       });
-        db.posts = updBlogs
-        return blogAfterUpdate
+        db.posts = updPosts
+        return postAfterUpdate
     }
 
     static delete (deleteBlogId: number){

@@ -28,19 +28,21 @@ postRoute.post ("/", authMiddleware, blogValidation(), (req: Request, res: Respo
         blogId: blogId
     }
     const createdPost = PostRepository.create(newPost)
+    if (!createdPost){res.sendStatus(400)}
     res.status(201).send(createdPost)
 })
-
+// !!!!!
 postRoute.put ("/:id", authMiddleware, blogValidation(), (req: Request, res: Response) => {
-    const updatedBlogId = +req.params.id
-    const {name, description, websiteUrl } = req.body
-    const updatedBlogData= {
-        name: name,
-        description: description,
-        websiteUrl: websiteUrl,
+    const updatedPostId = +req.params.id
+    const {title, shortDescription, content, blogId } = req.body
+    const updatedPostData= {
+        title: title,
+        shortDescription: shortDescription,
+        content: content,
+        blogId: blogId,
     }
-    const createdBlog = PostRepository.update(updatedBlogId, updatedBlogData)
-    if (!createdBlog){res.sendStatus(404)}
+    const createdPost = PostRepository.update(updatedPostId, updatedPostData)
+    if (!createdPost){res.sendStatus(404)}
     res.sendStatus(204)
 })
 
