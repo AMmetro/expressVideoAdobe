@@ -1,7 +1,7 @@
 import {db} from '../BD/db'
 
 export type NewBlogType = {
-    id: number;
+    id: string;
     name: string;
     description: string;
     websiteUrl: string;
@@ -14,7 +14,7 @@ export type UpdatedBlogDataType = {
 
 export class BlogRepository {
     static getById (id: string){
-        const blog = db.blogs.find(v => v.id === +id);
+        const blog = db.blogs.find(b => b.id === id);
         return blog
     }
     static getAll (){
@@ -25,12 +25,12 @@ export class BlogRepository {
         return newBlog
     }
 
-    static update (updatedBlogId: number, updatedBlogData: UpdatedBlogDataType){
-        const blogForUpd = db.blogs.find(b=>b.id === +updatedBlogId)
+    static update (updatedBlogId: string, updatedBlogData: UpdatedBlogDataType){
+        const blogForUpd = db.blogs.find(b=>b.id === updatedBlogId)
         if (!blogForUpd){return null}
         const blogAfterUpdate = {...blogForUpd, ...updatedBlogData}
         const updBlogs = db.blogs.map(b => {
-        if (b.id === +updatedBlogId) {
+        if (b.id === updatedBlogId) {
             return blogAfterUpdate
         } else {
             return b
@@ -40,8 +40,8 @@ export class BlogRepository {
         return blogAfterUpdate
     }
 
-    static delete (deleteBlogId: number){
-        const blogForDelete = db.blogs.find(b=>b.id === +deleteBlogId)
+    static delete (deleteBlogId: string){
+        const blogForDelete = db.blogs.find(b=>b.id === deleteBlogId)
         if (!blogForDelete){return null}
         const cleanedBlogs = db.blogs.filter(b=>b.id !== deleteBlogId)
         db.blogs = cleanedBlogs

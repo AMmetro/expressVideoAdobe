@@ -1,7 +1,7 @@
 
 type BlogsType =
     {
-        id: number,
+        id: string,
         name: string,
         description: string,
         websiteUrl: string,
@@ -9,23 +9,23 @@ type BlogsType =
 
 type PostsType =
     {
-        id: number,
+        id: string,
         title: string,
         shortDescription: string,
         content: string,
-        blogId: number,
+        blogId: string,
         blogName: string,
     }
 
     const blogs: BlogsType[] = [
     {
-        "id": 1,
+        "id": "1",
         "name": "blogs1111",
         "description": "description1111",
         "websiteUrl": "websiteUrl1111",
     },
     {
-        "id": 2,
+        "id": "2",
         "name": "blogs2222",
         "description": "description22222",
         "websiteUrl": "websiteUrl22222",
@@ -34,11 +34,11 @@ type PostsType =
 
      const posts: PostsType[] = [
     {
-        "id": 1, 
+        "id": "1", 
         "title": "posts111",
         "shortDescription": "shortDescription111",
         "content": "content111",
-        "blogId": 1,
+        "blogId": "1",
         "blogName": "blogs1111",
     }
      ]

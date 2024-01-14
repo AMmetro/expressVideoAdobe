@@ -21,7 +21,7 @@ blogRoute.get ("/:id", authMiddleware, blogValidation(), (req: any, res: any) =>
 blogRoute.post ("/", authMiddleware, blogValidation(), (req: Request, res: Response) => {
     const {name, description, websiteUrl } = req.body
     const newBlog= {
-        id: +(new Date()),
+        id: String(+(new Date())),
         name: name,
         description: description,
         websiteUrl: websiteUrl,
@@ -31,7 +31,7 @@ blogRoute.post ("/", authMiddleware, blogValidation(), (req: Request, res: Respo
 })
 
 blogRoute.put ("/:id", authMiddleware, blogValidation(), (req: Request, res: Response) => {
-    const updatedBlogId = +req.params.id
+    const updatedBlogId = req.params.id
     const {name, description, websiteUrl } = req.body
     const updatedBlogData= {
         name: name,

@@ -1,17 +1,17 @@
 import {db} from '../BD/db'
 
 export type NewPostType = {
-    "id": number,
+    "id": string,
     "title": string,
     "shortDescription": string,
     "content": string,
-    "blogId": number,
+    "blogId": string,
  }
 export type UpdatedPostDataType = {
     title: string,
     shortDescription: string,
     content: string,
-    blogId: number,
+    blogId: string,
 }
 
 export class PostRepository {
@@ -19,14 +19,14 @@ export class PostRepository {
         return db.posts
     }
     static getById (id: string){
-        const post = db.posts.find(p => p.id === +id);
+        const post = db.posts.find(p => p.id === id);
         if (!post){
             return null
         }
         return post
     }
     static create (newPost:NewPostType){
-        let appropriateBlogName = db.blogs.find (b => b.id === +newPost?.blogId)?.name
+        let appropriateBlogName = db.blogs.find (b => b.id === newPost?.blogId)?.name
         if (!appropriateBlogName){
             return null
         }
@@ -35,12 +35,12 @@ export class PostRepository {
         return equippedPost
     }
 
-    static update (updatedPostId: number, updatedPostData: UpdatedPostDataType){
-        const postForUpd = db.posts.find(p=>p.id === +updatedPostId)
+    static update (updatedPostId: string, updatedPostData: UpdatedPostDataType){
+        const postForUpd = db.posts.find(p=>p.id === updatedPostId)
         if (!postForUpd){return null}
         const postAfterUpdate = {...postForUpd, ...updatedPostData}
         const updPosts = db.posts.map(p => {
-        if (p.id === +updatedPostId) {
+        if (p.id === updatedPostId) {
             return postAfterUpdate
         } else {
             return p
@@ -50,10 +50,10 @@ export class PostRepository {
         return postAfterUpdate
     }
 
-    static delete (deletePostId: number){
-        const postForDelete = db.posts.find(b=>b.id === +deletePostId)
+    static delete (deletePostId: sring){
+        const postForDelete = db.posts.find(b=>b.id === deletePostId)
         if (!postForDelete){return null}
-        const cleanedPosts = db.posts.filter(b=>b.id !== +deletePostId)
+        const cleanedPosts = db.posts.filter(b=>b.id !== deletePostId)
         db.posts = cleanedPosts
         return cleanedPosts
     }
