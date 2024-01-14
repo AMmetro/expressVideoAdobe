@@ -43,7 +43,7 @@ blogRoute.put ("/:id", authMiddleware, blogValidation(), (req: Request, res: Res
     res.sendStatus(204)
 })
 
-blogRoute.delete ("/:id", authMiddleware, blogValidation(), (req: Request, res: Response) => {
+blogRoute.delete ("/:id", authMiddleware, (req: Request, res: Response) => {
     const deleteBlogId = req.params.id
     const deleteBlog = BlogRepository.delete(deleteBlogId)
     if (!deleteBlog){res.sendStatus(404)}
