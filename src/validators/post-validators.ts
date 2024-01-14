@@ -15,11 +15,12 @@ isLength({min:1, max:1000})
 const blogValidator = body("blogId").custom((value)=>{
     const blog= BlogRepository.getById(value);
     if (!blog) {
-        throw Error ("incorect blogId")
+        return false
+        // throw Error ("incorect blogId")
         }
         return true
 })
-// .withMessage("incorect blog id")
+.withMessage("incorect blogId")
 
 // const blogValidator = body("blogId").isString().withMessage("blogId must be a string").trim().
 // isLength({min:1, max:100}).matches("^https://([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$").withMessage("Incorect description")

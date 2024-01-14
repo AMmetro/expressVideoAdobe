@@ -9,7 +9,7 @@ postRoute.get ("/", (req: Request, res: Response) => {
     res.send(PostRepository.getAll())
 })
 
-postRoute.get ("/:id", authMiddleware, postValidation(), (req: any, res: any) => {
+postRoute.get ("/:id", postValidation(), (req: any, res: any) => {
    const post =  PostRepository.getById(req.params.id)
    if (!post) {
     res.sendStatus(404)
@@ -49,6 +49,6 @@ postRoute.put ("/:id", authMiddleware, postValidation(), (req: Request, res: Res
 postRoute.delete ("/:id", authMiddleware, postValidation(), (req: Request, res: Response) => {
     const deletePostId = req.params.id
     const deletePost = PostRepository.delete(deletePostId)
-    if (!deletePostId){res.sendStatus(404)}
+    if (!deletePost){res.sendStatus(404)}
     res.sendStatus(204)
 })
