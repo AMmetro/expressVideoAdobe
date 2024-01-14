@@ -1,6 +1,7 @@
 import express, {Request, Response} from 'express';
 import { blogRoute } from './routes/blog-routes';
 import { postRoute } from './routes/post-routes';
+import { db } from './BD/db';
 
 export const app = express();
 
@@ -8,6 +9,12 @@ app.use(express.json());
 
 app.use("/blogs", blogRoute);
 app.use("/posts", postRoute);
+
+app.delete('/testing/all-data', (req: Request, res: Response): void => {
+    db.blogs = [];
+    db.posts = [];  
+    res.sendStatus(204);
+})
 
 
 

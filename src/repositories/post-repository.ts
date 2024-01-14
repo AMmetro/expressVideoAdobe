@@ -19,7 +19,7 @@ export class PostRepository {
         return db.posts
     }
     static getById (id: string){
-        const post = db.posts.find(v => v.id === +id);
+        const post = db.posts.find(p => p.id === +id);
         if (!post){
             return null
         }
@@ -50,12 +50,12 @@ export class PostRepository {
         return postAfterUpdate
     }
 
-    static delete (deleteBlogId: number){
-        const blogForDelete = db.posts.find(b=>b.id === +deleteBlogId)
-        if (!blogForDelete){return null}
-        const cleanedBlogs = db.posts.filter(b=>b.id !== deleteBlogId)
-        db.posts = cleanedBlogs
-        return cleanedBlogs
+    static delete (deletePostId: number){
+        const postForDelete = db.posts.find(b=>b.id === +deletePostId)
+        if (!postForDelete){return null}
+        const cleanedPosts = db.posts.filter(b=>b.id !== +deletePostId)
+        db.posts = cleanedPosts
+        return cleanedPosts
     }
 
 
