@@ -9,7 +9,7 @@ postRoute.get ("/", (req: Request, res: Response) => {
     res.send(PostRepository.getAll())
 })
 
-postRoute.get ("/:id", postValidation(), (req: any, res: any) => {
+postRoute.get ("/:id", (req: any, res: any) => {
    const post =  PostRepository.getById(req.params.id)
    if (!post) {
     res.sendStatus(404)

@@ -9,7 +9,7 @@ blogRoute.get ("/", (req: Request, res: Response) => {
     res.status(200).send(BlogRepository.getAll())
 })
 
-blogRoute.get ("/:id", blogValidation(), (req: any, res: any) => {
+blogRoute.get ("/:id", (req: any, res: any) => {
    const blog =  BlogRepository.getById(req.params.id)
    if (!blog) {
     res.sendStatus(404)
