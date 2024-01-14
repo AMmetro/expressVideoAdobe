@@ -22,7 +22,7 @@ export class BlogRepository {
     }
     static create (newBlog:NewBlogType){
          db.blogs.push(newBlog)
-        return db.blogs
+        return newBlog
     }
 
     static update (updatedBlogId: number, updatedBlogData: UpdatedBlogDataType){

@@ -6,7 +6,7 @@ import { BlogRepository } from "../repositories/blog-repository"
 export const blogRoute = Router({})
 
 blogRoute.get ("/", (req: Request, res: Response) => {
-    res.send(BlogRepository.getAll())
+    res.status(200).send(BlogRepository.getAll())
 })
 
 blogRoute.get ("/:id", authMiddleware, blogValidation(), (req: any, res: any) => {
