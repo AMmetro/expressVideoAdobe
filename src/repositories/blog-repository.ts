@@ -15,8 +15,6 @@ export type UpdatedBlogDataType = {
 export class BlogRepository {
     static getById (id: string){
         const blog = db.blogs.find(b => b.id === id);
-        // console.log("blog");
-        // console.log(blog);
         return blog
     }
     static getAll (){

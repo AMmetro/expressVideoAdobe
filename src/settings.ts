@@ -1,6 +1,8 @@
 import express, {Request, Response} from 'express';
 import { blogRoute } from './routes/blog-routes';
 import { postRoute } from './routes/post-routes';
+// const mongoURI = process.env.MONGO_URL || 'mongodb://0.0.0.0:27017'
+// console.log(process.env.MONGO_URL)
 import { db } from './BD/db';
 
 export const app = express();
@@ -11,8 +13,8 @@ app.use("/blogs", blogRoute);
 app.use("/posts", postRoute);
 
 app.delete('/testing/all-data', (req: Request, res: Response): void => {
-    db.blogs = [];
-    db.posts = [];  
+    db.blogs.length = 0;
+    db.posts.length = 0;  
     res.sendStatus(204);
 })
 
