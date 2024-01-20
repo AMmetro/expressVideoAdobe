@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction} from "express"
 
+// const AcsessLogin = process.env.AcsessLogin
+// const AcsessPass = process.env.AcsessPass
 const AcsessLogin = "admin"
 const AcsessPass = "qwerty"
 

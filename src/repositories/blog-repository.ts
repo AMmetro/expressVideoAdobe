@@ -1,52 +1,72 @@
-import {db} from '../BD/db'
-
-export type NewBlogType = {
-    id: string;
-    name: string;
-    description: string;
-    websiteUrl: string;
-}
-export type UpdatedBlogDataType = {
-    name: string;
-    description: string;
-    websiteUrl: string;
-}
+import { WithId, ObjectId } from "mongodb";
+import { blogsCollection, db } from "../BD/db";
+import { OutputBlogType } from "../models/blog/output/blog.output";
+import { BlogDB } from "../models/blog/db/blog-db";
+import { blogMapper } from "../models/blog/mapper/blog-mapper";
+import { InputBlogType, UpdateBlogType } from "../models/blog/input/updateblog-input-model";
 
 export class BlogRepository {
-    static getById (id: string){
-        const blog = db.blogs.find(b => b.id === id);
-        return blog
+  static async getById(id: any): Promise<OutputBlogType | null> {
+    const blog = await blogsCollection.findOne({ _id: new ObjectId(id) });
+    if (!blog) {
+      return null;
     }
-    static getAll (){
-        return db.blogs
-    }
-    static create (newBlog:NewBlogType){
-         db.blogs.push(newBlog)
-        return newBlog
+    return blogMapper(blog);
+  }
+  static async getAll(): Promise<OutputBlogType[] | null> {
+    try {
+    const blogs: WithId<BlogDB>[] = await blogsCollection.find({}).toArray();
+    return blogs.map(blogMapper);
+    }catch (e){
+      console.log(e)
+      return null 
     }
 
-    static update (updatedBlogId: string, updatedBlogData: UpdatedBlogDataType){
-        const blogForUpd = db.blogs.find(b=>b.id === updatedBlogId)
-        if (!blogForUpd){return null}
-        const blogAfterUpdate = {...blogForUpd, ...updatedBlogData}
-        const updBlogs = db.blogs.map(b => {
-        if (b.id === updatedBlogId) {
-            return blogAfterUpdate
-        } else {
-            return b
+  }
+  static async create(newBlog: InputBlogType): Promise<String> {
+    // try{
+    const blog = await blogsCollection.insertOne(newBlog); 
+    console.log(blog)
+    return blog.insertedId.toString();
+    // } catch(e){
+    //   console.log(e) 
+    // }
+    
+  }
+
+  static async update(
+    updatedBlogId: string,
+    updatedBlogData: UpdateBlogType 
+  ): Promise<Boolean> { 
+    try { 
+      const blogForUpd = await blogsCollection.updateOne(
+        { _id: new ObjectId(updatedBlogId) },
+        {
+          $set: {
+            name: updatedBlogData.name,
+            description: updatedBlogData.description,
+            websiteUrl: updatedBlogData.websiteUrl,
+          },
         }
-      });
-        db.blogs = updBlogs
-        return blogAfterUpdate
+      );
+      return !!blogForUpd.matchedCount;
+      // ИЛИ true / false
+    } catch (e) {
+      console.log(e);
+      return false;
     }
+  }
 
-    static delete (deleteBlogId: string){
-        const blogForDelete = db.blogs.find(b=>b.id === deleteBlogId)
-        if (!blogForDelete){return null}
-        const cleanedBlogs = db.blogs.filter(b=>b.id !== deleteBlogId)
-        db.blogs = cleanedBlogs
-        return cleanedBlogs
-    }
+  static async delete(deleteBlogId: string): Promise<Boolean> {
+    const blogForDelete = await blogsCollection.deleteOne({
+      _id: new ObjectId(deleteBlogId),
+    });
 
+    return !!blogForDelete.deletedCount;
+    // ИЛИ true / false
 
+    // const cleanedBlogs = db.blogs.filter((b) => b.id !== deleteBlogId);
+    // db.blogs = cleanedBlogs;
+    // return cleanedBlogs;
+  }
 }

@@ -1,3 +1,28 @@
+import dotenv from 'dotenv';
+import { MongoClient } from "mongodb";
+import { BlogDB } from '../models/blog/db/blog-db';
+
+dotenv.config()
+const mongoURI = process.env.REMOUTE_MONGO_URL || "mongodb://0.0.0.0:27017";
+
+export const client = new MongoClient(mongoURI);
+
+const database = client.db("BlogDB")
+export const blogsCollection = database.collection<BlogDB>("blogs")
+export const postsCollection = database.collection("posts")
+
+export const runDB = async ()=>{
+    try {
+        await client.connect()
+        console.log("DB connected...") 
+    } 
+    catch(e) {
+        console.log(e)
+        await client.close()  
+    }
+} 
+
+
 
 type BlogsType =
     {

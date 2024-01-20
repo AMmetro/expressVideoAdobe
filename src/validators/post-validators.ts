@@ -12,8 +12,8 @@ const contentValidator = body("content").isString().withMessage("content must be
 isLength({min:1, max:1000})
 // .matches("^https://([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$").withMessage("Incorect description")
 
-const blogValidator = body("blogId").custom((value)=>{
-    const blog= BlogRepository.getById(value);
+const blogValidator = body("blogId").custom(async (value)=>{
+    const blog= await BlogRepository.getById(value);
     if (!blog) {
         return false
         // throw Error ("incorect blogId")

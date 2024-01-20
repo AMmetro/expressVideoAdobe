@@ -21,7 +21,6 @@ postRoute.get ("/:id", (req: any, res: any) => {
 postRoute.post ("/", authMiddleware, postValidation(), (req: Request, res: Response) => {
     const {title, shortDescription, content, blogId } = req.body
     const newPost= {
-        id: String(+(new Date())), 
         title: title,
         shortDescription: shortDescription,
         content: content,

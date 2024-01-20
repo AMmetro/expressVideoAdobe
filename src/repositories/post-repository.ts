@@ -1,7 +1,6 @@
 import {db} from '../BD/db'
 
 export type NewPostType = {
-    "id": string,
     "title": string,
     "shortDescription": string,
     "content": string,
