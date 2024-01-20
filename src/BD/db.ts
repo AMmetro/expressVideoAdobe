@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import { MongoClient } from "mongodb";
 import { BlogDB } from '../models/blog/db/blog-db';
+import { PostDB } from '../models/post/db/post-db';
 
 dotenv.config()
 const mongoURI = process.env.REMOUTE_MONGO_URL || "mongodb://0.0.0.0:27017";
@@ -9,7 +10,7 @@ export const client = new MongoClient(mongoURI);
 
 const database = client.db("BlogDB")
 export const blogsCollection = database.collection<BlogDB>("blogs")
-export const postsCollection = database.collection("posts")
+export const postsCollection = database.collection<PostDB>("posts")
 
 export const runDB = async ()=>{
     try {

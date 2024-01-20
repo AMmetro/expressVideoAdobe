@@ -1,61 +1,62 @@
-import {db} from '../BD/db'
-
-export type NewPostType = {
-    "title": string,
-    "shortDescription": string,
-    "content": string,
-    "blogId": string,
- }
-export type UpdatedPostDataType = {
-    title: string,
-    shortDescription: string,
-    content: string,
-    blogId: string,
-}
-
+import { WithId, ObjectId } from "mongodb";
+import { blogsCollection, postsCollection } from "../BD/db";
+import { postMapper } from "../models/post/mapper/post-mapper";
+import { OutputPostType } from "../models/post/output/post.output";
+import { RequestInputPostType, UpdateInputPostType } from "../models/post/input/updateposts-input-model";
+import { PostDB } from "../models/post/db/post-db";
 export class PostRepository {
-    static getAll (){
-        return db.posts
+  static async getAll(): Promise<OutputPostType[] | null> {
+    try {
+      const posts: WithId<PostDB>[] = await postsCollection.find({}).toArray();
+      return posts.map(postMapper);
+    } catch (e) {
+      console.log(e);
+      return null;
     }
-    static getById (id: string){
-        const post = db.posts.find(p => p.id === id);
-        if (!post){
-            return null
-        }
-        return post
+  }
+  
+  static async getById(id: string): Promise<OutputPostType | null> {
+    const post = await postsCollection.findOne({
+      id: { _id: new ObjectId(id) },
+    });
+    if (!post) {
+      return null;
     }
-    static create (newPost:NewPostType){
-        let appropriateBlogName = db.blogs.find (b => b.id === newPost?.blogId)?.name
-        if (!appropriateBlogName){
-            return null
-        }
-        const equippedPost = {...newPost, blogName: appropriateBlogName}
-         db.posts.push(equippedPost)
-        return equippedPost
-    }
+    return postMapper(post);
+  }
 
-    static update (updatedPostId: string, updatedPostData: UpdatedPostDataType){
-        const postForUpd = db.posts.find(p=>p.id === updatedPostId)
-        if (!postForUpd){return null}
-        const postAfterUpdate = {...postForUpd, ...updatedPostData}
-        const updPosts = db.posts.map(p => {
-        if (p.id === updatedPostId) {
-            return postAfterUpdate
-        } else {
-            return p
-        }
-      });
-        db.posts = updPosts
-        return postAfterUpdate
-    }
+  static async create(newPostData: UpdateInputPostType) {
+    const appropriateBlog = await blogsCollection.findOne(
+      { _id: new ObjectId(newPostData.blogId) }
+    );
+    if (!appropriateBlog){return null}
+    const appropriateBlogName = appropriateBlog?.name
+    const newPostId = await postsCollection.insertOne({...newPostData, blogName:appropriateBlogName});
+    return newPostId.insertedId.toString();
+  }
 
-    static delete (deletePostId: string){
-        const postForDelete = db.posts.find(b=>b.id === deletePostId)
-        if (!postForDelete){return null}
-        const cleanedPosts = db.posts.filter(b=>b.id !== deletePostId)
-        db.posts = cleanedPosts
-        return cleanedPosts
-    }
+  static async update(
+    updatedPostId: string,
+    updatedPostData: RequestInputPostType
+  ): Promise<Boolean> {
+    const postForUpd = await postsCollection.updateOne(
+      { _id: new ObjectId(updatedPostId) },
+      {
+        $set: {
+          title: updatedPostData.title,
+          shortDescription: updatedPostData.shortDescription,
+          content: updatedPostData.content,
+          blogId: updatedPostData.blogId,
+        },
+      }
+    );
+    return !!postForUpd.matchedCount;
+  }
 
-
+  static async delete(deletePostId: string): Promise<Boolean> {
+    const deletePost = await postsCollection.deleteOne({
+      _id: new ObjectId(deletePostId),
+    });
+    return !!deletePost.deletedCount;
+  }
 }

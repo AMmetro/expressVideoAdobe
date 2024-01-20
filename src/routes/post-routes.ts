@@ -1,53 +1,101 @@
-import express, {Router, Request, Response} from 'express';
-import { authMiddleware } from "../auth/auth-middleware"
-import { postValidation } from "../validators/post-validators"
-import { PostRepository } from "../repositories/post-repository"
+import { Router, Request, Response } from "express";
+import { ObjectId } from "mongodb";
+import { authMiddleware } from "../auth/auth-middleware";
+import { postValidation } from "../validators/post-validators";
+import { PostRepository } from "../repositories/post-repository";
+import { OutputPostType } from "../models/post/output/post.output";
+import {
+  Params,
+  RequestWithBody,
+  RequestWithBodyAndParams,
+  RequestWithParams,
+  ResposesType,
+} from "../models/common";
+import { RequestInputPostType, UpdateInputPostType } from "../models/post/input/updateposts-input-model";
 
-export const postRoute = Router({})
+export const postRoute = Router({});
 
-postRoute.get ("/", (req: Request, res: Response) => {
-    res.send(PostRepository.getAll())
-})
+postRoute.get("/", async (req: Request, res: Response) => {
+  const posts = await PostRepository.getAll();
+  if (!posts) {
+    res.status(404);
+  }
+  await res.send(PostRepository.getAll());
+});
 
-postRoute.get ("/:id", (req: any, res: any) => {
-   const post =  PostRepository.getById(req.params.id)
-   if (!post) {
-    res.sendStatus(404)
-    return
-   }
-    res.status(200).send(post)
-})
-
-postRoute.post ("/", authMiddleware, postValidation(), (req: Request, res: Response) => {
-    const {title, shortDescription, content, blogId } = req.body
-    const newPost= {
-        title: title,
-        shortDescription: shortDescription,
-        content: content,
-        blogId: blogId 
+postRoute.get(
+  "/:id",
+  async (
+    req: RequestWithParams<Params>,
+    res: ResposesType<OutputPostType | null>
+  ) => {
+    const id = req.params.id;
+    if (!ObjectId.isValid(id)) {
+      res.sendStatus(404);
     }
-    const createdPost = PostRepository.create(newPost)
-    if (!createdPost){res.sendStatus(400)}
-    res.status(201).send(createdPost)
-})
-
-postRoute.put ("/:id", authMiddleware, postValidation(), (req: Request, res: Response) => {
-    const updatedPostId = req.params.id
-    const {title, shortDescription, content, blogId } = req.body
-    const updatedPostData= {
-        title: title,
-        shortDescription: shortDescription,
-        content: content,
-        blogId: blogId,
+    const post = await PostRepository.getById(id);
+    if (!post) {
+      res.sendStatus(404);
+      // return null
     }
-    const createdPost = PostRepository.update(updatedPostId, updatedPostData)
-    if (!createdPost){res.sendStatus(404)}
-    res.sendStatus(204)
-})
+    res.status(200).send(post);
+  }
+);
 
-postRoute.delete ("/:id", authMiddleware, (req: Request, res: Response) => {
-    const deletePostId = req.params.id
-    const deletePost = PostRepository.delete(deletePostId)
-    if (!deletePost){res.sendStatus(404)}
-    res.sendStatus(204)
-})
+postRoute.post(
+  "/",
+  authMiddleware,
+  postValidation(),
+  async (req: RequestWithBody<RequestInputPostType>, res: Response) => {
+    const { title, shortDescription, content, blogId } = req.body;
+    const newPostData:UpdateInputPostType = {
+      title: title,
+      shortDescription: shortDescription,
+      content: content,
+      blogId: blogId,
+      createdAt: new Date().toISOString(),
+    };
+    const createdPostId = await PostRepository.create(newPostData);
+    if (!createdPostId){
+         res.sendStatus(404)
+          return
+        }
+    const createdPost = await PostRepository.getById(createdPostId);
+    res.status(201).send(createdPost);
+  }
+);
+
+postRoute.put(
+  "/:id",
+  authMiddleware,
+  postValidation(),
+  async (req: RequestWithBodyAndParams<Params, RequestInputPostType>, res: Response) => {
+    const id = req.params.id;
+    const { title, shortDescription, content, blogId } = req.body;
+    const updatedPostData = {
+      title: title,
+      shortDescription: shortDescription,
+      content: content,
+      blogId: blogId,
+    };
+    const updatedPost = await PostRepository.update(id, updatedPostData);
+    if (!updatedPost) {
+      res.sendStatus(404);
+    }
+    res.sendStatus(204);
+  }
+);
+
+postRoute.delete("/:id", authMiddleware, 
+async (req: RequestWithParams<Params>,
+res: ResposesType<OutputPostType | null>) => {
+  const deletePostId = req.params.id;
+  if (!ObjectId.isValid(deletePostId)) {
+    res.sendStatus(404);
+  }
+  const deletePost = await PostRepository.delete(deletePostId);
+  if (!deletePost) {
+    res.sendStatus(404);
+  }
+  res.sendStatus(204);
+});

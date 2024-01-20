@@ -1,3 +1,5 @@
+// import {WithId} from 'mongodb'
+
 export type BlogDB = {
     name: string,
     description: string,

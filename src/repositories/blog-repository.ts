@@ -6,14 +6,7 @@ import { blogMapper } from "../models/blog/mapper/blog-mapper";
 import { InputBlogType, UpdateBlogType } from "../models/blog/input/updateblog-input-model";
 
 export class BlogRepository {
-  static async getById(id: any): Promise<OutputBlogType | null> {
-    const blog = await blogsCollection.findOne({ _id: new ObjectId(id) });
-    if (!blog) {
-      return null;
-    }
-    return blogMapper(blog);
-  }
-  static async getAll(): Promise<OutputBlogType[] | null> {
+    static async getAll(): Promise<OutputBlogType[] | null> {
     try {
     const blogs: WithId<BlogDB>[] = await blogsCollection.find({}).toArray();
     return blogs.map(blogMapper);
@@ -21,13 +14,20 @@ export class BlogRepository {
       console.log(e)
       return null 
     }
+  }
 
+  static async getById(id: any): Promise<OutputBlogType | null> {
+    const blog = await blogsCollection.findOne({ _id: new ObjectId(id) });
+    if (!blog) {
+      return null;
+    }
+    return blogMapper(blog);
   }
   static async create(newBlog: InputBlogType): Promise<String> {
     // try{
-    const blog = await blogsCollection.insertOne(newBlog); 
-    console.log(blog)
-    return blog.insertedId.toString();
+    const blogId = await blogsCollection.insertOne(newBlog); 
+    // console.log(blogId)
+    return blogId.insertedId.toString();
     // } catch(e){
     //   console.log(e) 
     // }
@@ -61,12 +61,6 @@ export class BlogRepository {
     const blogForDelete = await blogsCollection.deleteOne({
       _id: new ObjectId(deleteBlogId),
     });
-
     return !!blogForDelete.deletedCount;
-    // ИЛИ true / false
-
-    // const cleanedBlogs = db.blogs.filter((b) => b.id !== deleteBlogId);
-    // db.blogs = cleanedBlogs;
-    // return cleanedBlogs;
   }
 }
