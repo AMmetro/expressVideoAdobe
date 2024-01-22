@@ -4,8 +4,11 @@ import { BlogDB } from '../models/blog/db/blog-db';
 import { PostDB } from '../models/post/db/post-db'; 
 
 dotenv.config()
-const mongoURI = process.env.MONGO_URL || "mongodb://0.0.0.0:27017"; 
-
+// const mongoURI = process.env.MONGO_URL || "mongodb://0.0.0.0:27017"; 
+const mongoURI = process.env.MONGO_URL; 
+if (!mongoURI){
+    throw new Error ("No URL for MongoDB conection")
+}
 export const client = new MongoClient(mongoURI);
 
 const database = client.db("BlogDB")
