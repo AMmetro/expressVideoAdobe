@@ -4,9 +4,7 @@ import { BlogDB } from '../models/blog/db/blog-db';
 import { PostDB } from '../models/post/db/post-db'; 
 
 dotenv.config()
-// const mongoURI = process.env.REMOUTE_MONGO_URL || "mongodb://0.0.0.0:27017"; 
-
-const mongoURI="mongodb+srv://metroexpress:suradet842@cluster0.gkpqpve.mongodb.net/?retryWrites=true&w=majority"
+const mongoURI = process.env.REMOUTE_MONGO_URL || "mongodb://0.0.0.0:27017"; 
 
 export const client = new MongoClient(mongoURI);
 
