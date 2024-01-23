@@ -26,13 +26,13 @@ export class PostRepository {
   }
 
   static async create(newPostData: UpdateInputPostType) {
-    const appropriateBlog = await blogsCollection.findOne(
+    const corespondingBlog = await blogsCollection.findOne(
       { _id: new ObjectId(newPostData.blogId) }
     );
-    if (!appropriateBlog){return null}
-    const appropriateBlogName = appropriateBlog?.name
-    const newPostId = await postsCollection.insertOne({...newPostData, blogName:appropriateBlogName});
-    return newPostId.insertedId.toString();
+    if (!corespondingBlog){return null}
+    const newPost = {...newPostData, blogName:corespondingBlog.name }
+    const newPostId = await postsCollection.insertOne(newPost);
+    return await this.getById(newPostId.insertedId.toString())
   }
 
   static async update(

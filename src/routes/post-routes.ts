@@ -57,12 +57,12 @@ postRoute.post(
       blogId: blogId,
       createdAt: new Date().toISOString(),
     };
-    const createdPostId = await PostRepository.create(newPostData);
-    if (!createdPostId){
+    const createdPost = await PostRepository.create(newPostData);
+    if (!createdPost){
          res.sendStatus(404)
           return
         }
-    const createdPost = await PostRepository.getById(createdPostId);
+    // const createdPost = await PostRepository.getById(createdPostId);
     res.status(201).send(createdPost);
   }
 );
