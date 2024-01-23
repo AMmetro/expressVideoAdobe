@@ -20,7 +20,7 @@ postRoute.get("/", async (req: Request, res: Response) => {
   if (!posts) {
     res.status(404);
   }
-  await res.send(PostRepository.getAll());
+  res.status(200).send(posts);
 });
 
 postRoute.get(
@@ -34,12 +34,12 @@ postRoute.get(
       res.sendStatus(404);
       return
     }
-    const post = await PostRepository.getById(id);
-    if (!post) {
+    const posts = await PostRepository.getById(id);
+    if (!posts) {
       res.sendStatus(404);
       return
     }
-    res.status(200).send(post);
+    res.status(200).send(posts);
   }
 );
 
