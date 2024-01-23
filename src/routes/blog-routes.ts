@@ -58,8 +58,8 @@ blogRoute.put(
   async (req: RequestWithBodyAndParams<Params, RequestInputBlogType>, res: Response) => {
     const updatedBlogId = req.params.id;
     if (!ObjectId.isValid(updatedBlogId)) {
-      return res.sendStatus(404);
-      // return
+       res.sendStatus(404);
+      return
     }
 
     const { name, description, websiteUrl } = req.body;
@@ -88,6 +88,7 @@ blogRoute.delete(
 
     if (!ObjectId.isValid(deleteBlogId)) {
       res.sendStatus(404);
+      return
     }
 
     const isDeleted = await BlogRepository.delete(deleteBlogId);
