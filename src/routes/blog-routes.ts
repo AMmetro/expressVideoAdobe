@@ -73,6 +73,7 @@ blogRoute.put(
     );
     if (!createdBlog) {
       res.sendStatus(404);
+      return
     }
     res.sendStatus(204);
   }
