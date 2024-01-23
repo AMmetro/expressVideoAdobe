@@ -27,7 +27,7 @@ blogRoute.get("/:id", async (req: RequestWithParams<Params>, res: ResposesType<O
   const blog = await BlogRepository.getById(id);
   if (!blog) {
     res.sendStatus(404);
-    // return
+    return
   }
   res.status(200).send(blog); 
 });
@@ -37,7 +37,7 @@ blogRoute.post("/",authMiddleware,blogValidation(),
     const { name, description, websiteUrl } = req.body;
     const newBlog: BlogDB = {
       name: name, 
-      description: description,
+      description: description, 
       websiteUrl: websiteUrl,
       createdAt: new Date().toISOString(),
       isMembership: false,
