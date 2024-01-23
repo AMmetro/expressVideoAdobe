@@ -50,7 +50,7 @@ export class PostRepository {
         },
       }
     );
-    return !!postForUpd.matchedCount;
+    return !!postForUpd.modifiedCount;
   }
 
   static async delete(deletePostId: string): Promise<Boolean> {

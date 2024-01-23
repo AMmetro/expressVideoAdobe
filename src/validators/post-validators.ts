@@ -1,6 +1,8 @@
 import { body } from "express-validator";
+import { ObjectId } from "mongodb";
 import { BlogRepository } from "../repositories/blog-repository";
 import { inputValidationMiddleware } from "../inputValidation/input-validation-middleware";
+import { blogsCollection } from "../BD/db";
 
 const titleValidator = body("title").isString().withMessage("title must be a string").trim().
 isLength({min:1, max:30}).withMessage("Incorect length of name")
@@ -13,7 +15,10 @@ isLength({min:1, max:1000})
 // .matches("^https://([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$").withMessage("Incorect description")
 
 const blogValidator = body("blogId").custom(async (value)=>{
-    const blog= await BlogRepository.getById(value);
+    if (!ObjectId.isValid(value)){
+       throw new Error("incorect blogId")
+    }
+    const blog= await blogsCollection.findOne({_id:new ObjectId(value)});
     if (!blog) {
         return false
         // throw Error ("incorect blogId")
