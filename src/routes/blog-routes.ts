@@ -40,7 +40,7 @@ blogRoute.post("/",authMiddleware,blogValidation(),
       description: description,
       websiteUrl: websiteUrl,
       createdAt: new Date().toISOString(),
-      isMembership: true,
+      isMembership: false,
     };
 
     const createdBlogId = await BlogRepository.create(newBlog);
