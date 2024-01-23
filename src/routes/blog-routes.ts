@@ -81,7 +81,7 @@ blogRoute.put(
 blogRoute.delete(
   "/:id",
   authMiddleware,
-  async (req: Request, res: Response) => {
+  async (req: RequestWithParams<Params>, res: Response) => {
     const deleteBlogId = req.params.id;
 
     if (!ObjectId.isValid(deleteBlogId)) {
@@ -89,8 +89,10 @@ blogRoute.delete(
     }
 
     const isDeleted = await BlogRepository.delete(deleteBlogId);
+
     if (!isDeleted) {
       res.sendStatus(404);
+      return
     }
     res.sendStatus(204);
   }

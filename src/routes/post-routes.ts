@@ -36,7 +36,7 @@ postRoute.get(
     const post = await PostRepository.getById(id);
     if (!post) {
       res.sendStatus(404);
-      // return null
+      return
     }
     res.status(200).send(post);
   }

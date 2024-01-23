@@ -61,6 +61,7 @@ export class BlogRepository {
     const blogForDelete = await blogsCollection.deleteOne({
       _id: new ObjectId(deleteBlogId),
     });
-    return !!blogForDelete.deletedCount;
+
+     return !!blogForDelete.deletedCount;
   }
 }
