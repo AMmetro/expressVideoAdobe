@@ -32,6 +32,7 @@ postRoute.get(
     const id = req.params.id;
     if (!ObjectId.isValid(id)) {
       res.sendStatus(404);
+      return
     }
     const post = await PostRepository.getById(id);
     if (!post) {
@@ -92,6 +93,7 @@ res: ResposesType<OutputPostType | null>) => {
   const deletePostId = req.params.id;
   if (!ObjectId.isValid(deletePostId)) {
     res.sendStatus(404);
+    return
   }
   const deletePost = await PostRepository.delete(deletePostId);
   if (!deletePost) {
