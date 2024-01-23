@@ -58,7 +58,7 @@ blogRoute.put(
   async (req: RequestWithBodyAndParams<Params, RequestInputBlogType>, res: Response) => {
     const updatedBlogId = req.params.id;
     if (!ObjectId.isValid(updatedBlogId)) {
-      res.sendStatus(404);
+      return res.sendStatus(404);
     }
 
     const { name, description, websiteUrl } = req.body;
