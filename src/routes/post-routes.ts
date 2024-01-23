@@ -19,6 +19,7 @@ postRoute.get("/", async (req: Request, res: Response) => {
   const posts = await PostRepository.getAll();
   if (!posts) {
     res.status(404);
+    return
   }
   res.status(200).send(posts);
 });
@@ -82,6 +83,7 @@ postRoute.put(
     const updatedPost = await PostRepository.update(id, updatedPostData);
     if (!updatedPost) {
       res.sendStatus(404);
+      return
     }
     res.sendStatus(204);
   }
@@ -98,6 +100,7 @@ res: ResposesType<OutputPostType | null>) => {
   const deletePost = await PostRepository.delete(deletePostId);
   if (!deletePost) {
     res.sendStatus(404);
+    return
   }
   res.sendStatus(204);
 });
