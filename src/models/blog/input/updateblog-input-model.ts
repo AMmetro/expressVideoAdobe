@@ -3,7 +3,7 @@ export type InputBlogType = {
     description: string,
     websiteUrl: string,
     createdAt: string,
-    isMemberShip: boolean,
+    isMembership: boolean,
 }
 
 export type UpdateBlogType = {

@@ -3,5 +3,5 @@ export type BlogDB = {
     description: string,
     websiteUrl: string,
     createdAt: string,
-    isMemberShip: boolean,
+    isMembership: boolean,
 }
