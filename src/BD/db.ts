@@ -5,6 +5,7 @@ import { PostDB } from '../models/post/db/post-db';
 
 dotenv.config()
 // const mongoURI = process.env.MONGO_URL || "mongodb://0.0.0.0:27017"; 
+// const
 const mongoURI = process.env.MONGO_URL; 
 if (!mongoURI){
     throw new Error ("No URL for MongoDB conection")

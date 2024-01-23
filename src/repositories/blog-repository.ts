@@ -24,7 +24,7 @@ export class BlogRepository {
     return blogMapper(blog);
   }
   static async create(newBlog: InputBlogType): Promise<String> {
-    // try{
+    //   try{
     const blogId = await blogsCollection.insertOne(newBlog); 
     // console.log(blogId)
     return blogId.insertedId.toString();

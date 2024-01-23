@@ -23,7 +23,7 @@ blogRoute.get("/:id", async (req: RequestWithParams<Params>, res: ResposesType<O
   if (!ObjectId.isValid(id)) {
     res.sendStatus(404);
   }
-
+// eee
   const blog = await BlogRepository.getById(id);
   if (!blog) {
     res.sendStatus(404);
@@ -65,7 +65,7 @@ blogRoute.put(
     const updatedBlogData = {
       name: name,
       description: description,
-      websiteUrl: websiteUrl,
+      websiteUrl: websiteUrl, 
     };
     const createdBlog = await BlogRepository.update(
       updatedBlogId,
