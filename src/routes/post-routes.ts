@@ -50,6 +50,10 @@ postRoute.post(
   postValidation(),
   async (req: RequestWithBody<RequestInputPostType>, res: Response) => {
     const { title, shortDescription, content, blogId } = req.body;
+
+    console.log("------INCOM ID---------------")
+    console.log(blogId)
+
     const newPostData:UpdateInputPostType = {
       title: title,
       shortDescription: shortDescription,
@@ -62,7 +66,7 @@ postRoute.post(
          res.sendStatus(404)
           return
         }
-    // const createdPost = await PostRepository.getById(createdPostId);
+    // const findedCreatedPost = await PostRepository.getById(createdPost);
     res.status(201).send(createdPost);
   }
 );

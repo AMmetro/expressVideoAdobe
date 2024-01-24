@@ -17,8 +17,9 @@ export class PostRepository {
   
   static async getById(id: string): Promise<OutputPostType | null> {
     const post = await postsCollection.findOne({
-      id: { _id: new ObjectId(id) },
+       _id: new ObjectId(id) 
     });
+
     if (!post) {
       return null;
     }
@@ -26,13 +27,35 @@ export class PostRepository {
   }
 
   static async create(newPostData: UpdateInputPostType) {
-    const corespondingBlog = await blogsCollection.findOne(
+
+    try {
+   const corespondingBlog = await blogsCollection.findOne(
       { _id: new ObjectId(newPostData.blogId) }
     );
-    if (!corespondingBlog){return null}
-    const newPost = {...newPostData, blogName:corespondingBlog.name }
-    const newPostId = await postsCollection.insertOne(newPost);
-    return await this.getById(newPostId.insertedId.toString())
+
+    if (corespondingBlog){
+        const newPostId = await postsCollection.insertOne(
+          {...newPostData, blogName:corespondingBlog.name
+           });
+       const newPostFromBD = await this.getById(newPostId.insertedId.toString())
+       return newPostFromBD
+    } else return false
+
+
+    }catch (e){
+      return false
+    }
+
+
+    // const corespondingBlog = await blogsCollection.findOne(
+    //   { _id: new ObjectId(newPostData.blogId) }
+    // );
+    
+    // if (!corespondingBlog){return null}
+    // const newPost = {...newPostData, blogName:corespondingBlog.name }
+    // const newPostId = await postsCollection.insertOne(newPost);
+    // return await this.getById(newPostId.insertedId.toString())
+
   }
 
   static async update(
