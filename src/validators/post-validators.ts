@@ -16,7 +16,8 @@ isLength({min:1, max:1000})
 
 const blogValidator = body("blogId").custom(async (value)=>{
     if (!ObjectId.isValid(value)){
-       throw new Error("incorect blogId")
+        return false
+    //    throw new Error("incorect blogId")
     }
     const blog= await blogsCollection.findOne({_id:new ObjectId(value)});
     if (!blog) {

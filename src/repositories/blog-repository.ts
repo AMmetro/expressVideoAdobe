@@ -16,14 +16,14 @@ export class BlogRepository {
     }
   }
 
-  static async getById(id: String): Promise<OutputBlogType | null> {
+  static async getById(id: string): Promise<OutputBlogType | null> {
     const blog = await blogsCollection.findOne({ _id: new ObjectId(id)});
     if (!blog) {
       return null;
     }
     return blogMapper(blog);
   }
-  static async create(newBlog: InputBlogType): Promise<String> {
+  static async create(newBlog: InputBlogType): Promise<string> {
     //   try{
     const blogId = await blogsCollection.insertOne(newBlog); 
     // console.log(blogId)

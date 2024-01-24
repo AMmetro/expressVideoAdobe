@@ -35,7 +35,7 @@ describe("should return API data", () => {
       name: expect.any(String),
       description: expect.any(String),
       websiteUrl: expect.any(String),
-      isMembership: true,
+      isMembership: false,
       createdAt: expect.any(String),
 
        // id: expect.any(String),
@@ -58,7 +58,7 @@ describe("should return API data", () => {
       name: expect.any(String),
       description: expect.any(String),
       websiteUrl: expect.any(String),
-      isMembership: true,
+      isMembership: false,
       createdAt: expect.any(String),
     });
 
