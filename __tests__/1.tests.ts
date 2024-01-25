@@ -1,5 +1,6 @@
 import request from "supertest";
 import { app } from "../src/settings";
+import { client } from "../src/BD/db";
 
 describe("should return API data", () => {
 
@@ -37,14 +38,6 @@ describe("should return API data", () => {
       websiteUrl: expect.any(String),
       isMembership: false,
       createdAt: expect.any(String),
-
-       // id: expect.any(String),
-      // title: expect.any(String),
-      // shortDescription: expect.any(String),
-      // content: expect.any(String),
-      // blogId: expect.any(String),
-      // blogName: expect.any(String),
-      // createdAt: expect.any(String),
     });
   });
 
@@ -76,22 +69,13 @@ describe("should return API data", () => {
         blogId: `${memorisedNewBlogId}`
       })
       .expect(201);
-
-    // const responseNewPostBody = responseNewPost.body;
-    
-    // expect(responseNewPostBody).toEqual({
-    //    id: expect.any(String),
-    //   title: expect.any(String),
-    //   shortDescription: expect.any(String),
-    //   content: expect.any(String),
-    //   blogId: expect.any(String),
-    //   blogName: expect.any(String),
-    //   createdAt: expect.any(String),
-    // });
-
-
   });
 
+  afterAll(done => {
+    // Closing the DB connection allows Jest to exit successfully.
+    client.close()
+    done()
+  })
 
 
 

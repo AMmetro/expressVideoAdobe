@@ -58,7 +58,12 @@ postRoute.post(
       blogId: blogId,
       createdAt: new Date().toISOString(),
     };
-    const createdPost = await PostRepository.create(newPostData);
+    const newPostId = await PostRepository.create(newPostData);
+    if (!newPostId){
+      res.sendStatus(404)
+       return
+     }
+    const createdPost = await PostRepository.getById(newPostId);
     if (!createdPost){
          res.sendStatus(404)
           return
