@@ -6,12 +6,22 @@ import { ObjectId } from "mongodb";
 import { OutputBlogType } from "../models/blog/output/blog.output";
 import { InputBlogType, RequestInputBlogType } from "../models/blog/input/updateblog-input-model";
 import { BlogDB } from "../models/blog/db/blog-db";
-import { Params, RequestWithBody, RequestWithBodyAndParams, RequestWithParams, ResposesType } from "../models/common";
+import { Params, RequestWithBody, RequestWithBodyAndParams, RequestWithParams, RequestWithQuery, ResposesType } from "../models/common";
+import { QueryBlogInputModel } from "../models/blog/input/queryBlog-input-model";
+import { BlogQueryRepository } from "../repositories/blog.query-repository";
 
 export const blogRoute = Router({});
 
-blogRoute.get("/", async (req: Request, res: Response) => {
-  const blogs = await BlogRepository.getAll();
+
+blogRoute.get("/", async (req: RequestWithQuery<QueryBlogInputModel>, res: Response) => {
+  const sortData = {
+    searchNameTerm: req.query.searchNameTerm ?? null,
+    sortBy: req.query.sortBy ?? "createdAt",
+    sortDirection: req.query.sortDirection ?? "desc",
+    pageNumber: req.query.pageNumber ? +req.query.pageNumber : 1,
+    pageSize: req.query.pageSize ? +req.query.pageSize: 10,
+  };
+  const blogs = await BlogQueryRepository.getAll(sortData);
   if (!blogs) {
     res.status(404);
   }
@@ -24,7 +34,7 @@ blogRoute.get("/:id", async (req: RequestWithParams<Params>, res: ResposesType<O
     res.sendStatus(404);
     return
   }
-  const blog = await BlogRepository.getById(id);
+  const blog = await BlogQueryRepository.getById(id);
   if (!blog) {
     res.sendStatus(404);
     return
@@ -44,7 +54,7 @@ blogRoute.post("/",authMiddleware,blogValidation(),
     };
 
     const createdBlogId = await BlogRepository.create(newBlog);
-    const createdBlog = await BlogRepository.getById(createdBlogId);
+    const createdBlog = await BlogQueryRepository.getById(createdBlogId);
     // const createdBlog =async ()=> await BlogRepository.create(newBlog).then(createdBlogId=>BlogRepository.getById(createdBlogId))
 
     res.status(201).send(createdBlog);

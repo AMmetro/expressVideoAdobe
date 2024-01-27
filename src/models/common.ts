@@ -3,6 +3,7 @@ import {Request, Response} from 'express';
 export type Params = {id:string};
 export type RequestWithParams<P> = Request<P>;
 export type RequestWithBody<B> = Request<{}, {}, B>;
+export type RequestWithQuery<Q> = Request<{}, {}, {}, Q>;
 export type RequestWithBodyAndParams<P,B> = Request<P, {}, B>;
 export type ResposesType<T> = Response<T,{}>;
 
