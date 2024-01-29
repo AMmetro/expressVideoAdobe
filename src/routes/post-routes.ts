@@ -132,11 +132,10 @@ postRoute.put(
       res.sendStatus(404);
       return;
     }
-    // ?????????????? какая ошибка в этом случае
-    if (!postIsUpdated) {
-      res.sendStatus(400);
-      return;
-    }
+    // if (!postIsUpdated) {
+    //   res.sendStatus(400);
+    //   return;
+    // }
     res.sendStatus(204);
   }
 );

@@ -40,6 +40,8 @@ blogRoute.get(
       pageNumber: req.query.pageNumber ? +req.query.pageNumber : 1,
       pageSize: req.query.pageSize ? +req.query.pageSize : 10,
     };
+            console.log("sortData")
+    console.log(sortData)
     const blogs = await BlogQueryRepository.getAll(sortData);
     if (!blogs) {
       res.status(404);
@@ -70,7 +72,6 @@ blogRoute.get(
       pageNumber: req.query.pageNumber ? +req.query.pageNumber : 1,
       pageSize: req.query.pageSize ? +req.query.pageSize : 10,
     };
-    // const specificiedBlogPosts = await PostServices.getBlogPosts(blogId, postsSortData);
     const specificiedBlogPosts = await PostQueryRepository.getAll(postsSortData, blogId);
     res.status(200).send(specificiedBlogPosts);
   }
@@ -108,8 +109,6 @@ blogRoute.post(
       websiteUrl: websiteUrl,
     };
     const createdBlog = await BlogServices.createBlog(InputBlogModel);
-    //     console.log("createdBlog")
-    // console.log(createdBlog)
     if (!createdBlog) {
       res.sendStatus(400);
       return;

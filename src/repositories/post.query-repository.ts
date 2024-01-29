@@ -17,7 +17,7 @@ export class PostQueryRepository {
     const posts: WithId<PostDB>[] = await postsCollection
     .find(filter)
     .sort(sortBy, sortDirection)
-    .skip(pageNumber-1 * pageSize)
+    .skip((pageNumber-1) * pageSize)
     .limit(pageSize)
     .toArray();
     const totalCount = await postsCollection.countDocuments(filter)
