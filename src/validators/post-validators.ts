@@ -1,4 +1,5 @@
 import { body } from "express-validator";
+const { query } = require('express-validator/check');
 import { ObjectId } from "mongodb";
 import { BlogRepository } from "../repositories/blog-repository";
 import { inputValidationMiddleware } from "../inputValidation/input-validation-middleware";
@@ -28,12 +29,27 @@ const blogValidator = body("blogId").custom(async (value)=>{
 })
 .withMessage("incorect blogId")
 
+
+const blogValidatorQuery = query("id").custom(async (value: string)=>{
+    if (!ObjectId.isValid(value)){
+        //return false
+        throw new Error("incorect blogId2")
+    }
+    const blog = await blogsCollection.findOne({_id:new ObjectId(value)});
+    if (!blog) {
+        // false
+         throw Error ("incorect blogId2")
+        }
+        return true
+})
+.withMessage("incorect blogId2")
+
 // const blogValidator = body("blogId").isString().withMessage("blogId must be a string").trim().
 // isLength({min:1, max:100}).matches("^https://([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$").withMessage("Incorect description")
 
 export const postValidation=()=>[titleValidator, shortDescriptionValidator, contentValidator, blogValidator, inputValidationMiddleware]
 
-export const createPostFromBlogValidation=()=>[titleValidator, shortDescriptionValidator, contentValidator, inputValidationMiddleware]
+export const createPostFromBlogValidation=()=>[titleValidator, shortDescriptionValidator, blogValidatorQuery, contentValidator, inputValidationMiddleware]
 
 
 
