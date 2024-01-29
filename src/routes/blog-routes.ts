@@ -40,8 +40,6 @@ blogRoute.get(
       pageNumber: req.query.pageNumber ? +req.query.pageNumber : 1,
       pageSize: req.query.pageSize ? +req.query.pageSize : 10,
     };
-            console.log("sortData")
-    console.log(sortData)
     const blogs = await BlogQueryRepository.getAll(sortData);
     if (!blogs) {
       res.status(404);
@@ -136,6 +134,8 @@ blogRoute.post(
       content: req.body.content,
     };
     const createdPost = await BlogServices.createPostToBlog(blogId, createPostModel);
+    console.log("createdPost")
+    console.log(createdPost)
     res.status(201).send(createdPost);
   }
 );

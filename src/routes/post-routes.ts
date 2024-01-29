@@ -81,7 +81,7 @@ postRoute.post(
 );
 
 postRoute.post(
-  "/blogs/:id/posts",
+  "/:id/posts",
   authMiddleware,
   postValidation(),
   async (req: RequestWithBodyAndParams<Params, RequestInputBlogPostType>, res: Response) => {
