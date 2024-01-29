@@ -134,8 +134,12 @@ blogRoute.post(
       content: req.body.content,
     };
     const createdPost = await BlogServices.createPostToBlog(blogId, createPostModel);
-    console.log("createdPost")
-    console.log(createdPost)
+    if (createdPost==="null") {
+      res.sendStatus(402);
+      return;
+    }
+    // console.log("createdPost")
+    // console.log(createdPost)
     res.status(201).send(createdPost);
   }
 );
