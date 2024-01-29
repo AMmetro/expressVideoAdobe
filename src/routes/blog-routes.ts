@@ -165,8 +165,7 @@ blogRoute.put(
       description: description,
       websiteUrl: websiteUrl,
     };
-
-    const updatedBlog = BlogServices.updateBlog(
+    const updatedBlog = await BlogServices.updateBlog(
       updatedBlogId,
       updatedBlogModel
     );
@@ -187,7 +186,7 @@ blogRoute.delete(
       res.sendStatus(404);
       return;
     }
-    const isDeleted = BlogServices.deleteBlog(deleteBlogId);
+    const isDeleted = await BlogServices.deleteBlog(deleteBlogId);
     if (!isDeleted) {
       res.sendStatus(404);
       return;
