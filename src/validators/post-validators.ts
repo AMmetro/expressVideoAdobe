@@ -32,16 +32,16 @@ const blogValidator = body("blogId").custom(async (value)=>{
 const blogValidatorQuery = query("blogId").custom(async (value: string)=>{
     if (!ObjectId.isValid(value)){
         //return false
-        throw new Error("incorect blogId2")
+        throw new Error("incorect blogId Query")
     }
     const blog = await blogsCollection.findOne({_id:new ObjectId(value)});
     if (!blog) {
         // false
-         throw Error ("incorect blogId2")
+         throw Error ("incorect blogId Query")
         }
         return true
 })
-.withMessage("incorect blogId2")
+.withMessage("incorect blogId Query")
 
 // const blogValidator = body("blogId").isString().withMessage("blogId must be a string").trim().
 // isLength({min:1, max:100}).matches("^https://([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$").withMessage("Incorect description")
