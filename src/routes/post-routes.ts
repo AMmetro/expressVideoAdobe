@@ -1,3 +1,4 @@
+import { RequestWithQuery } from './../models/common';
 import { Router, Request, Response } from "express";
 import { ObjectId } from "mongodb";
 import { authMiddleware } from "../auth/auth-middleware";
@@ -11,15 +12,27 @@ import {
   RequestWithParams,
   ResposesType,
 } from "../models/common";
-import { RequestInputPostType, UpdateInputPostType } from "../models/post/input/updateposts-input-model";
+import {
+  RequestInputPostType,
+  UpdateInputPostType,
+} from "../models/post/input/updateposts-input-model";
+import { PostQueryRepository } from "../repositories/post.query-repository";
+import { PostServices } from "../services/postServices";
+import { QueryPostInputModel } from '../models/blog/input/queryBlog-input-model';
 
 export const postRoute = Router({});
 
-postRoute.get("/", async (req: Request, res: Response) => {
-  const posts = await PostRepository.getAll();
+postRoute.get("/", async (req: RequestWithQuery<QueryPostInputModel>, res: Response) => {
+  const postsRequestsSortData = {
+    sortBy: req.query.sortBy ?? "createdAt",
+    sortDirection: req.query.sortDirection ?? "desc",
+    pageNumber: req.query.pageNumber ? +req.query.pageNumber : 1,
+    pageSize: req.query.pageSize ? +req.query.pageSize : 10,
+  };
+  const posts = await PostQueryRepository.getAll(postsRequestsSortData);
   if (!posts) {
     res.status(404);
-    return
+    return;
   }
   res.status(200).send(posts);
 });
@@ -33,12 +46,12 @@ postRoute.get(
     const id = req.params.id;
     if (!ObjectId.isValid(id)) {
       res.sendStatus(404);
-      return
+      return;
     }
-    const posts = await PostRepository.getById(id);
+    const posts = await PostQueryRepository.getById(id);
     if (!posts) {
       res.sendStatus(404);
-      return
+      return;
     }
     res.status(200).send(posts);
   }
@@ -51,24 +64,18 @@ postRoute.post(
   async (req: RequestWithBody<RequestInputPostType>, res: Response) => {
     const { title, shortDescription, content, blogId } = req.body;
 
-    const newPostData:UpdateInputPostType = {
+    const newPostModal = {
       title: title,
       shortDescription: shortDescription,
       content: content,
       blogId: blogId,
-      createdAt: new Date().toISOString(),
     };
-    const newPostId = await PostRepository.create(newPostData);
-    if (!newPostId){
-      res.sendStatus(404)
-       return
-     }
-    const createdPost = await PostRepository.getById(newPostId);
-    if (!createdPost){
-         res.sendStatus(404)
-          return
-        }
-    res.status(201).send(createdPost);
+    const newPost = await PostServices.create(newPostModal);
+    if (!newPost) {
+      res.sendStatus(404);
+      return;
+    }
+    res.status(201).send(newPost);
   }
 );
 
@@ -76,36 +83,51 @@ postRoute.put(
   "/:id",
   authMiddleware,
   postValidation(),
-  async (req: RequestWithBodyAndParams<Params, RequestInputPostType>, res: Response) => {
+  async (
+    req: RequestWithBodyAndParams<Params, RequestInputPostType>,
+    res: Response
+  ) => {
     const id = req.params.id;
     const { title, shortDescription, content, blogId } = req.body;
-    const updatedPostData = {
+    const updatedPostModal = {
       title: title,
       shortDescription: shortDescription,
       content: content,
       blogId: blogId,
     };
-    const updatedPost = await PostRepository.update(id, updatedPostData);
-    if (!updatedPost) {
+    const postIsUpdated = await PostServices.update(id, updatedPostModal);
+    if (postIsUpdated === null) {
       res.sendStatus(404);
-      return
+      return;
+    }
+    // ?????????????? какая ошибка в этом случае
+    if (!postIsUpdated) {
+      res.sendStatus(400);
+      return;
     }
     res.sendStatus(204);
   }
 );
 
-postRoute.delete("/:id", authMiddleware, 
-async (req: RequestWithParams<Params>,
-res: ResposesType<OutputPostType | null>) => {
-  const deletePostId = req.params.id;
-  if (!ObjectId.isValid(deletePostId)) {
-    res.sendStatus(404);
-    return
+postRoute.delete(
+  "/:id",
+  authMiddleware,
+  async (
+    req: RequestWithParams<Params>,
+    res: ResposesType<OutputPostType | null>
+  ) => {
+    const deletePostId = req.params.id;
+    if (!ObjectId.isValid(deletePostId)) {
+      res.sendStatus(404);
+      return;
+    }
+    
+    const deletePost = await PostServices.delete(deletePostId);
+    // нужно ли перед этм проаерять по айди наличие
+    if (!deletePost) {
+      res.sendStatus(404);
+      return;
+    }
+    res.sendStatus(204);
   }
-  const deletePost = await PostRepository.delete(deletePostId);
-  if (!deletePost) {
-    res.sendStatus(404);
-    return
-  }
-  res.sendStatus(204);
-});
+);

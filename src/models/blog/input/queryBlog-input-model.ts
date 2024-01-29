@@ -7,3 +7,5 @@ export type QueryBlogInputModel = {
     pageNumber?: number,
     pageSize?: number,
 }
+
+export type QueryPostInputModel = Omit <QueryBlogInputModel, "searchNameTerm">

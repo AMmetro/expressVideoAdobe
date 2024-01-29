@@ -6,8 +6,9 @@ import { blogMapper } from "../models/blog/mapper/blog-mapper";
 import { InputBlogType, UpdateBlogType } from "../models/blog/input/updateblog-input-model";
 import { QueryBlogInputModel } from "../models/blog/input/queryBlog-input-model";
 import {SortDirection} from "mongodb"
+import { PaginationType } from "../models/common";
 
-type SortData = {
+type SortDataType = {
   searchNameTerm?: string | null,
   sortBy: string,
   sortDirection: SortDirection,
@@ -17,7 +18,7 @@ type SortData = {
 
 
 export class BlogQueryRepository {
-    static async getAll(sortData: SortData): Promise<OutputBlogType[] | null> {
+    static async getAll(sortData: SortDataType): Promise<PaginationType<OutputBlogType> | null> {
 
       const { searchNameTerm, sortBy, sortDirection, pageNumber, pageSize } = sortData
 
@@ -38,7 +39,17 @@ export class BlogQueryRepository {
     .skip(pageNumber-1 * pageSize)
     .limit(pageSize)
     .toArray();
-    return blogs.map(blogMapper);
+
+    const totalCount = await blogsCollection.countDocuments(filter)
+    const pagesCount = Math.ceil(totalCount / pageSize);
+    return {
+      pagesCount: pagesCount,
+      page: pageNumber,
+      pageSize: pageSize,
+      totalCount: totalCount,
+      items: blogs.map(blogMapper),
+    } 
+
     }catch (e){
       console.log(e)
       return null 
@@ -52,6 +63,7 @@ export class BlogQueryRepository {
     }
     return blogMapper(blog);
   }
+  
   static async create(newBlog: InputBlogType): Promise<string> {
     //   try{
     const blogId = await blogsCollection.insertOne(newBlog); 

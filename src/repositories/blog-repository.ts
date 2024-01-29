@@ -6,15 +6,22 @@ import { blogMapper } from "../models/blog/mapper/blog-mapper";
 import { InputBlogType, UpdateBlogType } from "../models/blog/input/updateblog-input-model";
 
 export class BlogRepository {
-  static async create(newBlog: InputBlogType): Promise<string> {
-    //   try{
+  static async create(newBlog: InputBlogType): Promise<string | null> {
+      try{
     const blogId = await blogsCollection.insertOne(newBlog); 
-    // console.log(blogId)
     return blogId.insertedId.toString();
-    // } catch(e){
-    //   console.log(e) 
-    // }
-    
+    } catch(e){
+      console.log(e) 
+      return null
+    } 
+  }
+
+  static async getById(id: string): Promise<OutputBlogType | null> {
+    const blog = await blogsCollection.findOne({ _id: new ObjectId(id)});
+    if (!blog) {
+      return null;
+    }
+    return blogMapper(blog);
   }
 
   static async update(
@@ -33,7 +40,6 @@ export class BlogRepository {
         }
       );
       return !!blogForUpd.matchedCount;
-      // ИЛИ true / false
     } catch (e) {
       console.log(e);
       return false;
