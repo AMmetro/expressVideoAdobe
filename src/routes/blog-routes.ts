@@ -119,7 +119,7 @@ blogRoute.post(
 blogRoute.post(
   "/:blogId/posts",
   authMiddleware,
-  // createPostFromBlogValidation(),
+  createPostFromBlogValidation(),
   async (
     req: RequestWithBodyAndParams<{blogId: string}, RequestInputBlogPostType>,
     res: Response
