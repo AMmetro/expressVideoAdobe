@@ -122,6 +122,15 @@ postRoute.put(
     res: Response
   ) => {
     const id = req.params.id;
+    if (!ObjectId.isValid(id)) {
+      res.sendStatus(404);
+      return;
+    }
+    const postFotUpdated = PostQueryRepository.getById(id)
+    if (postFotUpdated === null) {
+      res.sendStatus(404);
+      return;
+    }
     const { title, shortDescription, content, blogId } = req.body;
     const updatedPostModal = {
       title: title,
