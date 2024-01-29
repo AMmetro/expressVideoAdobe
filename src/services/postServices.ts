@@ -42,6 +42,7 @@ export class PostServices {
     if (!newPostId) {
       return null;
     }
+    // нужно ли эта проверка ???
     const createdPost = await PostQueryRepository.getById(newPostId);
     if (!createdPost) {
       return null;

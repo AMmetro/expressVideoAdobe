@@ -1,4 +1,4 @@
-import { RequestWithQuery } from './../models/common';
+import { RequestWithQuery, RequestWithQueryAndParams } from './../models/common';
 import { Router, Request, Response } from "express";
 import { ObjectId } from "mongodb";
 import { authMiddleware } from "../auth/auth-middleware";
@@ -13,6 +13,7 @@ import {
   ResposesType,
 } from "../models/common";
 import {
+  RequestInputBlogPostType,
   RequestInputPostType,
   UpdateInputPostType,
 } from "../models/post/input/updateposts-input-model";
@@ -64,6 +65,37 @@ postRoute.post(
   async (req: RequestWithBody<RequestInputPostType>, res: Response) => {
     const { title, shortDescription, content, blogId } = req.body;
 
+    const newPostModal = {
+      title: title,
+      shortDescription: shortDescription,
+      content: content,
+      blogId: blogId,
+    };
+    const newPost = await PostServices.create(newPostModal);
+    if (!newPost) {
+      res.sendStatus(404);
+      return;
+    }
+    res.status(201).send(newPost);
+  }
+);
+
+postRoute.post(
+  "/blogs/:id/posts",
+  authMiddleware,
+  postValidation(),
+  async (req: RequestWithBodyAndParams<Params, RequestInputBlogPostType>, res: Response) => {
+    const blogId = req.params.id;
+    if (!ObjectId.isValid(blogId)) {
+      res.sendStatus(404);
+      return;
+    }
+    const specifiedBlog = await PostQueryRepository.getById(blogId); 
+    if (!specifiedBlog) {
+      res.sendStatus(404);
+      return;
+    }
+    const { title, shortDescription, content } = req.body;
     const newPostModal = {
       title: title,
       shortDescription: shortDescription,

@@ -1,26 +1,28 @@
-import { SortDirection } from "mongodb"
+import { SortDirection } from "mongodb";
 
-export type UpdateInputPostType = {
-    title: string,
-    shortDescription: string,
-    content: string,
-    blogId: string,
-    blogName: string,
-    createdAt: string,
-}
+export type RequestInputBlogPostType = {
+  title: string;
+  shortDescription: string;
+  content: string;
+};
 
-export type RequestInputPostType = {
-    title: string,
-    shortDescription: string,
-    content: string,
-    blogId: string,
-}
+export type RequestInputPostType = RequestInputBlogPostType & {
+  blogId: string;
+};
 
-export type RequestCreatePostFromBlogInputType = Omit<RequestInputPostType, 'blogId'>
+export type UpdateInputPostType = RequestInputPostType & {
+  blogName: string;
+  createdAt: string;
+};
+
+// export type RequestCreatePostFromBlogInputType = Omit<
+//   RequestInputPostType,
+//   "blogId"
+// >;
 
 export type postsSortDataType = {
-    sortBy: string,
-    sortDirection: SortDirection,
-    pageNumber: number,
-    pageSize: number,
-  }
+  sortBy: string;
+  sortDirection: SortDirection;
+  pageNumber: number;
+  pageSize: number;
+};

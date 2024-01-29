@@ -62,6 +62,7 @@ describe("should return API data", () => {
     const responseNewPost = await request(app)
       .post("/posts/")
       .auth("admin", "qwerty")
+      // .set('Authorization', token)
       .send({
         title: "post title",
         shortDescription: "post shortDescription",

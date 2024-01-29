@@ -21,7 +21,7 @@ import {
 import { QueryBlogInputModel, QueryPostInputModel } from "../models/blog/input/queryBlog-input-model";
 import { BlogQueryRepository } from "../repositories/blog.query-repository";
 import { PostDB } from "../models/post/db/post-db";
-import { RequestCreatePostFromBlogInputType } from "../models/post/input/updateposts-input-model";
+import { RequestInputBlogPostType } from "../models/post/input/updateposts-input-model";
 import { PostRepository } from "../repositories/post-repository";
 import { PostQueryRepository } from "../repositories/post.query-repository";
 import { BlogServices } from "../services/blogServices";
@@ -51,7 +51,6 @@ blogRoute.get(
 blogRoute.get(
   "/:id/posts",
   async (
-    // req: RequestWithBodyAndParams<Params, QueryPostInputModel>,
     req: RequestWithQueryAndParams<Params, QueryPostInputModel>,
     res: Response
   ) => {
@@ -122,7 +121,7 @@ blogRoute.post(
   authMiddleware,
   blogValidation(),
   async (
-    req: RequestWithBodyAndParams<Params, RequestCreatePostFromBlogInputType>,
+    req: RequestWithBodyAndParams<Params, RequestInputBlogPostType>,
     res: Response
   ) => {
     const blogId = req.params.id;
