@@ -158,7 +158,6 @@ blogRoute.put(
       res.sendStatus(404);
       return;
     }
-
     const { name, description, websiteUrl } = req.body;
     const updatedBlogModel = {
       name: name,
@@ -173,7 +172,7 @@ blogRoute.put(
       res.sendStatus(404);
       return;
     }
-    res.sendStatus(204);
+    res.sendStatus(304);
   }
 );
 

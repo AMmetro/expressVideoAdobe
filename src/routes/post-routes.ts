@@ -153,7 +153,6 @@ postRoute.delete(
       res.sendStatus(404);
       return;
     }
-    
     const deletePost = await PostServices.delete(deletePostId);
     // нужно ли перед этм проаерять по айди наличие
     if (!deletePost) {
