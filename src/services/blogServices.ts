@@ -33,8 +33,6 @@ export class BlogServices {
     return createdBlog
     }
 
-
-
   static async createPostToBlog(
     blogId: string,
     createPostModel: RequestInputBlogPostType

@@ -48,7 +48,7 @@ const blogValidatorParam = param("blogId").custom(async (value: string)=>{
 
 export const postValidation=()=>[titleValidator, shortDescriptionValidator, contentValidator, blogValidator, inputValidationMiddleware]
 
-export const createPostFromBlogValidation=()=>[titleValidator, shortDescriptionValidator, contentValidator, blogValidatorParam, inputValidationMiddleware]
+export const createPostFromBlogValidation=()=>[titleValidator, shortDescriptionValidator, contentValidator, inputValidationMiddleware]
 
 
 
