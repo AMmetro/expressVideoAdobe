@@ -6,6 +6,7 @@ import { blogMapper } from "../models/blog/mapper/blog-mapper";
 import { InputBlogType, UpdateBlogType } from "../models/blog/input/updateblog-input-model";
 
 export class BlogRepository {
+  
   static async create(newBlog: InputBlogType): Promise<string | null> {
       try{
     const blogId = await blogsCollection.insertOne(newBlog); 

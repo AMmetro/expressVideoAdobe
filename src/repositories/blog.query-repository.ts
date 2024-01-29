@@ -18,10 +18,9 @@ type SortDataType = {
 
 
 export class BlogQueryRepository {
+
     static async getAll(sortData: SortDataType): Promise<PaginationType<OutputBlogType> | null> {
-
       const { searchNameTerm, sortBy, sortDirection, pageNumber, pageSize } = sortData
-
       let filter = {}
       if (searchNameTerm){
         filter = {
@@ -31,7 +30,6 @@ export class BlogQueryRepository {
           }
         }
       }
-
     try {
     const blogs: WithId<BlogDB>[] = await blogsCollection
     .find(filter)
@@ -49,7 +47,6 @@ export class BlogQueryRepository {
       totalCount: totalCount,
       items: blogs.map(blogMapper),
     } 
-
     }catch (e){
       console.log(e)
       return null 

@@ -1,4 +1,4 @@
-import { body, query } from "express-validator";
+import { body, param } from "express-validator";
 import { ObjectId } from "mongodb";
 import { BlogRepository } from "../repositories/blog-repository";
 import { inputValidationMiddleware } from "../inputValidation/input-validation-middleware";
@@ -29,7 +29,7 @@ const blogValidator = body("blogId").custom(async (value)=>{
 .withMessage("incorect blogId")
 
 
-const blogValidatorQuery = query("blogId").custom(async (value: string)=>{
+const blogValidatorParam = param("blogId").custom(async (value: string)=>{
     if (!ObjectId.isValid(value)){
         //return false
         throw new Error("incorect blogId Query1")
@@ -48,7 +48,7 @@ const blogValidatorQuery = query("blogId").custom(async (value: string)=>{
 
 export const postValidation=()=>[titleValidator, shortDescriptionValidator, contentValidator, blogValidator, inputValidationMiddleware]
 
-export const createPostFromBlogValidation=()=>[titleValidator, shortDescriptionValidator, contentValidator, inputValidationMiddleware]
+export const createPostFromBlogValidation=()=>[titleValidator, shortDescriptionValidator, contentValidator, blogValidatorParam, inputValidationMiddleware]
 
 
 
