@@ -126,7 +126,7 @@ postRoute.put(
       res.sendStatus(404);
       return;
     }
-    const postFotUpdated = PostQueryRepository.getById(id)
+    const postFotUpdated = await PostQueryRepository.getById(id)
     if (postFotUpdated === null) {
       res.sendStatus(404);
       return;
