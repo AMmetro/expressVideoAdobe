@@ -50,12 +50,12 @@ blogRoute.get(
 );
 
 blogRoute.get(
-  "/:id/posts",
+  "/:blogId/posts",
   async (
-    req: RequestWithQueryAndParams<Params, QueryPostInputModel>,
+    req: RequestWithQueryAndParams<{blogId:string}, QueryPostInputModel>,
     res: Response
   ) => {
-    const blogId = req.params.id;
+    const blogId = req.params.blogId;
     if (!ObjectId.isValid(blogId)) {
       res.sendStatus(404);
       return;
@@ -119,7 +119,7 @@ blogRoute.post(
 blogRoute.post(
   "/:blogId/posts",
   authMiddleware,
-  // createPostFromBlogValidation(),
+  createPostFromBlogValidation(),
   async (
     req: RequestWithBodyAndParams<{blogId: string}, RequestInputBlogPostType>,
     res: Response
