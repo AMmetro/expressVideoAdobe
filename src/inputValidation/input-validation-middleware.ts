@@ -11,7 +11,7 @@ export const inputValidationMiddleware = (req: Request, res: Response, next: Nex
         // чтобы не писать bail() в чейне проверок иначе одновременно все ошибки вернуться
         const errorsMessages = formattedErrors.array({ onlyFirstError:true })
         const errorsResponse = {"errorsMessages": errorsMessages}
-        res.status(404).send(errorsResponse)
+        res.status(400).send(errorsResponse)
         // return res.status(400).json(errorsResponse)
         return
     }
