@@ -80,6 +80,7 @@ postRoute.post(
   }
 );
 
+// нет такого метода
 postRoute.post(
   "/:id/posts",
   authMiddleware,

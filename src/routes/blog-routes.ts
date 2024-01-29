@@ -27,6 +27,7 @@ import { PostQueryRepository } from "../repositories/post.query-repository";
 import { BlogServices } from "../services/blogServices";
 import { OutputPostType } from "../models/post/output/post.output";
 import { PostServices } from "../services/postServices";
+import { postValidation } from "../validators/post-validators";
 
 export const blogRoute = Router({});
 
@@ -118,7 +119,7 @@ blogRoute.post(
 blogRoute.post(
   "/:id/posts",
   authMiddleware,
-  blogValidation(),
+  postValidation(),
   async (
     req: RequestWithBodyAndParams<Params, RequestInputBlogPostType>,
     res: Response
