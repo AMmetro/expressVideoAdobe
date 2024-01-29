@@ -129,6 +129,7 @@ blogRoute.post(
       res.sendStatus(404);
       return;
     }
+    // console.log("1111111111")
     const createPostModel = {
       title: req.body.title,
       shortDescription: req.body.shortDescription,

@@ -2,7 +2,6 @@ import { ObjectId, SortDirection } from 'mongodb';
 import { OutputPostType } from "./../models/post/output/post.output";
 import { PostDB } from "../models/post/db/post-db";
 import {
-  RequestCreatePostFromBlogInputType,
   RequestInputPostType,
   postsSortDataType,
 } from "../models/post/input/updateposts-input-model";
@@ -26,7 +25,9 @@ export class PostServices {
     createPostModel: RequestInputPostType
   ): Promise<OutputPostType | null> {
     const { title, shortDescription, content, blogId } = createPostModel;
-    const corespondingBlog = await PostQueryRepository.getById(blogId);
+    const corespondingBlog = await BlogQueryRepository.getById(blogId);
+    console.log("11111111111111")
+    console.log(corespondingBlog)
     if (!corespondingBlog) {
       return null;
     }
@@ -35,7 +36,7 @@ export class PostServices {
       shortDescription: shortDescription,
       content: content,
       blogId: blogId,
-      blogName: corespondingBlog.blogName,
+      blogName: corespondingBlog.name,
       createdAt: new Date().toISOString(),
     };
     const newPostId = await PostRepository.create(newPostModal);

@@ -64,7 +64,6 @@ postRoute.post(
   postValidation(),
   async (req: RequestWithBody<RequestInputPostType>, res: Response) => {
     const { title, shortDescription, content, blogId } = req.body;
-
     const newPostModal = {
       title: title,
       shortDescription: shortDescription,
@@ -72,6 +71,8 @@ postRoute.post(
       blogId: blogId,
     };
     const newPost = await PostServices.create(newPostModal);
+    console.log("000000000000")
+    console.log(newPost)
     if (!newPost) {
       res.sendStatus(404);
       return;
