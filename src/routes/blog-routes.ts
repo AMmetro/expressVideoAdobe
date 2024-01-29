@@ -72,6 +72,8 @@ blogRoute.get(
       pageSize: req.query.pageSize ? +req.query.pageSize : 10,
     };
     const specificiedBlogPosts = await PostQueryRepository.getAll(postsSortData, blogId);
+    console.log("000000000000000000")
+    console.log(specificiedBlogPosts)
     res.status(200).send(specificiedBlogPosts);
   }
 );
@@ -129,7 +131,6 @@ blogRoute.post(
       res.sendStatus(404);
       return;
     }
-    // console.log("1111111111")
     const createPostModel = {
       title: req.body.title,
       shortDescription: req.body.shortDescription,

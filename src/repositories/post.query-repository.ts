@@ -9,18 +9,27 @@ import { OutputBlogType } from "../models/blog/output/blog.output";
 
 export class PostQueryRepository {
 
-  static async getAll(postsSortData: postsSortDataType, postId?:string):Promise<PaginationType<OutputPostType> | null> {
+  static async getAll(postsSortData: postsSortDataType, blogId?:string):Promise<PaginationType<OutputPostType> | null> {
   const { sortBy, sortDirection, pageNumber, pageSize } = postsSortData
    let filter = {}
-   if (postId){filter = {postId: postId} }
+   console.log("postId")
+   console.log(blogId)
+   if (blogId){filter = {blogId: blogId} }
    try {
+    console.log("try")
     const posts: WithId<PostDB>[] = await postsCollection
     .find(filter)
     .sort(sortBy, sortDirection)
     .skip((pageNumber-1) * pageSize)
     .limit(pageSize)
     .toArray();
+    console.log("posts")
+    console.log(posts)
+    console.log("filter")
+    console.log(filter)
     const totalCount = await postsCollection.countDocuments(filter)
+    console.log("totalCount")
+    console.log(totalCount)
     const pagesCount = Math.ceil(totalCount / pageSize);
     return {
       pagesCount: pagesCount,
