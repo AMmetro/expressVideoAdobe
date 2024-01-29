@@ -44,7 +44,6 @@ export class BlogServices {
     if (!currentBlog) {
       return null;
     }
-
     const newPost: PostDB = {
       title: title,
       shortDescription: shortDescription,
@@ -53,7 +52,6 @@ export class BlogServices {
       blogId: currentBlog.id,
       createdAt: new Date().toISOString(),
     };
-
     const createdPostId = await PostRepository.create(newPost);
     if (!createdPostId) {
       return null;

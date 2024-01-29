@@ -135,7 +135,7 @@ blogRoute.post(
       shortDescription: req.body.shortDescription,
       content: req.body.content,
     };
-    const createdPost = BlogServices.createPostToBlog(blogId, createPostModel);
+    const createdPost = await BlogServices.createPostToBlog(blogId, createPostModel);
     res.status(201).send(createdPost);
   }
 );
