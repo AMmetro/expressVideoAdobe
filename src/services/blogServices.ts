@@ -28,8 +28,6 @@ export class BlogServices {
       return null;
     }
     const createdBlog = await BlogQueryRepository.getById(createdBlogId);
-    // console.log("createdBlog")
-    // console.log(createdBlog)
     return createdBlog
     }
 
@@ -39,8 +37,6 @@ export class BlogServices {
   ): Promise<OutputPostType | null> {
     const { title, shortDescription, content } = createPostModel;
     const currentBlog = await BlogRepository.getById(blogId);
-    // console.log("2222222222")
-    // console.log(currentBlog)
     if (!currentBlog) {
       return null;
     }
@@ -53,11 +49,7 @@ export class BlogServices {
       createdAt: new Date().toISOString(),
     };
     const createdPostId = await PostRepository.create(newPost);
-    // console.log("3333333333")
-    // console.log(createdPostId)
     const createdPost = await PostQueryRepository.getById(createdPostId);
-    // console.log("4444444444")
-    console.log(createdPost)
     return createdPost;
   }
 

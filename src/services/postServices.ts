@@ -26,8 +26,6 @@ export class PostServices {
   ): Promise<OutputPostType | null> {
     const { title, shortDescription, content, blogId } = createPostModel;
     const corespondingBlog = await BlogQueryRepository.getById(blogId);
-    // console.log("11111111111111")
-    // console.log(corespondingBlog)
     if (!corespondingBlog) {
       return null;
     }
