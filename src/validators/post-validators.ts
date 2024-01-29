@@ -41,7 +41,7 @@ const blogValidatorQuery = query("blogId").custom(async (value: string)=>{
         }
         return true
 })
-.withMessage("incorect blogId Query3")
+// .withMessage("incorect blogId Query3")
 
 // const blogValidator = body("blogId").isString().withMessage("blogId must be a string").trim().
 // isLength({min:1, max:100}).matches("^https://([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$").withMessage("Incorect description")
