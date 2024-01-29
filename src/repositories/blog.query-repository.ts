@@ -36,7 +36,7 @@ export class BlogQueryRepository {
     const blogs: WithId<BlogDB>[] = await blogsCollection
     .find(filter)
     .sort(sortBy, sortDirection)
-    .skip(pageNumber-1 * pageSize)
+    .skip((pageNumber-1) * pageSize)
     .limit(pageSize)
     .toArray();
 
