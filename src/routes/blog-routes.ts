@@ -117,14 +117,14 @@ blogRoute.post(
 );
 
 blogRoute.post(
-  "/:id/posts",
+  "/:blogId/posts",
   authMiddleware,
   createPostFromBlogValidation(),
   async (
-    req: RequestWithBodyAndParams<Params, RequestInputBlogPostType>,
+    req: RequestWithBodyAndParams<{blogId: string}, RequestInputBlogPostType>,
     res: Response
   ) => {
-    const blogId = req.params.id;
+    const blogId = req.params.blogId;
     if (!ObjectId.isValid(blogId)) {
       res.sendStatus(404);
       return;

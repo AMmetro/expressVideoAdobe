@@ -49,7 +49,7 @@ const blogValidatorQuery = query("id").custom(async (value: string)=>{
 
 export const postValidation=()=>[titleValidator, shortDescriptionValidator, contentValidator, blogValidator, inputValidationMiddleware]
 
-export const createPostFromBlogValidation=()=>[titleValidator, shortDescriptionValidator, blogValidatorQuery, contentValidator, inputValidationMiddleware]
+export const createPostFromBlogValidation=()=>[titleValidator, shortDescriptionValidator, contentValidator, blogValidatorQuery,  inputValidationMiddleware]
 
 
 
