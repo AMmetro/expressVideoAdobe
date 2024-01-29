@@ -172,7 +172,7 @@ blogRoute.put(
       res.sendStatus(404);
       return;
     }
-    res.sendStatus(304);
+    res.sendStatus(204);
   }
 );
 
