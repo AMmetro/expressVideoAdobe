@@ -28,6 +28,8 @@ export class BlogServices {
       return null;
     }
     const createdBlog = await BlogQueryRepository.getById(createdBlogId);
+    // console.log("createdBlog")
+    // console.log(createdBlog)
     return createdBlog
     }
 

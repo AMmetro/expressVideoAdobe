@@ -107,7 +107,9 @@ blogRoute.post(
       description: description,
       websiteUrl: websiteUrl,
     };
-    const createdBlog = BlogServices.createBlog(InputBlogModel);
+    const createdBlog = await BlogServices.createBlog(InputBlogModel);
+    //     console.log("createdBlog")
+    // console.log(createdBlog)
     if (!createdBlog) {
       res.sendStatus(400);
       return;
