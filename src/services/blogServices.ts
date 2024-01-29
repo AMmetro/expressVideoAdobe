@@ -42,7 +42,7 @@ export class BlogServices {
     const { title, shortDescription, content } = createPostModel;
     const currentBlog = await BlogRepository.getById(blogId);
     if (!currentBlog) {
-      return "null";
+      return null;
     }
     const newPost: PostDB = {
       title: title,
