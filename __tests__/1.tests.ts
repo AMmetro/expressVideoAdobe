@@ -72,6 +72,26 @@ describe("should return API data", () => {
       .expect(201);
   });
 
+  it("- GET created POST", async function () {
+    const {memorisedNewBlogId} = expect.getState()
+    const responseNewPost = await request(app)
+      .get("/posts/")
+      // .auth("admin", "qwerty")
+      // .set('Authorization', token)
+      // .expect(200);
+
+      expect(responseNewPost.body.items).toEqual({
+        title: "post title",
+        shortDescription: "post shortDescription",
+        content: "content of post",
+        blogId: `${memorisedNewBlogId}`,
+        createdAt: expect.any(String),
+        blogName: "blog name", 
+        id: expect.any(String),
+      });
+
+  });
+
   afterAll(done => {
     // Closing the DB connection allows Jest to exit successfully.
     client.close()

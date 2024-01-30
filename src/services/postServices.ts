@@ -57,13 +57,13 @@ export class PostServices {
     if (!postForUpd) {
       return null;
     }
-    const updatePostBody = {
-      title: updatePostModel.title,
-      shortDescription: updatePostModel.shortDescription,
-      content: updatePostModel.content,
-      blogId: updatePostModel.blogId,
-    }
-    const postIsUpdated = PostRepository.update(id,updatePostBody)
+    // const updatePostBody = {
+    //   title: updatePostModel.title,
+    //   shortDescription: updatePostModel.shortDescription,
+    //   content: updatePostModel.content,
+    //   blogId: updatePostModel.blogId,
+    // }
+    const postIsUpdated = PostRepository.update(id,updatePostModel)
     return postIsUpdated
   }
   
