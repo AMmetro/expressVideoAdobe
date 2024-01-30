@@ -50,10 +50,10 @@ export class PostServices {
   }
 
   static async update(
-    id: string,
+    updatedPostId: string,
     updatePostModel: RequestInputPostType,
   ): Promise<Boolean | null> {
-    const postForUpd = PostQueryRepository.getById(id)
+    const postForUpd = PostQueryRepository.getById(updatedPostId)
     if (!postForUpd) {
       return null;
     }
@@ -63,7 +63,9 @@ export class PostServices {
     //   content: updatePostModel.content,
     //   blogId: updatePostModel.blogId,
     // }
-    const postIsUpdated = PostRepository.update(id,updatePostModel)
+    const postIsUpdated = PostRepository.update(updatedPostId, updatePostModel)
+    console.log("postIsUpdated")
+    console.log(postIsUpdated)
     return postIsUpdated
   }
   

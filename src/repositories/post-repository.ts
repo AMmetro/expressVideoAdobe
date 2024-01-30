@@ -16,15 +16,10 @@ export class PostRepository {
     updatedPostData: RequestInputPostType
   ): Promise<Boolean> {
 
-
     const postForUpd = await postsCollection.updateOne(
       { _id: new ObjectId(updatedPostId) },
-      {$set: {updatedPostData}}
+      {$set: {...updatedPostData}}
     );
-
-    // console.log("postForUpd")
-    // console.log(postForUpd)
-
     return !!postForUpd.modifiedCount;
   }
 

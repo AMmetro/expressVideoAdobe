@@ -54,12 +54,11 @@ describe("should return API data", () => {
       isMembership: false,
       createdAt: expect.any(String),
     });
-
   });
 
-  it("- POST create NEO POST", async function () {
+  it("- POST new POST with blog Id", async function () {
     const {memorisedNewBlogId} = expect.getState()
-    const responseNewPost = await request(app)
+    const response = await request(app)
       .post("/posts/")
       .auth("admin", "qwerty")
       // .set('Authorization', token)
@@ -70,17 +69,18 @@ describe("should return API data", () => {
         blogId: `${memorisedNewBlogId}`
       })
       .expect(201);
+
+      expect.setState({memorisedNewPostId:response.body.id})
   });
 
   it("- GET created POST", async function () {
     const {memorisedNewBlogId} = expect.getState()
+    const {memorisedNewPostId} = expect.getState()
     const responseNewPost = await request(app)
-      .get("/posts/")
-      // .auth("admin", "qwerty")
-      // .set('Authorization', token)
-      // .expect(200);
-
-      expect(responseNewPost.body.items).toEqual({
+      .get("/posts/" + memorisedNewPostId)
+      .expect(200)
+     
+      expect(responseNewPost.body).toEqual({
         title: "post title",
         shortDescription: "post shortDescription",
         content: "content of post",
@@ -89,8 +89,42 @@ describe("should return API data", () => {
         blogName: "blog name", 
         id: expect.any(String),
       });
+    });
 
-  });
+  it("- PUT update created POST", async function () {
+    const {memorisedNewBlogId} = expect.getState()
+    const {memorisedNewPostId} = expect.getState()
+    const responseUpdatedPost = await request(app)
+      .put("/posts/" + memorisedNewPostId)
+      .auth("admin", "qwerty")
+      .send({
+        title: "updated title",
+        shortDescription: "updated shortDescription",
+        content: "updated of post",
+        blogId: `${memorisedNewBlogId}`
+      })
+      .expect(204);
+    })
+
+    it("- GET updated POST and CHECK", async function () {
+      const {memorisedNewBlogId} = expect.getState()
+      const {memorisedNewPostId} = expect.getState()
+      const responseNewPost = await request(app)
+        .get("/posts/" + memorisedNewPostId)
+        expect(responseNewPost.body).toEqual({
+          title: "updated title",
+          shortDescription: "updated shortDescription",
+          content: "updated of post",
+          blogId: `${memorisedNewBlogId}`,
+          createdAt: expect.any(String),
+          blogName: "blog name", 
+          id: expect.any(String),
+        });
+      });
+
+
+
+
 
   afterAll(done => {
     // Closing the DB connection allows Jest to exit successfully.

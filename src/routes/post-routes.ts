@@ -119,13 +119,13 @@ postRoute.put(
     req: RequestWithBodyAndParams<Params, RequestInputPostType>,
     res: Response
   ) => {
-    const id = req.params.id;
-    if (!ObjectId.isValid(id)) {
+    const updatedPostId = req.params.id;
+    if (!ObjectId.isValid(updatedPostId)) {
       res.sendStatus(404);
       return;
     }
-    const postFotUpdated = await PostQueryRepository.getById(id)
-    if (postFotUpdated === null) {
+    const postForUpdated = await PostQueryRepository.getById(updatedPostId)
+    if (postForUpdated === null) {
       res.sendStatus(404);
       return;
     }
@@ -136,7 +136,7 @@ postRoute.put(
       content: content,
       blogId: blogId,
     };
-    const postIsUpdated = await PostServices.update(id, updatedPostModal);
+    const postIsUpdated = await PostServices.update(updatedPostId, updatedPostModal);
     if (!postIsUpdated) {
       res.sendStatus(404);
       return;
