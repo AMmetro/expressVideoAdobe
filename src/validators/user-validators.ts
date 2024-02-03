@@ -49,7 +49,7 @@ const emailValidator = body("email").isString().withMessage("email must be a str
 // const blogValidator = body("blogId").isString().withMessage("blogId must be a string").trim().
 // isLength({min:1, max:100}).matches("^https://([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$").withMessage("Incorect description")
 
-export const userValidation=()=>[loginValidator, passwordValidator, emailValidator, inputValidationMiddleware]
+export const userValidation=()=>[loginValidator, passwordValidator, inputValidationMiddleware]
 
 // export const createPostFromBlogValidation=()=>[titleValidator, shortDescriptionValidator, contentValidator, inputValidationMiddleware]
 
