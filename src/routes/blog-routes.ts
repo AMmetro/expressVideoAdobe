@@ -28,19 +28,14 @@ import { BlogServices } from "../services/blogServices";
 import { OutputPostType } from "../models/post/output/post.output";
 import { PostServices } from "../services/postServices";
 import { createPostFromBlogValidation, postValidation } from "../validators/post-validators";
+import { sortQueryUtils } from "../utils/sortQeryUtils";
 
 export const blogRoute = Router({});
 
 blogRoute.get(
   "/",
   async (req: RequestWithQuery<QueryBlogInputModel>, res: Response) => {
-    const sortData = {
-      searchNameTerm: req.query.searchNameTerm ?? null,
-      sortBy: req.query.sortBy ?? "createdAt",
-      sortDirection: req.query.sortDirection ?? "desc",
-      pageNumber: req.query.pageNumber ? +req.query.pageNumber : 1,
-      pageSize: req.query.pageSize ? +req.query.pageSize : 10,
-    };
+    const sortData = sortQueryUtils(req.query)
     const blogs = await BlogQueryRepository.getAll(sortData);
     if (!blogs) {
       res.status(404);
@@ -65,12 +60,13 @@ blogRoute.get(
       res.sendStatus(404);
       return;
     }
-    const postsSortData = {
-      sortBy: req.query.sortBy ?? "createdAt",
-      sortDirection: req.query.sortDirection ?? "desc",
-      pageNumber: req.query.pageNumber ? +req.query.pageNumber : 1,
-      pageSize: req.query.pageSize ? +req.query.pageSize : 10,
-    };
+    const postsSortData = sortQueryUtils(req.query)
+    // const postsSortData = {
+    //   sortBy: req.query.sortBy ?? "createdAt",
+    //   sortDirection: req.query.sortDirection ?? "desc",
+    //   pageNumber: req.query.pageNumber ? +req.query.pageNumber : 1,
+    //   pageSize: req.query.pageSize ? +req.query.pageSize : 10,
+    // };
     const specificiedBlogPosts = await PostQueryRepository.getAll(postsSortData, blogId);
     res.status(200).send(specificiedBlogPosts);
   }

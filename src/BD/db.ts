@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import { MongoClient } from "mongodb";
 import { BlogDB } from '../models/blog/db/blog-db';
 import { PostDB } from '../models/post/db/post-db';  
+import { UserDB } from '../models/user/db/user-db';
 
 dotenv.config()
 // const mongoURI = process.env.MONGO_URL || "mongodb://0.0.0.0:27017"; 
@@ -13,6 +14,7 @@ if (!mongoURI){
 export const client = new MongoClient(mongoURI);
 
 const database = client.db("BlogDB")
+export const usersCollection = database.collection<UserDB>("users")
 export const blogsCollection = database.collection<BlogDB>("blogs")
 export const postsCollection = database.collection<PostDB>("posts")
 
