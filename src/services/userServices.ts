@@ -48,29 +48,5 @@ export class UserServices {
     return createdUser;
   }
 
-  // static async update(
-  //   updatedPostId: string,
-  //   updatePostModel: RequestInputPostType,
-  // ): Promise<Boolean | null> {
-  //   const postForUpd = PostQueryRepository.getById(updatedPostId)
-  //   if (!postForUpd) {
-  //     return null;
-  //   }
-  //   // const updatePostBody = {
-  //   //   title: updatePostModel.title,
-  //   //   shortDescription: updatePostModel.shortDescription,
-  //   //   content: updatePostModel.content,
-  //   //   blogId: updatePostModel.blogId,
-  //   // }
-  //   const postIsUpdated = PostRepository.update(updatedPostId, updatePostModel)
-  //   console.log("postIsUpdated")
-  //   console.log(postIsUpdated)
-  //   return postIsUpdated
-  // }
   
-  // static async delete(id: string): Promise<Boolean | null> {
-  //   const isPostdeleted = await PostRepository.delete(id);
-  //   return isPostdeleted;
-  // }
-
 }

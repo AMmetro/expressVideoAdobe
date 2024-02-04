@@ -8,6 +8,7 @@ import { OutputUserType } from "../models/user/output/user.output";
 
 type SortDataType = {
   searchEmailTerm?: string | null,
+  searchLoginTerm?: string | null,
   sortBy: string,
   sortDirection: SortDirection,
   pageNumber: number,
@@ -18,7 +19,8 @@ type SortDataType = {
 export class UserQueryRepository {
 
     static async getAll(sortData: SortDataType): Promise<PaginationType<OutputUserType> | null> {
-      const { searchEmailTerm, sortBy, sortDirection, pageNumber, pageSize } = sortData
+      const { searchEmailTerm, searchLoginTerm, sortBy, sortDirection, pageNumber, pageSize } = sortData
+      
       let filter = {}
       if (searchEmailTerm){
         filter = {
@@ -27,7 +29,15 @@ export class UserQueryRepository {
             $options: 'i'
           }
         }
+      } else if (searchLoginTerm){
+        filter = {
+          name: {
+            $regex: searchLoginTerm,
+            $options: 'i'
+          }
+        }
       }
+      
     try {
     const users: WithId<UserDB>[] = await usersCollection
     .find(filter)

@@ -1,36 +1,33 @@
 import request from "supertest";
 import { app } from "../src/settings";
 import { client } from "../src/BD/db";
+import { createUsers } from "./utils";
+import { OutputPostType } from "../src/models/post/output/post.output";
 
 describe("should return API data", () => {
-
-  beforeAll(async ()=>{
-    await request(app).delete('/testing/all-data').expect(204)
-  })
-
-    it("- GET all users", async () => {
-    await request(app)
-      .get("/users")
-      .expect(200);
+  beforeAll(async () => {
+    await request(app).delete("/testing/all-data").expect(204);
   });
 
-    it("- POST create USERS", async function () {
-    const response = await request(app)
+  it("- GET all users", async () => {
+    await request(app).get("/users").expect(200);
+  });
+
+  it("- POST create 1 USER", async function () {
+    const responseNewUser = await request(app)
       .post("/users/")
       .auth("admin", "qwerty")
       .send({
         login: "newLogin",
         password: "new_password",
-        email: "email35466@gg.com",
+        email: "email56010@gg.com",
         // email: "ema4353",
       })
       .expect(201);
 
-    const responseNewUser = response.body;
-    
-    expect.setState({memorisedNewUserId:response.body.id})
+    expect.setState({ memorisedNewUserId: responseNewUser.body.id });
 
-    expect(responseNewUser).toEqual({
+    expect(responseNewUser.body).toEqual({
       id: expect.any(String),
       login: expect.any(String),
       email: expect.any(String),
@@ -38,11 +35,36 @@ describe("should return API data", () => {
     });
   });
 
+    it("- POST create many users and check pagination", async () => {
+    // const {memorisedNewBlogId} = expect.getState()
+    const createdUsers: any[] = []
+    for (let i = 0; i < 18; i++) {
+      const user = await createUsers(app, i)
+       createdUsers.push(user)
+    }
+
+    // console.log("createdUsers")
+    // console.log(createdUsers)
+
+    const responseUsers = await request(app)
+    .get("/users/")
+     expect(responseUsers.body).toEqual({
+        pagesCount: 1,
+        page: 1,
+        pageSize: 10,
+        totalCount: 9,
+        items: expect.any(Array<OutputPostType>)
+    });
+
+
+
+  });
+
   // it("- GET blog with memo id", async () => {
   //   const {memorisedNewBlogId} = expect.getState()
   //   const responseBlog = await request(app)
   //   .get("/blogs/"+ memorisedNewBlogId)
-    
+
   //    expect(responseBlog.body).toEqual({
   //     id: expect.any(String),
   //     name: expect.any(String),
@@ -76,14 +98,14 @@ describe("should return API data", () => {
   //   const responseNewPost = await request(app)
   //     .get("/posts/" + memorisedNewPostId)
   //     .expect(200)
-     
+
   //     expect(responseNewPost.body).toEqual({
   //       title: "post title",
   //       shortDescription: "post shortDescription",
   //       content: "content of post",
   //       blogId: `${memorisedNewBlogId}`,
   //       createdAt: expect.any(String),
-  //       blogName: "blog name", 
+  //       blogName: "blog name",
   //       id: expect.any(String),
   //     });
   //   });
@@ -114,21 +136,14 @@ describe("should return API data", () => {
   //         content: "updated of post",
   //         blogId: `${memorisedNewBlogId}`,
   //         createdAt: expect.any(String),
-  //         blogName: "blog name", 
+  //         blogName: "blog name",
   //         id: expect.any(String),
   //       });
   //     });
 
-
-
-
-
-  afterAll(done => {
+  afterAll((done) => {
     // Closing the DB connection allows Jest to exit successfully.
-    client.close()
-    done()
-  })
-
-
-
+    client.close();
+    done();
+  });
 });

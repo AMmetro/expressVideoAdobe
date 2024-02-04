@@ -5,6 +5,7 @@ import {SortDirection} from "mongodb"
 export type QueryType = {
   searchEmailTerm?: string | null, 
   searchNameTerm?: string | null,
+  searchLoginTerm?: string | null,
   sortBy?: string,
   sortDirection?: SortDirection,
   pageNumber?: number,
@@ -14,6 +15,7 @@ export type QueryType = {
 export const sortQueryUtils = (query:QueryType) => {
   const result = {
     searchEmailTerm: query.searchEmailTerm ?? null, 
+    searchLoginTerm: query.searchLoginTerm ?? null, 
     searchNameTerm: query.searchNameTerm ?? null,
     sortBy: query.sortBy ?? "createdAt",
     sortDirection: query.sortDirection ?? "desc",
