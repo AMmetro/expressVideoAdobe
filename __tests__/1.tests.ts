@@ -22,6 +22,7 @@ describe("should return API data", () => {
         login: "newLogin",
         password: "new_password",
         email: "email35466@gg.com",
+        // email: "ema4353",
       })
       .expect(201);
 
