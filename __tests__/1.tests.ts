@@ -65,20 +65,22 @@ describe("should return API data", () => {
   });
 
 
-  // it("- GET blog with memo id", async () => {
-  //   const {memorisedNewBlogId} = expect.getState()
-  //   const responseBlog = await request(app)
-  //   .get("/blogs/"+ memorisedNewBlogId)
+  it("- DELETE user with wrong auth", async () => {
+    // const {memorisedNewBlogId} = expect.getState()
+    const responseUser = await request(app)
+    .get("/users/")
+    const firstUserId = responseUser.body.items[0].id
 
-  //    expect(responseBlog.body).toEqual({
-  //     id: expect.any(String),
-  //     name: expect.any(String),
-  //     description: expect.any(String),
-  //     websiteUrl: expect.any(String),
-  //     isMembership: false,
-  //     createdAt: expect.any(String),
-  //   });
-  // });
+    const deleteUser = await request(app)
+    .delete("/users/" + firstUserId)
+    .auth("admin", "qwerty")
+    .expect(204);
+
+    // console.log("--------URL-------------")
+    // console.log(deleteUser.request.url)
+
+
+  });
 
   // it("- POST new POST with blog Id", async function () {
   //   const {memorisedNewBlogId} = expect.getState()
