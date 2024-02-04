@@ -24,14 +24,15 @@ export class UserQueryRepository {
       let filter = {}
       if (searchEmailTerm){
         filter = {
-          name: {
+          email: {
             $regex: searchEmailTerm,
             $options: 'i'
           }
         }
-      } else if (searchLoginTerm){
-        filter = {
-          name: {
+      } 
+      if (searchLoginTerm){
+        filter = {...filter,
+          login: {
             $regex: searchLoginTerm,
             $options: 'i'
           }
