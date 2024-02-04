@@ -32,7 +32,7 @@ export const usersRoute = Router({});
 usersRoute.get(
   "/",
   async (req: RequestWithQuery<QueryUserInputModel>, res: Response) => {
-    const sortData = sortQueryUtils(req.query)
+    const sortData = sortQueryUtils(req.query);
     const users = await UserQueryRepository.getAll(sortData);
     if (!users) {
       res.status(404);
@@ -61,78 +61,20 @@ usersRoute.post(
   }
 );
 
-// usersRoute.post(
-//   "/:blogId/posts",
-//   authMiddleware,
-//   createPostFromBlogValidation(),
-//   async (
-//     req: RequestWithBodyAndParams<{blogId: string}, RequestInputBlogPostType>,
-//     res: Response
-//   ) => {
-//     const blogId = req.params.blogId;
-//     if (!ObjectId.isValid(blogId)) {
-//       res.sendStatus(404);
-//       return;
-//     }
-//     const createPostModel = {
-//       title: req.body.title,
-//       shortDescription: req.body.shortDescription,
-//       content: req.body.content,
-//     };
-//     const createdPost = await BlogServices.createPostToBlog(blogId, createPostModel);
-//     if (!createdPost) {
-//       res.sendStatus(404);
-//       return;
-//     }
-//     res.status(201).send(createdPost);
-//   }
-// );
-
-// usersRoute.put(
-//   "/:id",
-//   authMiddleware,
-//   blogValidation(),
-//   async (
-//     req: RequestWithBodyAndParams<Params, RequestInputBlogType>,
-//     res: Response
-//   ) => {
-//     const updatedBlogId = req.params.id;
-//     if (!ObjectId.isValid(updatedBlogId)) {
-//       res.sendStatus(404);
-//       return;
-//     }
-//     const { name, description, websiteUrl } = req.body;
-//     const updatedBlogModel = {
-//       name: name,
-//       description: description,
-//       websiteUrl: websiteUrl,
-//     };
-//     const updatedBlog = await BlogServices.updateBlog(
-//       updatedBlogId,
-//       updatedBlogModel
-//     );
-//     if (!updatedBlog) {
-//       res.sendStatus(404);
-//       return;
-//     }
-//     res.sendStatus(204);
-//   }
-// );
-
-// usersRoute.delete(
-//   "/:id",
-//   authMiddleware,
-//   async (req: RequestWithParams<Params>, res: Response) => {
-//     const deleteBlogId = req.params.id;
-//     if (!ObjectId.isValid(deleteBlogId)) {
-//       res.sendStatus(404);
-//       return;
-//     }
-//     const isDeleted = await BlogServices.deleteBlog(deleteBlogId);
-//     if (!isDeleted) {
-//       res.sendStatus(404);
-//       return;
-//     }
-//     res.sendStatus(204);
-//   }
-// );
+usersRoute.delete(
+  "/:id",
+  authMiddleware,
+  async (req: RequestWithParams<Params>, res: Response) => {
+    const deletePostId = req.params.id;
+    if (!ObjectId.isValid(deletePostId)) {
+      res.sendStatus(404);
+      return;
+    }
+    const isDeleted = await UserServices.delete(deletePostId);
+    if (!isDeleted) {
+      res.sendStatus(404);
+      return;
+    }
+    res.sendStatus(204);
+  }
+);

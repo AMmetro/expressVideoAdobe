@@ -48,5 +48,10 @@ export class UserServices {
     return createdUser;
   }
 
+  static async delete(id: string): Promise<Boolean | null> {
+    const isUserDeleted = await UserRepository.delete(id);
+    return isUserDeleted;
+  }
+
   
 }

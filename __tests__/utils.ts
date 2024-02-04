@@ -7,9 +7,9 @@ export const createUsers = async (app:any, i:number)=> {
   .post("/users/")
   .auth("admin", "qwerty")
   .send({
-    login: "log" + i,
-    password: "new_password",
-    email: "email56010@gg.com",
+    login: "seR" + i,
+    password: "password" + i,
+    email: i + "email56010@gg.com",
     // email: "ema4353",
   })
   .expect(201);

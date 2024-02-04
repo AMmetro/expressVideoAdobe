@@ -35,26 +35,12 @@ describe("should return API data", () => {
     });
   });
 
-    it("- POST create many users and check pagination", async () => {
-    // const {memorisedNewBlogId} = expect.getState()
+    it("- POST create many users and check returned pagination", async () => {
     const createdUsers: any[] = []
     for (let i = 0; i < 11; i++) {
       const user = await createUsers(app, i)
        createdUsers.push(user)
     }
-
-    // console.log("createdUsers")
-    // console.log(createdUsers)
-
-    // const testResponse = await request(app)
-    // .get("/users/?pagesCount=4&pageSize=3")
-
-
-    // console.log("-------------------------")
-    // // console.log(responseUsers.request.url)
-    // console.log(testResponse.request.url)
-
-
     const responseUsers = await request(app)
     .get("/users/?pagesCount=4&pageSize=3")
      expect(responseUsers.body).toEqual({
@@ -64,13 +50,20 @@ describe("should return API data", () => {
         totalCount: 12,
         items: expect.any(Array<OutputPostType>)
     });
-
-    // console.log(responseUsers.request.url)
-    // console.log(responseUsers)
-
-
-
   });
+
+  it("- GET users after request with query", async () => {
+    const responseUsers = await request(app)
+    .get("/users/?pageSize=15&pageNumber=1&searchLoginTerm=seR&searchEmailTerm=.com&sortDirection=asc&sortBy=login")
+     expect(responseUsers.body).toEqual({
+        pagesCount: 1,
+        page: 1,
+        pageSize: 15,
+        totalCount: 11,
+        items: expect.any(Array<OutputPostType>)
+    });
+  });
+
 
   // it("- GET blog with memo id", async () => {
   //   const {memorisedNewBlogId} = expect.getState()
