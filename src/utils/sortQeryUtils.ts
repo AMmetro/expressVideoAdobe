@@ -13,6 +13,12 @@ export type QueryType = {
 }
 
 export const sortQueryUtils = (query:QueryType) => {
+
+  // console.log("!isNaN(Number(query.pageSize))--------")
+  // console.log(query)
+  // console.log(Number(query.pageSize))
+  // console.log(isNaN(Number(query.pageSize)))
+
   const result = {
     searchEmailTerm: query.searchEmailTerm ?? null, 
     searchLoginTerm: query.searchLoginTerm ?? null, 

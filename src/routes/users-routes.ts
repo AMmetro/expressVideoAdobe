@@ -32,7 +32,7 @@ export const usersRoute = Router({});
 usersRoute.get(
   "/",
   async (req: RequestWithQuery<QueryUserInputModel>, res: Response) => {
-    const sortData = sortQueryUtils(req.params)
+    const sortData = sortQueryUtils(req.query)
     const users = await UserQueryRepository.getAll(sortData);
     if (!users) {
       res.status(404);

@@ -38,7 +38,7 @@ describe("should return API data", () => {
     it("- POST create many users and check pagination", async () => {
     // const {memorisedNewBlogId} = expect.getState()
     const createdUsers: any[] = []
-    for (let i = 0; i < 18; i++) {
+    for (let i = 0; i < 11; i++) {
       const user = await createUsers(app, i)
        createdUsers.push(user)
     }
@@ -46,15 +46,27 @@ describe("should return API data", () => {
     // console.log("createdUsers")
     // console.log(createdUsers)
 
+    // const testResponse = await request(app)
+    // .get("/users/?pagesCount=4&pageSize=3")
+
+
+    // console.log("-------------------------")
+    // // console.log(responseUsers.request.url)
+    // console.log(testResponse.request.url)
+
+
     const responseUsers = await request(app)
-    .get("/users/")
+    .get("/users/?pagesCount=4&pageSize=3")
      expect(responseUsers.body).toEqual({
-        pagesCount: 1,
+        pagesCount: 4,
         page: 1,
-        pageSize: 10,
-        totalCount: 9,
+        pageSize: 3,
+        totalCount: 12,
         items: expect.any(Array<OutputPostType>)
     });
+
+    // console.log(responseUsers.request.url)
+    // console.log(responseUsers)
 
 
 
