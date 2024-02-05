@@ -28,9 +28,6 @@ export class UserQueryRepository {
       pageSize,
     } = sortData;
 
-    // console.log("sortData");
-    // console.log(sortData);
-
     let filter = {};
     if (searchEmailTerm) {
       filter = {

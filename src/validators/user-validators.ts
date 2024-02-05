@@ -10,7 +10,7 @@ isLength({min:6, max:20}).withMessage("Incorect length of password")
 const emailValidator = body("email").isString().withMessage("email must be a string")
 .matches("^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$").withMessage("wrong symbol for email")
 
-export const userValidation=()=>[loginValidator, passwordValidator, emailValidator, inputValidationMiddleware]
+export const userValidation=()=>[loginValidator, passwordValidator, inputValidationMiddleware]
 
 
 
