@@ -41,10 +41,9 @@ authRoute.post(
   async (req: RequestWithBody<AuthUserInputModel>, res: Response) => {
     const {login, email, password} = req.body
     if ( !password || (!login && !email) || (login && email) ){
-      res.sendStatus(400);
+      res.sendStatus(401);
       return; 
     } 
- 
     const authData = {loginOrEmail: login ? login : email!, password: password }
     const authUsers = await UserServices.auth(authData) 
     if (!authUsers) {
