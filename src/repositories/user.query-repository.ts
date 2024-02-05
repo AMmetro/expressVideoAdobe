@@ -5,6 +5,7 @@ import { PaginationType } from "../models/common";
 import { UserDB } from "../models/user/db/user-db";
 import { userMapper } from "../models/user/mapper/user-mapper";
 import { OutputUserType } from "../models/user/output/user.output";
+import { AuthUserFindModel, AuthUserInputModel } from "../models/user/input/authUser-input-model";
 
 type SortDataType = {
   searchEmailTerm?: string | null;
@@ -37,10 +38,10 @@ export class UserQueryRepository {
         },
       };
     }
-    if (searchLoginTerm && !searchEmailTerm ) {
+    if (searchLoginTerm && !searchEmailTerm) {
       filter = {
-        email: {
-          $regex: searchEmailTerm,
+        login: {
+          $regex: searchLoginTerm,
           $options: "i",
         },
       };
@@ -64,11 +65,6 @@ export class UserQueryRepository {
       const totalCount = await usersCollection.countDocuments(filter);
       const pagesCount = Math.ceil(totalCount / pageSize);
 
-      // console.log("filter");
-      // console.log(filter);
-      // console.log("totalCount");
-      // console.log(totalCount);
-
       return {
         pagesCount: pagesCount,
         page: pageNumber,
@@ -90,14 +86,20 @@ export class UserQueryRepository {
     return userMapper(user);
   }
 
-  // static async create(newBlog: InputBlogType): Promise<string> {
-  //   //   try{
-  //   const blogId = await blogsCollection.insertOne(newBlog);
-  //   // console.log(blogId)
-  //   return blogId.insertedId.toString();
-  //   // } catch(e){
-  //   //   console.log(e)
-  //   // }
-
-  // }
+  static async getOneForAuth(
+    authUserModel: AuthUserFindModel
+  ): Promise<UserDB | null> {
+    const { loginOrEmail } = authUserModel;
+    const filter = {
+      $or: [
+        { email: { $regex: loginOrEmail, $options: "i" } },
+        { login: { $regex: loginOrEmail, $options: "i" } },
+      ],
+    };
+    const user = await usersCollection.findOne(filter);
+    if (!user) {
+      return null;
+    }
+    return user;
+  }
 }
