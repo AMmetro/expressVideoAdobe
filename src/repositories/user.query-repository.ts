@@ -40,7 +40,7 @@ export class UserQueryRepository {
     if (searchLoginTerm && !searchEmailTerm ) {
       filter = {
         email: {
-          $regex: searchLoginTerm,
+          $regex: searchEmailTerm,
           $options: "i",
         },
       };
