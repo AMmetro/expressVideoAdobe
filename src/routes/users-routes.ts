@@ -52,6 +52,7 @@ usersRoute.post(
       password: password,
       email: email,
     };
+
     const createdUser = await UserServices.create(InputUserModel);
     if (!createdUser) {
       res.sendStatus(400);

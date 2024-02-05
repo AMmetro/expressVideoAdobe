@@ -19,6 +19,9 @@ export const sortQueryUtils = (query:QueryType) => {
   // console.log(Number(query.pageSize))
   // console.log(isNaN(Number(query.pageSize)))
 
+  // console.log("query")
+  // console.log(query)
+
   const result = {
     searchEmailTerm: query.searchEmailTerm ?? null, 
     searchLoginTerm: query.searchLoginTerm ?? null, 
