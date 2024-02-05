@@ -40,7 +40,6 @@ export class UserServices {
     if (!newUserId) {
       return null;
     }
-    // нужно ли эта проверка ???
     const createdUser = await UserQueryRepository.getById(newUserId);
     if (!createdUser) {
       return null;

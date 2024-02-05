@@ -1,6 +1,4 @@
 import request from "supertest";
-// import { app } from "../src/settings";
-import {  } from "../src/models/post/output/post.output";
 
 export const createUsers = async (app:any, i:number)=> {
   const response = await request(app)
