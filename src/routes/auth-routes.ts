@@ -44,19 +44,13 @@ authRoute.post(
       res.sendStatus(400);
       return; 
     } 
-  
+ 
     const authData = {loginOrEmail: login ? login : email!, password: password }
     const authUsers = await UserServices.auth(authData) 
-    // console.log("existingUsers")
-    // console.log(existingUsers)
-
-    // const user = existingUsers.items[0]
-
-    // const createdBlog = await UserServices.auth(AuthUserModel);
-    // if (!createdBlog) {
-    //   res.sendStatus(400);
-    //   return;
-    // }
-    res.status(201).send(authUsers);
+    if (!authUsers) {
+      res.sendStatus(401);
+      return;
+    }
+    res.sendStatus(204);
   }
 );
