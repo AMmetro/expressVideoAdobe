@@ -67,18 +67,15 @@ export class UserServices {
     return isUserDeleted;
   }
 
-  static async auth(authUserData: AuthUserFindModel): Promise<any | null> {
-    // console.log("-------------------authUserData------------------")
-    // console.log(authUserData)
+  static async auth(authUserData: AuthUserFindModel): Promise<boolean | null> {
     const user = await UserQueryRepository.getOneForAuth(authUserData);
     if (!user){
       return null
     }
-    // const requestedPassword = authUserData.password
     const requestedPasswordHash = await this._generateHash(authUserData.password, user.passwordSalt )
     if ((user.passwordHash !== requestedPasswordHash) || !user){
       return null
     }
-    return user;
+    return true;
   }
 }

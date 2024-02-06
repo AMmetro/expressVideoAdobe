@@ -1,6 +1,4 @@
 export type AuthUserInputModel = {
-    login?: string,
-    email?: string,
     password: string,
     loginOrEmail: string,
 }

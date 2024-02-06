@@ -37,15 +37,12 @@ export const authRoute = Router({});
 
 authRoute.post(
   "/login",
-  // blogValidation(),
   async (req: RequestWithBody<AuthUserInputModel>, res: Response) => {
-    const {login, email, password, loginOrEmail} = req.body
-    // if ( !password || (!login && !email) || (login && email) ){
+    const {password, loginOrEmail} = req.body
     if ( !password || !loginOrEmail ){
       res.sendStatus(401);
       return; 
     } 
-    // const authData = {loginOrEmail: login ? login : email!, password: password }
     const authData = {loginOrEmail:loginOrEmail, password: password }
     const authUsers = await UserServices.auth(authData) 
     if (!authUsers) {

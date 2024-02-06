@@ -61,12 +61,6 @@ blogRoute.get(
       return;
     }
     const postsSortData = sortQueryUtils(req.query)
-    // const postsSortData = {
-    //   sortBy: req.query.sortBy ?? "createdAt",
-    //   sortDirection: req.query.sortDirection ?? "desc",
-    //   pageNumber: req.query.pageNumber ? +req.query.pageNumber : 1,
-    //   pageSize: req.query.pageSize ? +req.query.pageSize : 10,
-    // };
     const specificiedBlogPosts = await PostQueryRepository.getAll(postsSortData, blogId);
     res.status(200).send(specificiedBlogPosts);
   }

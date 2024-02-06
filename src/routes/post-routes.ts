@@ -79,38 +79,6 @@ postRoute.post(
   }
 );
 
-// нет такого метода
-postRoute.post(
-  "/:id/posts",
-  authMiddleware,
-  postValidation(),
-  async (req: RequestWithBodyAndParams<Params, RequestInputBlogPostType>, res: Response) => {
-    const blogId = req.params.id;
-    if (!ObjectId.isValid(blogId)) {
-      res.sendStatus(404);
-      return;
-    }
-    const specifiedBlog = await PostQueryRepository.getById(blogId); 
-    if (!specifiedBlog) {
-      res.sendStatus(404);
-      return;
-    }
-    const { title, shortDescription, content } = req.body;
-    const newPostModal = {
-      title: title,
-      shortDescription: shortDescription,
-      content: content,
-      blogId: blogId,
-    };
-    const newPost = await PostServices.create(newPostModal);
-    if (!newPost) {
-      res.sendStatus(404);
-      return;
-    }
-    res.status(201).send(newPost);
-  }
-);
-
 postRoute.put(
   "/:id",
   authMiddleware,
