@@ -1,5 +1,5 @@
 import express, { Router, Request, Response } from "express";
-import { authMiddleware } from "../auth/auth-middleware";
+import { authMiddleware } from "../auth/basicAuth-middleware";
 import { blogValidation } from "../validators/blog-validators";
 import { BlogRepository } from "../repositories/blog-repository";
 import { ObjectId } from "mongodb";

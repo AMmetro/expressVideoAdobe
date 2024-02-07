@@ -1,7 +1,7 @@
 import { RequestWithQuery, RequestWithQueryAndParams } from './../models/common';
 import { Router, Request, Response } from "express";
 import { ObjectId } from "mongodb";
-import { authMiddleware } from "../auth/auth-middleware";
+import { authMiddleware } from "../auth/basicAuth-middleware";
 import { postValidation } from "../validators/post-validators";
 import { PostRepository } from "../repositories/post-repository";
 import { OutputPostType } from "../models/post/output/post.output";

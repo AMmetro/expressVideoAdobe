@@ -5,7 +5,7 @@ import { OutputPostType } from "../models/post/output/post.output";
 import { RequestInputPostType, UpdateInputPostType } from "../models/post/input/updateposts-input-model";
 import { PostDB } from "../models/post/db/post-db";
 import { UpdateInputUserType } from "../models/user/input/updateUser-input-model";
-import { UserDB, UserModel } from "../models/user/db/user-db";
+import { UserDB } from "../models/user/db/user-db";
 
 export class UserRepository {
 

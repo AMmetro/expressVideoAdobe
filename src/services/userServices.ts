@@ -1,4 +1,4 @@
-import { ObjectId, SortDirection } from "mongodb";
+import {WithId} from 'mongodb'
 import { OutputPostType } from "./../models/post/output/post.output";
 import { PostDB } from "../models/post/db/post-db";
 import {
@@ -20,7 +20,7 @@ import { OutputBlogType } from "../models/blog/output/blog.output";
 import { postMapper } from "../models/post/mapper/post-mapper";
 import { RequestInputUserType } from "../models/user/input/updateUser-input-model";
 import { OutputUserType } from "../models/user/output/user.output";
-import { UserDB, UserModel } from "../models/user/db/user-db";
+import { UserDB } from "../models/user/db/user-db";
 import { UserRepository } from "../repositories/user-repository";
 import { UserQueryRepository } from "../repositories/user.query-repository";
 import {
@@ -28,6 +28,7 @@ import {
   AuthUserInputModel,
 } from "../models/user/input/authUser-input-model";
 import bcrypt from "bcrypt";
+import { userMapper } from "../models/user/mapper/user-mapper";
 
 export class UserServices {
   static async _generateHash(password: string, paswordSalt: string) {
@@ -67,8 +68,8 @@ export class UserServices {
     return isUserDeleted;
   }
 
-  static async auth(authUserData: AuthUserFindModel): Promise<boolean | null> {
-    const user = await UserQueryRepository.getOneForAuth(authUserData);
+  static async checkCredentials(authUserData: AuthUserFindModel): Promise<OutputUserType | null> {
+    const user: WithId<UserDB> | null = await UserQueryRepository.getOneForAuth(authUserData);
     if (!user){
       return null
     }
@@ -76,6 +77,6 @@ export class UserServices {
     if ((user.passwordHash !== requestedPasswordHash) || !user){
       return null
     }
-    return true;
+    return userMapper(user);
   }
 }

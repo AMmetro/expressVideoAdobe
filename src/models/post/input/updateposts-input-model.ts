@@ -15,11 +15,6 @@ export type UpdateInputPostType = RequestInputPostType & {
   createdAt: string;
 };
 
-// export type RequestCreatePostFromBlogInputType = Omit<
-//   RequestInputPostType,
-//   "blogId"
-// >;
-
 export type postsSortDataType = {
   sortBy: string;
   sortDirection: SortDirection;

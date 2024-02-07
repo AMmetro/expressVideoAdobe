@@ -6,7 +6,6 @@ import { UserDB } from '../models/user/db/user-db';
 
 dotenv.config()
 // const mongoURI = process.env.MONGO_URL || "mongodb://0.0.0.0:27017"; 
-// const
 const mongoURI = process.env.MONGO_URL; 
 if (!mongoURI){
     throw new Error ("No URL for MongoDB conection")

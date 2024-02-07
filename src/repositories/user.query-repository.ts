@@ -88,7 +88,7 @@ export class UserQueryRepository {
 
   static async getOneForAuth(
     authUserModel: AuthUserFindModel
-  ): Promise<UserDB | null> {
+  ): Promise<WithId<UserDB> | null> {
     const { loginOrEmail } = authUserModel;
     const filter = {
       $or: [
