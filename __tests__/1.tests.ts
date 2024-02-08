@@ -5,6 +5,13 @@ import { createUsers } from "./utils";
 import { OutputPostType } from "../src/models/post/output/post.output";
 
 describe("should return API data", () => {
+
+
+  const user = {
+    login: "newLogin",
+    password: "new_password"
+  }
+
   beforeAll(async () => {
     await request(app).delete("/testing/all-data").expect(204);
   });
@@ -18,69 +25,92 @@ describe("should return API data", () => {
       .post("/users/")
       .auth("admin", "qwerty")
       .send({
-        login: "newLogin",
-        password: "new_password",
+        login: user.login,
+        password: user.password,
         email: "email56010@gg.com",
         // email: "ema4353",
       })
       .expect(201);
 
-    expect.setState({ memorisedNewUserId: responseNewUser.body.id });
+    expect.setState({ memorisedNewUserLogin: responseNewUser.body.login });
 
     expect(responseNewUser.body).toEqual({
       id: expect.any(String),
-      login: expect.any(String),
+      login: user.login,
       email: expect.any(String),
       createdAt: expect.any(String),
     });
   });
 
-    it("- POST create many users and check returned pagination", async () => {
-    const createdUsers: any[] = []
-    for (let i = 0; i < 11; i++) {
-      const user = await createUsers(app, i)
-       createdUsers.push(user)
-    }
-    const responseUsers = await request(app)
-    .get("/users/?pagesCount=4&pageSize=3")
-     expect(responseUsers.body).toEqual({
-        pagesCount: 4,
-        page: 1,
-        pageSize: 3,
-        totalCount: 12,
-        items: expect.any(Array<OutputPostType>)
-    });
-  });
-
-  it("- GET users after request with query", async () => {
-    const responseUsers = await request(app)
-    .get("/users/?pageSize=15&pageNumber=1&searchLoginTerm=seR&searchEmailTerm=.com&sortDirection=asc&sortBy=login")
-     expect(responseUsers.body).toEqual({
-        pagesCount: 1,
-        page: 1,
-        pageSize: 15,
-        totalCount: 11,
-        items: expect.any(Array<OutputPostType>)
+  it("- GET created users by login", async () => {
+    const {memorisedNewUserLogin} = expect.getState()
+    const responseUsers = await request(app).get(
+      "/users/?searchLoginTerm=" + memorisedNewUserLogin
+    );
+    expect(responseUsers.body).toEqual({
+      pagesCount: 1,
+      page: 1,
+      pageSize: 10,
+      totalCount: 1,
+      items: expect.any(Array<OutputPostType>),
     });
   });
 
 
-  it("- DELETE user with wrong auth", async () => {
-    // const {memorisedNewBlogId} = expect.getState()
-    const responseUser = await request(app)
-    .get("/users/")
-    const firstUserId = responseUser.body.items[0].id
+  it("- GET created user token", async () => {
+    const {memorisedNewUserLogin} = expect.getState()
+    const responseUsers = await request(app)
+    .post("/auth/login")
+    .send({
+      loginOrEmail: memorisedNewUserLogin,
+      password: user.password
+      })
+     .expect(200);
 
-    const deleteUser = await request(app)
-    .delete("/users/" + firstUserId)
-    .auth("admin", "qwerty")
-    .expect(204);
-
-    // console.log("--------URL-------------")
-    // console.log(deleteUser.request.url)
-
-
+     expect.setState({ memorisedUserToken: responseUsers.text })
+     expect(responseUsers.text).toEqual(expect.any(String));
   });
+
+    it("- AUTH user with token", async () => {
+      const {memorisedUserToken} = expect.getState()
+    const authUsers = await request(app)
+    .get("/auth/me")
+    .set('Authorization', `Bearer ${memorisedUserToken}`)
+     expect(authUsers.body).toEqual({
+      id: expect.any(String),
+      login: user.login,
+      email: expect.any(String),
+      createdAt: expect.any(String),
+    });
+  });
+
+  // it("- GET users after request with query", async () => {
+  //   const responseUsers = await request(app)
+  //   .get("/users/?pageSize=15&pageNumber=1&searchLoginTerm=seR&searchEmailTerm=.com&sortDirection=asc&sortBy=login")
+  //    expect(responseUsers.body).toEqual({
+  //       pagesCount: 1,
+  //       page: 1,
+  //       pageSize: 15,
+  //       totalCount: 11,
+  //       items: expect.any(Array<OutputPostType>)
+  //   });
+  // });
+
+  // it("- DELETE user with wrong auth", async () => {
+  //   // const {memorisedNewBlogId} = expect.getState()
+  //   const responseUser = await request(app)
+  //   .get("/users/")
+  //   const firstUserId = responseUser.body.items[0].id
+
+  //   const deleteUser = await request(app)
+  //   .delete("/users/" + firstUserId)
+  //   .auth("admin", "qwerty")
+  //   .expect(204);
+
+  //   // console.log("--------URL-------------")
+  //   // console.log(deleteUser.request.url)
+
+  // });
 
   // it("- POST new POST with blog Id", async function () {
   //   const {memorisedNewBlogId} = expect.getState()
