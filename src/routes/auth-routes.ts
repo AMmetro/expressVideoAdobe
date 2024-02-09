@@ -33,8 +33,8 @@ export const authRoute = Router({});
 authRoute.get(
   "/me", jwtValidationMiddleware,
   async (req: Request, res: Response) => {
-    const user = await UserQueryRepository.getById(req.user!.id)
-    res.status(200).send(user);
+    const me = await UserQueryRepository.getById(req.user!.id)
+    res.status(200).send(me);
   }
 );
 
@@ -52,7 +52,7 @@ authRoute.post(
       res.sendStatus(401);
       return;
     }
-    const token = await jwtServise.createJWT(authUsers)
-    res.status(200).send(token);
+    const accessToken = await jwtServise.createJWT(authUsers)
+    res.status(200).send({accessToken});
   }
 );

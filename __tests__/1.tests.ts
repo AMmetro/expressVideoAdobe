@@ -68,7 +68,7 @@ describe("should return API data", () => {
      .expect(200);
 
      expect.setState({ memorisedUserToken: responseUsers.text })
-     expect(responseUsers.text).toEqual(expect.any(String));
+     expect(responseUsers.body.accessToken).toEqual(expect.any(String));
   });
 
     it("- AUTH user with token", async () => {
