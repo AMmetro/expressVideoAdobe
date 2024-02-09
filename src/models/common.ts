@@ -1,6 +1,7 @@
 import {Request, Response} from 'express';
 
 export type Params = {id:string};
+export type CommentParams = {postId:string};
 export type RequestWithParams<P> = Request<P>;
 export type RequestWithBody<B> = Request<{}, {}, B>;
 export type RequestWithQuery<Q> = Request<{}, {}, {}, Q>;

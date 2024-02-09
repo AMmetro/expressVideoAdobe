@@ -1,4 +1,4 @@
-import { RequestWithQuery, RequestWithQueryAndParams } from './../models/common';
+import { CommentParams, RequestWithQuery, RequestWithQueryAndParams } from './../models/common';
 import { Router, Request, Response } from "express";
 import { ObjectId } from "mongodb";
 import { authMiddleware } from "../auth/basicAuth-middleware";
@@ -20,6 +20,12 @@ import {
 import { PostQueryRepository } from "../repositories/post.query-repository";
 import { PostServices } from "../services/postServices";
 import { QueryPostInputModel } from '../models/blog/input/queryBlog-input-model';
+import { basicSortQuery, sortQueryUtils } from '../utils/sortQeryUtils';
+import { CommentsQueryRepository } from '../repositories/comments.query-repository';
+import { OutputCommentType } from '../models/comments/output/comment.output';
+import { CommentsServices } from '../services/commentsServices';
+import { UserQueryRepository } from '../repositories/user.query-repository';
+import { jwtValidationMiddleware } from '../auth/jwtAuth-middleware';
 
 export const postRoute = Router({});
 
@@ -58,6 +64,29 @@ postRoute.get(
   }
 );
 
+// ------------------------------------------------------------
+postRoute.get(
+  "/:postId/comments",
+  async (
+    req: RequestWithParams<CommentParams>,
+    res: Response
+  ) => {
+    const id = req.params.postId;
+    if (!ObjectId.isValid(id)) {
+      res.sendStatus(404);
+      return;
+    }
+    const basicSortData = basicSortQuery(req.query)
+    const sortData = {  id: id, ...basicSortData}
+    const comment = await CommentsQueryRepository.getAll(sortData);
+    if (!comment) {
+      res.sendStatus(404);
+      return;
+    }
+    res.status(200).send(comment);
+  }
+);
+
 postRoute.post(
   "/",
   authMiddleware,
@@ -76,6 +105,38 @@ postRoute.post(
       return;
     }
     res.status(201).send(newPost);
+  }
+);
+
+// ----------------------------------------------
+postRoute.post(
+  "/:postId/comments",
+  jwtValidationMiddleware,
+  async (
+    req: RequestWithParams<CommentParams>,
+    res: Response
+  ) => {
+    const commentedPostId = req.params.postId;
+    if (!ObjectId.isValid(commentedPostId)) {
+      res.sendStatus(404);
+      return;
+    }
+    const commentedPost = await PostQueryRepository.getById(commentedPostId)
+    if (commentedPost === null) {
+      res.sendStatus(404);
+      return;
+    }
+    const userCommentatorId = req.user!.id
+    const userCommentator = await UserQueryRepository.getById(userCommentatorId)
+    const { newCommentContent } = req.body;
+    const newCommentModal = {newCommentContent, ...userCommentator }
+    // !!!!!!!!!!!!!!!!!!!
+    const postIsUpdated = await CommentsServices.create(newCommentModal);
+    if (!postIsUpdated) {
+      res.sendStatus(404);
+      return;
+    }
+    res.sendStatus(204);
   }
 );
 
