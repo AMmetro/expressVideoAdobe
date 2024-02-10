@@ -26,7 +26,8 @@ export class CommentsQueryRepository {
       pageNumber,
       pageSize,
     } = sortData;
-    let filter = { _id: new ObjectId(id) };
+    // let filter = { _id: new ObjectId(id) };
+    let filter = {};
     
     try {
       const comments: WithId<CommentDB>[] = await commentsCollection

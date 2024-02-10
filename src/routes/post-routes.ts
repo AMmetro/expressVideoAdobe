@@ -74,12 +74,12 @@ postRoute.get(
     }
     const basicSortData = basicSortQuery(req.query);
     const sortData = { id: postId, ...basicSortData };
-    const comment = await CommentsQueryRepository.getAll(sortData);
-    if (!comment) {
+    const comments = await CommentsQueryRepository.getAll(sortData);
+    if (!comments) {
       res.sendStatus(404);
       return;
     }
-    res.status(200).send(comment);
+    res.status(200).send(comments);
   }
 );
 
