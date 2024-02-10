@@ -14,7 +14,8 @@ import { OutputCommentType } from '../models/comments/output/comment.output';
 import { jwtValidationMiddleware } from '../auth/jwtAuth-middleware';
 import { CommentsServices } from '../services/commentsServices';
 import { ResultCode } from '../validators/error-validators';
-import { sendCustomError, sendCustomResponse } from '../utils/sendResponse';
+import { sendCustomError } from '../utils/sendResponse';
+import { commentValidation } from '../validators/comment-validators';
 
 export const commentsRoute = Router({});
 
@@ -35,6 +36,28 @@ commentsRoute.get(
       return;
     }
     res.status(200).send(comment);
+  }
+);
+
+commentsRoute.put(
+  "/:commentId",
+  jwtValidationMiddleware,
+  commentValidation(),
+  async (
+    req: RequestWithParams<Params>,
+    res: Response
+  ) => {
+    const updateCommentId = req.params.id;
+    const updaterUserId = req.user!.id;
+    const updateContent = req.body.content;
+    if (!ObjectId.isValid(updateCommentId)) {
+      res.sendStatus(404);
+      return;
+    }
+    const result = await CommentsServices.update(updateCommentId, updateContent, updaterUserId );
+    if (result.status === ResultCode.Success){
+      res.status(204);}
+      else {sendCustomError(res, result)}
   }
 );
 

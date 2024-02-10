@@ -26,7 +26,7 @@ import { CommentsServices } from "../services/commentsServices";
 import { jwtValidationMiddleware } from "../auth/jwtAuth-middleware";
 import { commentValidation } from "../validators/comment-validators";
 import { ResultCode } from "../validators/error-validators";
-import { sendCustomError, sendCustomResponse } from "../utils/sendResponse";
+import { sendCustomError } from "../utils/sendResponse";
 
 export const postRoute = Router({});
 
@@ -67,13 +67,13 @@ postRoute.get(
 postRoute.get(
   "/:postId/comments",
   async (req: RequestWithParams<CommentParams>, res: Response) => {
-    const id = req.params.postId;
-    if (!ObjectId.isValid(id)) {
+    const postId = req.params.postId;
+    if (!ObjectId.isValid(postId)) {
       res.sendStatus(404);
       return;
     }
     const basicSortData = basicSortQuery(req.query);
-    const sortData = { id: id, ...basicSortData };
+    const sortData = { id: postId, ...basicSortData };
     const comment = await CommentsQueryRepository.getAll(sortData);
     if (!comment) {
       res.sendStatus(404);

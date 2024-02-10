@@ -18,35 +18,25 @@ export class CommentRepository {
     } 
   }
 
-  // static async getById(id: string): Promise<OutputBlogType | null> {
-  //   const blog = await blogsCollection.findOne({ _id: new ObjectId(id)});
-  //   if (!blog) {
-  //     return null;
-  //   }
-  //   return blogMapper(blog);
-  // }
-
-  // static async update(
-  //   updatedBlogId: string,
-  //   updatedBlogData: UpdateBlogType 
-  // ): Promise<Boolean> { 
-  //   try { 
-  //     const blogForUpd = await blogsCollection.updateOne(
-  //       { _id: new ObjectId(updatedBlogId) },
-  //       {
-  //         $set: {
-  //           name: updatedBlogData.name,
-  //           description: updatedBlogData.description,
-  //           websiteUrl: updatedBlogData.websiteUrl,
-  //         },
-  //       }
-  //     );
-  //     return !!blogForUpd.matchedCount;
-  //   } catch (e) {
-  //     console.log(e);
-  //     return false;
-  //   }
-  // }
+  static async update(
+    updatedCommentId: string,
+    updateContent: string 
+  ): Promise<Boolean> { 
+    try { 
+      const commentForUpd = await commentsCollection.updateOne(
+        { _id: new ObjectId(updatedCommentId) },
+        {
+          $set: {
+            content: updateContent,
+          },
+        }
+      );
+      return !!commentForUpd.matchedCount;
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
+  }
 
   static async delete(deleteCommentId: string): Promise<Boolean> {
     const commentForDelete = await commentsCollection.deleteOne({

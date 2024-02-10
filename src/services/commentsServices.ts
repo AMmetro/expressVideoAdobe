@@ -48,7 +48,6 @@ export class CommentsServices {
         errorMessage: "Not found post with id " + commentedPostId,
         }
     }
-
     const commentatorInfo = await UserQueryRepository.getById(userCommentatorId);
     if (commentatorInfo === null) {
       return {
@@ -56,7 +55,6 @@ export class CommentsServices {
         errorMessage: "Not found user with id " + userCommentatorId,
         }
     }
-
     const newCommentModal = {
       content: content,
       commentatorInfo: {
@@ -65,7 +63,6 @@ export class CommentsServices {
       },
       createdAt: new Date().toISOString(),
     };
-   
     const createdCommentId = await CommentRepository.create(newCommentModal);
       if (!createdCommentId) {
       return {
@@ -86,6 +83,33 @@ export class CommentsServices {
     }
   }
 
+  static async update(updateCommentId:string, updateContent:string, updaterUserId:string): Promise<ResultCommentType> {
+    const commentForUpdate = await CommentsQueryRepository.getById(updateCommentId);
+    if (commentForUpdate === null) {
+     return {
+      status: ResultCode.NotFound,
+        errorMessage: "Not found comment with id " + updateCommentId,
+        }
+    }
+    if (commentForUpdate.commentatorInfo.userId !== updaterUserId){
+      return {
+        status: ResultCode.Forbidden,
+        errorMessage: "You try update the comment that is not your own",
+        }
+      }
+    const commentIsUpdate = await CommentRepository.update(updateCommentId, updateContent );
+    if (!commentIsUpdate){
+      return {
+        status: ResultCode.ServerError,
+        errorMessage: "Service temporarily unavailable"
+        }
+    }
+    return {
+      status: ResultCode.Success,
+      data: commentIsUpdate
+    }
+  }
+
   static async delete(deleteCommentId:string, removerId:string): Promise<ResultCommentType> {
     const commentForDelete = await CommentsQueryRepository.getById(deleteCommentId);
     if (commentForDelete === null) {
@@ -94,14 +118,12 @@ export class CommentsServices {
         errorMessage: "Not found comment with id " + deleteCommentId,
         }
     }
-
     if (commentForDelete.commentatorInfo.userId !== removerId){
       return {
         status: ResultCode.Forbidden,
         errorMessage: "You try delete the comment that is not your own",
         }
       }
-
     const commentIsDelete = await CommentRepository.delete(deleteCommentId);
     if (!commentIsDelete){
       return {
