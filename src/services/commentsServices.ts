@@ -32,7 +32,7 @@ import { userMapper } from "../models/user/mapper/user-mapper";
 import { CommentDB } from '../models/comments/db/comment-db';
 import { CommentRepository } from '../repositories/comment-repository';
 import { CommentsQueryRepository } from '../repositories/comments.query-repository';
-import { OutputCommentType } from '../models/comments/output/comment.output';
+import { OutputCommentType, ResultCommentType } from '../models/comments/output/comment.output';
 import { ResultCode } from '../validators/error-validators';
 
 export class CommentsServices {
@@ -40,7 +40,7 @@ export class CommentsServices {
   static async create(
     commentedPostId:string, userCommentatorId:string, content:string
     // newCommentModal: CommentDB
-  ): Promise<OutputCommentType | null |any > {
+  ): Promise<ResultCommentType> {
 
     const commentedPost = await PostQueryRepository.getById(commentedPostId);
     if (commentedPost === null) {
@@ -69,13 +69,18 @@ export class CommentsServices {
    
     const createdCommentId = await CommentRepository.create(newCommentModal);
       if (!createdCommentId) {
-      //  return null;
       return {
         status: ResultCode.NotFound,
         errorMessage: "Creating comment error"
         }
     }
     const createdComment = await CommentsQueryRepository.getById(createdCommentId);
+    if (!createdComment) {
+      return {
+        status: ResultCode.ServerError,
+        errorMessage: "Service temporarily unavailable"
+        }
+    }
     return {
       status: ResultCode.Success,
       data: createdComment

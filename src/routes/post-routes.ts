@@ -33,12 +33,15 @@ export const postRoute = Router({});
 postRoute.get(
   "/",
   async (req: RequestWithQuery<QueryPostInputModel>, res: Response) => {
-    const postsRequestsSortData = {
-      sortBy: req.query.sortBy ?? "createdAt",
-      sortDirection: req.query.sortDirection ?? "desc",
-      pageNumber: req.query.pageNumber ? +req.query.pageNumber : 1,
-      pageSize: req.query.pageSize ? +req.query.pageSize : 10,
-    };
+
+    const postsRequestsSortData = basicSortQuery(req.query)
+
+    // const postsRequestsSortData = {
+    //   sortBy: req.query.sortBy ?? "createdAt",
+    //   sortDirection: req.query.sortDirection ?? "desc",
+    //   pageNumber: req.query.pageNumber ? +req.query.pageNumber : 1,
+    //   pageSize: req.query.pageSize ? +req.query.pageSize : 10,
+    // };
     const posts = await PostQueryRepository.getAll(postsRequestsSortData);
     if (!posts) {
       res.status(404);
@@ -125,63 +128,19 @@ postRoute.post(
     }
 
     const result = await CommentsServices.create(commentedPostId, userCommentatorId, content );
-
-
-    // const commentedPost = await PostQueryRepository.getById(commentedPostId);
-
-    // if (commentedPost === null) {
-    //   res.sendStatus(404);
-    //   return;
-    //   // {
-    //   //   code: ResultCode.NotFound,
-    //   //   errorMessage: "Not found post with id " + commentedPostId,
-    //   //   }
-    // }
- 
-
-    // const commentatorInfo = await UserQueryRepository.getById(userCommentatorId);
-
-    // if (commentatorInfo === null) {
-    //   res.sendStatus(404);
-    //   return;
-    //   // {
-    //   //   code: ResultCode.NotFound,
-    //   //   errorMessage: "Not found user with id " + userCommentatorId,
-    //   //   }
-    // }
-
-    // const newCommentModal = {
-    //   content: req.body.content,
-    //   commentatorInfo: {
-    //     userId: commentatorInfo.id,
-    //     userLogin: commentatorInfo.login,
-    //   },
-    //   createdAt: new Date().toISOString(),
-    // };
-    // const newComment = await CommentsServices.create(newCommentModal);
-
-    if (!result) {
-      res.sendStatus(404);
-      return;
-      // {
-      //   code: ResultCode.NotFound,
-      //   errorMessage: "Error of creating comment 
-      //  }
-    }
-
     if (result.status === ResultCode.Success){
       res.status(201).send(result.data);
     }else if (result.status === ResultCode.NotFound){
-        // res.sendStatus(403);
         res.status(404).send(`${result.errorMessage}`);
       return;
     }else if (result.status === ResultCode.Forbidden){
-      // res.sendStatus(403);
       res.status(403).send(`${result.errorMessage}`);
+      return;
+    }else if (result.status === ResultCode.ServerError){
+      res.status(503).send(`${result.errorMessage}`);
       return;
     }
 
-    // res.status(201).send(createdComment);
   }
 );
 
