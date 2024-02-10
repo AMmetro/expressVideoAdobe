@@ -20,7 +20,7 @@ import {
 import { PostQueryRepository } from "../repositories/post.query-repository";
 import { PostServices } from "../services/postServices";
 import { QueryPostInputModel } from "../models/blog/input/queryBlog-input-model";
-import { basicSortQuery, sortQueryUtils } from "../utils/sortQeryUtils";
+import { basicSortQuery } from "../utils/sortQeryUtils";
 import { CommentsQueryRepository } from "../repositories/comments.query-repository";
 import { CommentsServices } from "../services/commentsServices";
 import { UserQueryRepository } from "../repositories/user.query-repository";
@@ -33,15 +33,7 @@ export const postRoute = Router({});
 postRoute.get(
   "/",
   async (req: RequestWithQuery<QueryPostInputModel>, res: Response) => {
-
     const postsRequestsSortData = basicSortQuery(req.query)
-
-    // const postsRequestsSortData = {
-    //   sortBy: req.query.sortBy ?? "createdAt",
-    //   sortDirection: req.query.sortDirection ?? "desc",
-    //   pageNumber: req.query.pageNumber ? +req.query.pageNumber : 1,
-    //   pageSize: req.query.pageSize ? +req.query.pageSize : 10,
-    // };
     const posts = await PostQueryRepository.getAll(postsRequestsSortData);
     if (!posts) {
       res.status(404);
@@ -49,6 +41,7 @@ postRoute.get(
     }
     res.status(200).send(posts);
   }
+
 );
 
 postRoute.get(

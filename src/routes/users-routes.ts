@@ -1,24 +1,12 @@
-import express, { Router, Request, Response } from "express";
+import { Router, Response } from "express";
 import { authMiddleware } from "../auth/basicAuth-middleware";
-import { blogValidation } from "../validators/blog-validators";
-import { BlogRepository } from "../repositories/blog-repository";
 import { ObjectId } from "mongodb";
-import { OutputBlogType } from "../models/blog/output/blog.output";
-import {
-  InputBlogType,
-  RequestInputBlogType,
-} from "../models/blog/input/updateblog-input-model";
-import { BlogDB } from "../models/blog/db/blog-db";
 import {
   Params,
   RequestWithBody,
-  RequestWithBodyAndParams,
   RequestWithParams,
   RequestWithQuery,
-  ResposesType,
-  RequestWithQueryAndParams,
 } from "../models/common";
-import { BlogServices } from "../services/blogServices";
 import { sortQueryUtils } from "../utils/sortQeryUtils";
 import { UserQueryRepository } from "../repositories/user.query-repository";
 import { userValidation } from "../validators/user-validators";

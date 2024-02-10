@@ -28,14 +28,16 @@ import { BlogServices } from "../services/blogServices";
 import { OutputPostType } from "../models/post/output/post.output";
 import { PostServices } from "../services/postServices";
 import { createPostFromBlogValidation, postValidation } from "../validators/post-validators";
-import { sortQueryUtils } from "../utils/sortQeryUtils";
+import { basicSortQuery, sortQueryUtils } from "../utils/sortQeryUtils";
 
 export const blogRoute = Router({});
 
 blogRoute.get(
   "/",
   async (req: RequestWithQuery<QueryBlogInputModel>, res: Response) => {
-    const sortData = sortQueryUtils(req.query)
+    // const sortData = sortQueryUtils(req.query)
+    const basicSortData = basicSortQuery(req.query)
+    const sortData = {...basicSortData, searchNameTerm: req.query.searchNameTerm ?? null,}
     const blogs = await BlogQueryRepository.getAll(sortData);
     if (!blogs) {
       res.status(404);
