@@ -120,7 +120,7 @@ postRoute.post(
     }
 
     const result = await CommentsServices.create(commentedPostId, userCommentatorId, content );
-    sendCustomResponse(res, result)
+    // sendCustomResponse(res, result)
     if (result.status === ResultCode.Success){
       res.status(201).send(result.data);
     }else if (result.status === ResultCode.NotFound){
