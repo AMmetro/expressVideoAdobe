@@ -26,6 +26,7 @@ import { CommentsServices } from "../services/commentsServices";
 import { jwtValidationMiddleware } from "../auth/jwtAuth-middleware";
 import { commentValidation } from "../validators/comment-validators";
 import { ResultCode } from "../validators/error-validators";
+import { sendCustomResponse } from "../utils/sendResponse";
 
 export const postRoute = Router({});
 
@@ -119,18 +120,19 @@ postRoute.post(
     }
 
     const result = await CommentsServices.create(commentedPostId, userCommentatorId, content );
-    if (result.status === ResultCode.Success){
-      res.status(201).send(result.data);
-    }else if (result.status === ResultCode.NotFound){
-        res.status(404).send(`${result.errorMessage}`);
-      return;
-    }else if (result.status === ResultCode.Forbidden){
-      res.status(403).send(`${result.errorMessage}`);
-      return;
-    }else if (result.status === ResultCode.ServerError){
-      res.status(503).send(`${result.errorMessage}`);
-      return;
-    }
+    sendCustomResponse(res, result)
+    // if (result.status === ResultCode.Success){
+    //   res.status(201).send(result.data);
+    // }else if (result.status === ResultCode.NotFound){
+    //     res.status(404).send(`${result.errorMessage}`);
+    //   return;
+    // }else if (result.status === ResultCode.Forbidden){
+    //   res.status(403).send(`${result.errorMessage}`);
+    //   return;
+    // }else if (result.status === ResultCode.ServerError){
+    //   res.status(503).send(`${result.errorMessage}`);
+    //   return;
+    // }
 
   }
 );

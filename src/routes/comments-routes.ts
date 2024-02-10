@@ -14,6 +14,7 @@ import { OutputCommentType } from '../models/comments/output/comment.output';
 import { jwtValidationMiddleware } from '../auth/jwtAuth-middleware';
 import { CommentsServices } from '../services/commentsServices';
 import { ResultCode } from '../validators/error-validators';
+import { sendCustomResponse } from '../utils/sendResponse';
 
 export const commentsRoute = Router({});
 
@@ -51,18 +52,19 @@ commentsRoute.delete(
       return;
     }
     const result = await CommentsServices.delete(deleteCommentId, removerId );
-    if (result.status === ResultCode.Success){
-      res.status(204);
-    }else if (result.status === ResultCode.NotFound){
-        res.status(404).send(`${result.errorMessage}`);
-      return;
-    }else if (result.status === ResultCode.Forbidden){
-      res.status(403).send(`${result.errorMessage}`);
-      return;
-    }else if (result.status === ResultCode.ServerError){
-      res.status(503).send(`${result.errorMessage}`);
-      return;
-    }
+    sendCustomResponse(res, result)
+  //   if (result.status === ResultCode.Success){
+  //     res.status(204);
+  //   }else if (result.status === ResultCode.NotFound){
+  //       res.status(404).send(`${result.errorMessage}`);
+  //     return;
+  //   }else if (result.status === ResultCode.Forbidden){
+  //     res.status(403).send(`${result.errorMessage}`);
+  //     return;
+  //   }else if (result.status === ResultCode.ServerError){
+  //     res.status(503).send(`${result.errorMessage}`);
+  //     return;
+  //   }
   }
 );
 

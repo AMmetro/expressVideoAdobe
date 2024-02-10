@@ -8,7 +8,7 @@ const settings = { JWT_SECRET: process.env.JWT_SECRET || "123" };
 export const jwtServise = {
   async createJWT(user: OutputUserType) {
     const token = jwt.sign({ userId: user.id }, settings.JWT_SECRET, {
-      expiresIn: "1d",
+      expiresIn: "24h",
     });
     return token
 //     return {
