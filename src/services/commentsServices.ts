@@ -30,32 +30,35 @@ import {
 import bcrypt from "bcrypt";
 import { userMapper } from "../models/user/mapper/user-mapper";
 import { CommentDB } from '../models/comments/db/comment-db';
+import { CommentRepository } from '../repositories/comment-repository';
+import { CommentsQueryRepository } from '../repositories/comments.query-repository';
+import { OutputCommentType } from '../models/comments/output/comment.output';
 
 export class CommentsServices {
 
   static async create(
     newCommentModal: CommentDB
-  ): Promise<OutputUserType | null> {
+  ): Promise<OutputCommentType | null> {
     // const { content, userId, userLogin } = newCommentModal;
 
-    const newComment: CommentDB = {
-      content: newCommentModal.content,
-      commentatorInfo: {
-        userId: newCommentModal.content.userId,
-        userLogin: newCommentModal.content.userLogin,
-      },
-      createdAt: new Date().toISOString(),
-    };
+    // const newComment: CommentDB = {
+    //   content: newCommentModal.content,
+    //   commentatorInfo: {
+    //     userId: newCommentModal.content.userId,
+    //     userLogin: newCommentModal.content.userLogin,
+    //   },
+    //   createdAt: new Date().toISOString(),
+    // };
 
-    const newUserId = await UserRepository.create(newUserModal);
-    if (!newUserId) {
+    const createdCommentId = await CommentRepository.create(newCommentModal);
+    if (!createdCommentId) {
       return null;
     }
-    const createdUser = await UserQueryRepository.getById(newUserId);
-    if (!createdUser) {
+    const createdComment = await CommentsQueryRepository.getById(createdCommentId);
+    if (!createdComment) {
       return null;
     }
-    return createdUser;
+    return createdComment;
   }
 
   // static async delete(id: string): Promise<Boolean | null> {
