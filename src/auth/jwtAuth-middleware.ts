@@ -7,7 +7,7 @@ import { UserQueryRepository } from "../repositories/user.query-repository";
 export const jwtValidationMiddleware =async (req: Request, res: Response, next: NextFunction )=> {
     if (!req.headers.authorization){
         res.send(401)
-        return
+        return 
      }
      const token = req.headers.authorization.split(" ")[1]
 

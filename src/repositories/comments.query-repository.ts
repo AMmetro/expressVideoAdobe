@@ -10,16 +10,18 @@ import { CommentDB } from "../models/comments/db/comment-db";
 import { commentMapper } from "../models/comments/mapper/comment-mapper";
 import { OutputCommentType } from "../models/comments/output/comment.output";
 import { OutputBasicSortQueryType } from "../utils/sortQeryUtils";
+import { PostQueryRepository } from "./post.query-repository";
 
 
 
 type SortDataType = OutputBasicSortQueryType & { id: string };
 
 export class CommentsQueryRepository {
-  static async getAll(
+  static async getPostComments(
     sortData: SortDataType
   ): Promise<PaginationType<OutputCommentType> | null> {
-        const {
+
+    const { 
       id,
       sortBy,
       sortDirection,
@@ -27,6 +29,10 @@ export class CommentsQueryRepository {
       pageSize,
     } = sortData;
     // let filter = { _id: new ObjectId(id) };
+
+    const postOwner = await PostQueryRepository.getById(id);
+    console.log("postOwner")
+    console.log(postOwner)
     let filter = {};
     
     try {

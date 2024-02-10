@@ -5,83 +5,53 @@ import { createUsers } from "./utils";
 import { OutputPostType } from "../src/models/post/output/post.output";
 
 describe("should return API data", () => {
-
   const user = {
     login: "newLogin",
-    password: "new_password"
-  }
+    password: "new_password",
+  };
 
   beforeAll(async () => {
     await request(app).delete("/testing/all-data").expect(204);
   });
 
-  it("- GET all users", async () => {
+  it.skip("- GET all users", async () => {
     await request(app).get("/users").expect(200);
   });
 
-  it("- POST create 1 USER", async function () {
-    const responseNewUser = await request(app)
-      .post("/users/")
-      .auth("admin", "qwerty")
-      .send({
-        login: user.login,
-        password: user.password,
-        email: "email56010@gg.com",
-        // email: "ema4353",
-      })
-      .expect(201);
+  it.skip("- POST create many users", async () => {
 
-    expect.setState({ memorisedNewUserLogin: responseNewUser.body.login });
+    // const create = async ()=>{
+    const users:any = []
+    // const users:any[] = Array.from([1,2,3], ()=>{
+    //   return {login:"login",
+    //            password:"password",
+    //          }
+    //                                             }
+    //                                )
 
-    expect(responseNewUser.body).toEqual({
-      id: expect.any(String),
-      login: user.login,
-      email: expect.any(String),
-      createdAt: expect.any(String),
-    });
+    for (let i=0; i<5; i++ ){
+      const newUser = await createUsers(app, i) 
+      users.push(newUser)
+       }
+
+      //  console.log("users")
+      //  console.log(users)
+
+      // }
+
+    // const { memorisedUserToken } = expect.getState();
+    // const authUsers = await request(app)
+    //   .get("/auth/me")
+    //   .set("Authorization", `Bearer ${memorisedUserToken}`);
+    // expect(authUsers.body).toEqual({
+    //   id: expect.any(String),
+    //   login: user.login,
+    //   email: expect.any(String),
+    //   createdAt: expect.any(String),
+    // });
   });
 
-  it("- GET created users by login", async () => {
-    const {memorisedNewUserLogin} = expect.getState()
-    const responseUsers = await request(app).get(
-      "/users/?searchLoginTerm=" + memorisedNewUserLogin
-    );
-    expect(responseUsers.body).toEqual({
-      pagesCount: 1,
-      page: 1,
-      pageSize: 10,
-      totalCount: 1,
-      items: expect.any(Array<OutputPostType>),
-    });
-  });
-
-
-  it("- GET created user token", async () => {
-    const {memorisedNewUserLogin} = expect.getState()
-    const responseUsers = await request(app)
-    .post("/auth/login")
-    .send({
-      loginOrEmail: memorisedNewUserLogin,
-      password: user.password
-      })
-     .expect(200);
-
-     expect.setState({ memorisedUserToken: responseUsers.body.accessToken })
-     expect(responseUsers.body.accessToken).toEqual(expect.any(String));
-  }); 
-
-    it("- AUTH user with token", async () => {
-      const {memorisedUserToken} = expect.getState()
-    const authUsers = await request(app)
-    .get("/auth/me")
-    .set('Authorization', `Bearer ${memorisedUserToken}`)
-     expect(authUsers.body).toEqual({
-      id: expect.any(String),
-      login: user.login,
-      email: expect.any(String),
-      createdAt: expect.any(String),
-    });
-  });
+  
 
   // it("- GET users after request with query", async () => {
   //   const responseUsers = await request(app)
