@@ -14,7 +14,7 @@ import { OutputCommentType } from '../models/comments/output/comment.output';
 import { jwtValidationMiddleware } from '../auth/jwtAuth-middleware';
 import { CommentsServices } from '../services/commentsServices';
 import { ResultCode } from '../validators/error-validators';
-import { sendCustomResponse } from '../utils/sendResponse';
+import { sendCustomError, sendCustomResponse } from '../utils/sendResponse';
 
 export const commentsRoute = Router({});
 
@@ -52,9 +52,10 @@ commentsRoute.delete(
       return;
     }
     const result = await CommentsServices.delete(deleteCommentId, removerId );
-    sendCustomResponse(res, result)
-  //   if (result.status === ResultCode.Success){
-  //     res.status(204);
+    // sendCustomResponse(res, result)
+    if (result.status === ResultCode.Success){
+      res.status(204);}
+      else {sendCustomError(res, result)}
   //   }else if (result.status === ResultCode.NotFound){
   //       res.status(404).send(`${result.errorMessage}`);
   //     return;
