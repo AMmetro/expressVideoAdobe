@@ -35,9 +35,8 @@ export const blogRoute = Router({});
 blogRoute.get(
   "/",
   async (req: RequestWithQuery<QueryBlogInputModel>, res: Response) => {
-    // const sortData = sortQueryUtils(req.query)
     const basicSortData = basicSortQuery(req.query)
-    const sortData = {...basicSortData, searchNameTerm: req.query.searchNameTerm ?? null,}
+    const sortData = {...basicSortData, searchNameTerm: req.query.searchNameTerm ?? null}
     const blogs = await BlogQueryRepository.getAll(sortData);
     if (!blogs) {
       res.status(404);
@@ -62,8 +61,8 @@ blogRoute.get(
       res.sendStatus(404);
       return;
     }
-    const postsSortData = sortQueryUtils(req.query)
-    const specificiedBlogPosts = await PostQueryRepository.getAll(postsSortData, blogId);
+    const basicSortData = basicSortQuery(req.query)
+    const specificiedBlogPosts = await PostQueryRepository.getAll(basicSortData, blogId);
     res.status(200).send(specificiedBlogPosts);
   }
 );
