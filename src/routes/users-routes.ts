@@ -7,11 +7,10 @@ import {
   RequestWithParams,
   RequestWithQuery,
 } from "../models/common";
-import { basicSortQuery, sortQueryUtils } from "../utils/sortQeryUtils";
+import { basicSortQuery } from "../utils/sortQeryUtils";
 import { UserQueryRepository } from "../repositories/user.query-repository";
 import { userValidation } from "../validators/user-validators";
 import { QueryUserInputModel } from "../models/user/input/queryUser-input-model";
-import { RequestInputPostType } from "../models/post/input/updateposts-input-model";
 import { RequestInputUserType } from "../models/user/input/updateUser-input-model";
 import { UserServices } from "../services/userServices";
 

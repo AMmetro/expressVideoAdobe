@@ -11,6 +11,9 @@ import {
 
 import { CommentsQueryRepository } from '../repositories/comments.query-repository';
 import { OutputCommentType } from '../models/comments/output/comment.output';
+import { jwtValidationMiddleware } from '../auth/jwtAuth-middleware';
+import { CommentsServices } from '../services/commentsServices';
+import { ResultCode } from '../validators/error-validators';
 
 export const commentsRoute = Router({});
 
@@ -34,84 +37,34 @@ commentsRoute.get(
   }
 );
 
-// commentsRoute.post(
-//   "/",
-//   authMiddleware,
-//   postValidation(),
-//   async (req: RequestWithBody<RequestInputPostType>, res: Response) => {
-//     const { title, shortDescription, content, blogId } = req.body;
-//     const newPostModal = {
-//       title: title,
-//       shortDescription: shortDescription,
-//       content: content,
-//       blogId: blogId,
-//     };
-//     const newPost = await PostServices.create(newPostModal);
-//     if (!newPost) {
-//       res.sendStatus(404);
-//       return;
-//     }
-//     res.status(201).send(newPost);
-//   }
-// );
+commentsRoute.delete(
+  "/:id",
+  jwtValidationMiddleware,
+  async (
+    req: RequestWithParams<Params>,
+    res: Response
+  ) => {
+    const deleteCommentId = req.params.id;
+    const removerId = req.user!.id;
+    if (!ObjectId.isValid(deleteCommentId)) {
+      res.sendStatus(404);
+      return;
+    }
+    const result = await CommentsServices.delete(deleteCommentId, removerId );
+    if (result.status === ResultCode.Success){
+      res.status(204);
+    }else if (result.status === ResultCode.NotFound){
+        res.status(404).send(`${result.errorMessage}`);
+      return;
+    }else if (result.status === ResultCode.Forbidden){
+      res.status(403).send(`${result.errorMessage}`);
+      return;
+    }else if (result.status === ResultCode.ServerError){
+      res.status(503).send(`${result.errorMessage}`);
+      return;
+    }
+  }
+);
 
-// commentsRoute.put(
-//   "/:id",
-//   authMiddleware,
-//   postValidation(),
-//   async (
-//     req: RequestWithBodyAndParams<Params, RequestInputPostType>,
-//     res: Response
-//   ) => {
-//     const updatedPostId = req.params.id;
-//     if (!ObjectId.isValid(updatedPostId)) {
-//       res.sendStatus(404);
-//       return;
-//     }
-//     const postForUpdated = await PostQueryRepository.getById(updatedPostId)
-//     if (postForUpdated === null) {
-//       res.sendStatus(404);
-//       return;
-//     }
-//     const { title, shortDescription, content, blogId } = req.body;
-//     const updatedPostModal = {
-//       title: title,
-//       shortDescription: shortDescription,
-//       content: content,
-//       blogId: blogId,
-//     };
-//     const postIsUpdated = await PostServices.update(updatedPostId, updatedPostModal);
-//     if (!postIsUpdated) {
-//       res.sendStatus(404);
-//       return;
-//     }
-//     res.sendStatus(204);
-//   }
-// );
 
-// commentsRoute.delete(
-//   "/:id",
-//   authMiddleware,
-//   async (
-//     req: RequestWithParams<Params>,
-//     res: ResposesType<OutputPostType | null>
-//   ) => {
-//     const deletePostId = req.params.id;
-//     if (!ObjectId.isValid(deletePostId)) {
-//       res.sendStatus(404);
-//       return;
-//     }
-//     const postForDelete = await PostQueryRepository.getById(deletePostId);
-//     if (!postForDelete) {
-//       res.sendStatus(404);
-//       return;
-//     }
-//     const isDeletePost = await PostServices.delete(deletePostId);
-//     // нужно ли перед этм проаерять по айди наличие
-//     if (!isDeletePost) {
-//       res.sendStatus(404);
-//       return;
-//     }
-//     res.sendStatus(204);
-//   }
-// );
+

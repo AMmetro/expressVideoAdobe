@@ -23,7 +23,6 @@ import { QueryPostInputModel } from "../models/blog/input/queryBlog-input-model"
 import { basicSortQuery } from "../utils/sortQeryUtils";
 import { CommentsQueryRepository } from "../repositories/comments.query-repository";
 import { CommentsServices } from "../services/commentsServices";
-import { UserQueryRepository } from "../repositories/user.query-repository";
 import { jwtValidationMiddleware } from "../auth/jwtAuth-middleware";
 import { commentValidation } from "../validators/comment-validators";
 import { ResultCode } from "../validators/error-validators";
@@ -41,7 +40,6 @@ postRoute.get(
     }
     res.status(200).send(posts);
   }
-
 );
 
 postRoute.get(

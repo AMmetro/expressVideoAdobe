@@ -41,7 +41,6 @@ export class CommentsServices {
     commentedPostId:string, userCommentatorId:string, content:string
     // newCommentModal: CommentDB
   ): Promise<ResultCommentType> {
-
     const commentedPost = await PostQueryRepository.getById(commentedPostId);
     if (commentedPost === null) {
      return {
@@ -85,8 +84,38 @@ export class CommentsServices {
       status: ResultCode.Success,
       data: createdComment
     }
-    
   }
+
+  static async delete(deleteCommentId:string, removerId:string): Promise<ResultCommentType> {
+    const commentForDelete = await CommentsQueryRepository.getById(deleteCommentId);
+    if (commentForDelete === null) {
+     return {
+      status: ResultCode.NotFound,
+        errorMessage: "Not found comment with id " + deleteCommentId,
+        }
+    }
+
+    if (commentForDelete.commentatorInfo.userId !== removerId){
+      return {
+        status: ResultCode.Forbidden,
+        errorMessage: "You try delete the comment that is not your own",
+        }
+      }
+
+    const commentIsDelete = await CommentRepository.delete(deleteCommentId);
+    if (!commentIsDelete){
+      return {
+        status: ResultCode.ServerError,
+        errorMessage: "Service temporarily unavailable"
+        }
+    }
+    return {
+      status: ResultCode.Success,
+      data: commentIsDelete
+    }
+  }
+
+
 
 
 }

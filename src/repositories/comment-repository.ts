@@ -48,11 +48,11 @@ export class CommentRepository {
   //   }
   // }
 
-  static async delete(deleteBlogId: string): Promise<Boolean> {
-    const blogForDelete = await blogsCollection.deleteOne({
-      _id: new ObjectId(deleteBlogId),
+  static async delete(deleteCommentId: string): Promise<Boolean> {
+    const commentForDelete = await commentsCollection.deleteOne({
+      _id: new ObjectId(deleteCommentId),
     });
 
-     return !!blogForDelete.deletedCount;
+     return !!commentForDelete.deletedCount;
   }
 }

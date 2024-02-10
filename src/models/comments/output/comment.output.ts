@@ -10,5 +10,5 @@ export type OutputCommentType = {
 export type ResultCommentType = {
   status: string,
   errorMessage?: string,
-  data?: OutputCommentType,
+  data?: OutputCommentType | Boolean,
   };
