@@ -1,26 +1,14 @@
 import { RequestWithQuery, RequestWithQueryAndParams } from './../models/common';
 import { Router, Request, Response } from "express";
 import { ObjectId } from "mongodb";
-import { authMiddleware } from "../auth/basicAuth-middleware";
-import { postValidation } from "../validators/post-validators";
-import { PostRepository } from "../repositories/post-repository";
-import { OutputPostType } from "../models/post/output/post.output";
+
 import {
   Params,
-  RequestWithBody,
-  RequestWithBodyAndParams,
   RequestWithParams,
   ResposesType,
 } from "../models/common";
-import {
-  RequestInputBlogPostType,
-  RequestInputPostType,
-  UpdateInputPostType,
-} from "../models/post/input/updateposts-input-model";
-import { PostQueryRepository } from "../repositories/post.query-repository";
-import { PostServices } from "../services/postServices";
-import { QueryPostInputModel } from '../models/blog/input/queryBlog-input-model';
-import { CommentDB } from '../models/comments/db/comment-db';
+
+
 import { CommentsQueryRepository } from '../repositories/comments.query-repository';
 import { OutputCommentType } from '../models/comments/output/comment.output';
 

@@ -5,7 +5,6 @@ import { OutputPostType } from "../models/post/output/post.output";
 import { RequestInputPostType, UpdateInputPostType, postsSortDataType } from "../models/post/input/updateposts-input-model";
 import { PostDB } from "../models/post/db/post-db";
 import { PaginationType } from "../models/common";
-import { OutputBlogType } from "../models/blog/output/blog.output";
 
 export class PostQueryRepository {
 

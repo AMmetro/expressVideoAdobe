@@ -49,7 +49,7 @@ authRoute.post(
     const authData = {loginOrEmail:loginOrEmail, password: password }
     const authUsers = await UserServices.checkCredentials(authData) 
     if (!authUsers) {
-      res.sendStatus(401);
+      res.sendStatus(401); 
       return;
     }
     const accessToken = await jwtServise.createJWT(authUsers)

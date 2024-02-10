@@ -33,48 +33,55 @@ import { CommentDB } from '../models/comments/db/comment-db';
 import { CommentRepository } from '../repositories/comment-repository';
 import { CommentsQueryRepository } from '../repositories/comments.query-repository';
 import { OutputCommentType } from '../models/comments/output/comment.output';
+import { ResultCode } from '../validators/error-validators';
 
 export class CommentsServices {
 
   static async create(
-    newCommentModal: CommentDB
-  ): Promise<OutputCommentType | null> {
-    // const { content, userId, userLogin } = newCommentModal;
+    commentedPostId:string, userCommentatorId:string, content:string
+    // newCommentModal: CommentDB
+  ): Promise<OutputCommentType | null |any > {
 
-    // const newComment: CommentDB = {
-    //   content: newCommentModal.content,
-    //   commentatorInfo: {
-    //     userId: newCommentModal.content.userId,
-    //     userLogin: newCommentModal.content.userLogin,
-    //   },
-    //   createdAt: new Date().toISOString(),
-    // };
+    const commentedPost = await PostQueryRepository.getById(commentedPostId);
+    if (commentedPost === null) {
+     return {
+      status: ResultCode.NotFound,
+        errorMessage: "Not found post with id " + commentedPostId,
+        }
+    }
 
+    const commentatorInfo = await UserQueryRepository.getById(userCommentatorId);
+    if (commentatorInfo === null) {
+      return {
+        status: ResultCode.NotFound,
+        errorMessage: "Not found user with id " + userCommentatorId,
+        }
+    }
+
+    const newCommentModal = {
+      content: content,
+      commentatorInfo: {
+        userId: commentatorInfo.id,
+        userLogin: commentatorInfo.login,
+      },
+      createdAt: new Date().toISOString(),
+    };
+   
     const createdCommentId = await CommentRepository.create(newCommentModal);
-    if (!createdCommentId) {
-      return null;
+      if (!createdCommentId) {
+      //  return null;
+      return {
+        status: ResultCode.NotFound,
+        errorMessage: "Creating comment error"
+        }
     }
     const createdComment = await CommentsQueryRepository.getById(createdCommentId);
-    if (!createdComment) {
-      return null;
+    return {
+      status: ResultCode.Success,
+      data: createdComment
     }
-    return createdComment;
+    
   }
 
-  // static async delete(id: string): Promise<Boolean | null> {
-  //   const isUserDeleted = await UserRepository.delete(id);
-  //   return isUserDeleted;
-  // }
 
-  // static async checkCredentials(authUserData: AuthUserFindModel): Promise<OutputUserType | null> {
-  //   const user: WithId<UserDB> | null = await UserQueryRepository.getOneForAuth(authUserData);
-  //   if (!user){
-  //     return null
-  //   }
-  //   const requestedPasswordHash = await this._generateHash(authUserData.password, user.passwordSalt )
-  //   if ((user.passwordHash !== requestedPasswordHash) || !user){
-  //     return null
-  //   }
-  //   return userMapper(user);
-  // }
 }

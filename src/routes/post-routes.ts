@@ -1,13 +1,11 @@
 import {
   CommentParams,
   RequestWithQuery,
-  RequestWithQueryAndParams,
 } from "./../models/common";
 import { Router, Request, Response } from "express";
 import { ObjectId } from "mongodb";
 import { authMiddleware } from "../auth/basicAuth-middleware";
 import { postValidation } from "../validators/post-validators";
-import { PostRepository } from "../repositories/post-repository";
 import { OutputPostType } from "../models/post/output/post.output";
 import {
   Params,
@@ -17,19 +15,18 @@ import {
   ResposesType,
 } from "../models/common";
 import {
-  RequestInputBlogPostType,
   RequestInputPostType,
-  UpdateInputPostType,
 } from "../models/post/input/updateposts-input-model";
 import { PostQueryRepository } from "../repositories/post.query-repository";
 import { PostServices } from "../services/postServices";
 import { QueryPostInputModel } from "../models/blog/input/queryBlog-input-model";
 import { basicSortQuery, sortQueryUtils } from "../utils/sortQeryUtils";
 import { CommentsQueryRepository } from "../repositories/comments.query-repository";
-import { OutputCommentType } from "../models/comments/output/comment.output";
 import { CommentsServices } from "../services/commentsServices";
 import { UserQueryRepository } from "../repositories/user.query-repository";
 import { jwtValidationMiddleware } from "../auth/jwtAuth-middleware";
+import { commentValidation } from "../validators/comment-validators";
+import { ResultCode } from "../validators/error-validators";
 
 export const postRoute = Router({});
 
@@ -116,39 +113,75 @@ postRoute.post(
 postRoute.post(
   "/:postId/comments",
   jwtValidationMiddleware,
+  commentValidation(),
   async (req: RequestWithParams<CommentParams>, res: Response) => {
     const commentedPostId = req.params.postId;
-    console.log("commentedPostId");
-    console.log(commentedPostId);
+    const userCommentatorId = req.user!.id;
+    const content = req.body.content;
+
     if (!ObjectId.isValid(commentedPostId)) {
       res.sendStatus(404);
       return;
     }
-    const commentedPost = await PostQueryRepository.getById(commentedPostId);
-    if (commentedPost === null) {
+
+    const result = await CommentsServices.create(commentedPostId, userCommentatorId, content );
+
+
+    // const commentedPost = await PostQueryRepository.getById(commentedPostId);
+
+    // if (commentedPost === null) {
+    //   res.sendStatus(404);
+    //   return;
+    //   // {
+    //   //   code: ResultCode.NotFound,
+    //   //   errorMessage: "Not found post with id " + commentedPostId,
+    //   //   }
+    // }
+ 
+
+    // const commentatorInfo = await UserQueryRepository.getById(userCommentatorId);
+
+    // if (commentatorInfo === null) {
+    //   res.sendStatus(404);
+    //   return;
+    //   // {
+    //   //   code: ResultCode.NotFound,
+    //   //   errorMessage: "Not found user with id " + userCommentatorId,
+    //   //   }
+    // }
+
+    // const newCommentModal = {
+    //   content: req.body.content,
+    //   commentatorInfo: {
+    //     userId: commentatorInfo.id,
+    //     userLogin: commentatorInfo.login,
+    //   },
+    //   createdAt: new Date().toISOString(),
+    // };
+    // const newComment = await CommentsServices.create(newCommentModal);
+
+    if (!result) {
       res.sendStatus(404);
       return;
+      // {
+      //   code: ResultCode.NotFound,
+      //   errorMessage: "Error of creating comment 
+      //  }
     }
-    const userCommentatorId = req.user!.id;
-    const commentatorInfo = await UserQueryRepository.getById(userCommentatorId);
-    if (commentatorInfo === null) {
-      res.sendStatus(404);
+
+    if (result.status === ResultCode.Success){
+      res.status(201).send(result.data);
+    }else if (result.status === ResultCode.NotFound){
+        // res.sendStatus(403);
+        res.status(404).send(`${result.errorMessage}`);
+      return;
+    }else if (result.status === ResultCode.Forbidden){
+      // res.sendStatus(403);
+      res.status(403).send(`${result.errorMessage}`);
       return;
     }
-    const newCommentModal = {
-      content: req.body.content,
-      commentatorInfo: {
-        userId: commentatorInfo.id,
-        userLogin: commentatorInfo.login,
-      },
-      createdAt: new Date().toISOString(),
-    };
-    const newComment = await CommentsServices.create(newCommentModal);
-    if (!newComment) {
-      res.sendStatus(404);
-      return;
-    }
-    res.status(201).send(newComment);
+
+    // res.status(201).send(createdComment);
   }
 );
 
@@ -215,3 +248,5 @@ postRoute.delete(
     res.sendStatus(204);
   }
 );
+
+
