@@ -36,7 +36,7 @@ export class CommentsQueryRepository {
         .skip((pageNumber - 1) * pageSize)
         .limit(pageSize)
         .toArray();
-      const totalCount = await usersCollection.countDocuments(filter);
+      const totalCount = await commentsCollection.countDocuments(filter);
       const pagesCount = Math.ceil(totalCount / pageSize);
 
       return {
