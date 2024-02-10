@@ -20,7 +20,10 @@ usersRoute.get(
   "/",
   async (req: RequestWithQuery<QueryUserInputModel>, res: Response) => {
     const basicSortData = basicSortQuery(req.query)
-    const sortData = {...basicSortData, searchEmailTerm: req.query.searchEmailTerm ?? null}
+    const sortData = {...basicSortData,
+       searchEmailTerm: req.query.searchEmailTerm ?? null,
+       searchLoginTerm: req.query.searchLoginTerm ?? null,
+      }
     const users = await UserQueryRepository.getAll(sortData);
     if (!users) {
       res.status(404);
