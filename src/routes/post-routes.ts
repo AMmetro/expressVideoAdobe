@@ -121,18 +121,18 @@ postRoute.post(
 
     const result = await CommentsServices.create(commentedPostId, userCommentatorId, content );
     sendCustomResponse(res, result)
-    // if (result.status === ResultCode.Success){
-    //   res.status(201).send(result.data);
-    // }else if (result.status === ResultCode.NotFound){
-    //     res.status(404).send(`${result.errorMessage}`);
-    //   return;
-    // }else if (result.status === ResultCode.Forbidden){
-    //   res.status(403).send(`${result.errorMessage}`);
-    //   return;
-    // }else if (result.status === ResultCode.ServerError){
-    //   res.status(503).send(`${result.errorMessage}`);
-    //   return;
-    // }
+    if (result.status === ResultCode.Success){
+      res.status(201).send(result.data);
+    }else if (result.status === ResultCode.NotFound){
+        res.status(404).send(`${result.errorMessage}`);
+      return;
+    }else if (result.status === ResultCode.Forbidden){
+      res.status(403).send(`${result.errorMessage}`);
+      return;
+    }else if (result.status === ResultCode.ServerError){
+      res.status(503).send(`${result.errorMessage}`);
+      return;
+    }
 
   }
 );
