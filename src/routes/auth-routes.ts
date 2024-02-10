@@ -12,17 +12,6 @@ import { BlogDB } from "../models/blog/db/blog-db";
 import {
   RequestWithBody,
 } from "../models/common";
-import { QueryBlogInputModel, QueryPostInputModel } from "../models/blog/input/queryBlog-input-model";
-import { BlogQueryRepository } from "../repositories/blog.query-repository";
-import { PostDB } from "../models/post/db/post-db";
-import { RequestInputBlogPostType } from "../models/post/input/updateposts-input-model";
-import { PostRepository } from "../repositories/post-repository";
-import { PostQueryRepository } from "../repositories/post.query-repository";
-import { BlogServices } from "../services/blogServices";
-import { OutputPostType } from "../models/post/output/post.output";
-import { PostServices } from "../services/postServices";
-import { createPostFromBlogValidation, postValidation } from "../validators/post-validators";
-import { sortQueryUtils } from "../utils/sortQeryUtils";
 import { AuthUserInputModel } from "../models/user/input/authUser-input-model";
 import { UserServices } from "../services/userServices";
 import { UserQueryRepository } from "../repositories/user.query-repository";

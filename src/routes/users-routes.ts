@@ -7,7 +7,7 @@ import {
   RequestWithParams,
   RequestWithQuery,
 } from "../models/common";
-import { sortQueryUtils } from "../utils/sortQeryUtils";
+import { basicSortQuery, sortQueryUtils } from "../utils/sortQeryUtils";
 import { UserQueryRepository } from "../repositories/user.query-repository";
 import { userValidation } from "../validators/user-validators";
 import { QueryUserInputModel } from "../models/user/input/queryUser-input-model";
@@ -20,7 +20,8 @@ export const usersRoute = Router({});
 usersRoute.get(
   "/",
   async (req: RequestWithQuery<QueryUserInputModel>, res: Response) => {
-    const sortData = sortQueryUtils(req.query);
+    const basicSortData = basicSortQuery(req.query)
+    const sortData = {...basicSortData, searchEmailTerm: req.query.searchEmailTerm ?? null}
     const users = await UserQueryRepository.getAll(sortData);
     if (!users) {
       res.status(404);

@@ -28,7 +28,7 @@ import { BlogServices } from "../services/blogServices";
 import { OutputPostType } from "../models/post/output/post.output";
 import { PostServices } from "../services/postServices";
 import { createPostFromBlogValidation, postValidation } from "../validators/post-validators";
-import { basicSortQuery, sortQueryUtils } from "../utils/sortQeryUtils";
+import { basicSortQuery } from "../utils/sortQeryUtils";
 
 export const blogRoute = Router({});
 
