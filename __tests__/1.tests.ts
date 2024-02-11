@@ -179,11 +179,7 @@ describe("should return API data", () => {
       it("- PUT update created COMMENT", async function () {
     const {memorisedNewCommentId} = expect.getState()
     const {memorisedUserToken} = expect.getState()
-    const {memorisedNewPostId} = expect.getState()
-
-    console.log("============memorisedNewCommentId==========")
-    console.log(memorisedNewCommentId)
-
+    // const {memorisedNewPostId} = expect.getState()
     const responseUpdatedPost = await request(app)
       .put("/comments/" + memorisedNewCommentId)
       .set('Authorization', `Bearer ${memorisedUserToken}`)

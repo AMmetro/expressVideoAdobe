@@ -50,17 +50,14 @@ commentsRoute.put(
     const updateCommentId = req.params.commentId;
     const updaterUserId = req.user!.id;
     const updateContent = req.body.content;
-    console.log("11111111111")
-    console.log(updateCommentId)
     if (!ObjectId.isValid(updateCommentId)) {
       res.sendStatus(404);
       return;
     }
     const result = await CommentsServices.update(updateCommentId, updateContent, updaterUserId );
-   console.log("rrrrrrrrrr")
-   console.log(result)
     if (result.status === ResultCode.Success){
-      res.status(204);}
+      res.sendStatus(204)
+    }
       else {sendCustomError(res, result)}
   }
 );
