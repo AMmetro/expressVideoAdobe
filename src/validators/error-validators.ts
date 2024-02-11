@@ -3,6 +3,7 @@ export enum ResultCode {
     Success = "Success",
     NotFound = "NotFound",
     Forbidden = "Forbidden",
+    Unauthorised = "Unauthorised",
     ServerError = "ServerError",
 }
 

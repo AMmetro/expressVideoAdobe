@@ -125,7 +125,7 @@ export class CommentsServices {
     }
     if (commentForDelete.commentatorInfo.userId !== removerId){
       return {
-        status: ResultCode.Forbidden,
+        status: ResultCode.Unauthorised,
         errorMessage: "You try delete the comment that is not your own",
         }
       }
