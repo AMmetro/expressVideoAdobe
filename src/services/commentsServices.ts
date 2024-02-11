@@ -98,7 +98,7 @@ export class CommentsServices {
     }
     if (commentForUpdate.commentatorInfo.userId !== updaterUserId){
       return {
-        status: ResultCode.Forbidden,
+        status: ResultCode.Unauthorised,
         errorMessage: "You try update the comment that is not your own",
         }
       }
