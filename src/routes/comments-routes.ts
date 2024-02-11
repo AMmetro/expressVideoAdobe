@@ -16,11 +16,13 @@ import { CommentsServices } from '../services/commentsServices';
 import { ResultCode } from '../validators/error-validators';
 import { sendCustomError } from '../utils/sendResponse';
 import { commentValidation } from '../validators/comment-validators';
+import { authMiddleware } from '../auth/basicAuth-middleware';
 
 export const commentsRoute = Router({});
 
 commentsRoute.get(
   "/:id",
+  authMiddleware,
   async (
     req: RequestWithParams<Params>,
     res: ResposesType<OutputCommentType | null>
