@@ -7,6 +7,7 @@ export type OutputCommentType = {
     };
     createdAt: string;
   };
+
 export type ResultCommentType = {
   status: string,
   errorMessage?: string,

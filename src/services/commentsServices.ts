@@ -34,6 +34,7 @@ import { CommentRepository } from '../repositories/comment-repository';
 import { CommentsQueryRepository } from '../repositories/comments.query-repository';
 import { OutputCommentType, ResultCommentType } from '../models/comments/output/comment.output';
 import { ResultCode } from '../validators/error-validators';
+import { commentMapper } from '../models/comments/mapper/comment-mapper';
 
 export class CommentsServices {
 
@@ -57,6 +58,7 @@ export class CommentsServices {
     }
     const newCommentModal = {
       content: content,
+      postId: commentedPostId,
       commentatorInfo: {
         userId: commentatorInfo.id,
         userLogin: commentatorInfo.login,
@@ -77,6 +79,9 @@ export class CommentsServices {
         errorMessage: "Service temporarily unavailable"
         }
     }
+
+    // const mappedCreatedComment = commentMapper(createdComment)
+
     return {
       status: ResultCode.Success,
       data: createdComment

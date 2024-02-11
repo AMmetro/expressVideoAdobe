@@ -28,12 +28,12 @@ export class CommentsQueryRepository {
       pageNumber,
       pageSize,
     } = sortData;
-    // let filter = { _id: new ObjectId(id) };
+    let filter = { _id: new ObjectId(id) };
 
     const postOwner = await PostQueryRepository.getById(id);
-    console.log("postOwner")
-    console.log(postOwner)
-    let filter = {};
+    // console.log("postOwner")
+    // console.log(postOwner)
+    // let filter = {};
     
     try {
       const comments: WithId<CommentDB>[] = await commentsCollection
@@ -51,6 +51,7 @@ export class CommentsQueryRepository {
         pageSize: pageSize,
         totalCount: totalCount,
         items: comments.map(commentMapper),
+        // items: comments,
       };
     } catch (e) {
       console.log(e);
