@@ -77,8 +77,9 @@ commentsRoute.delete(
     const result = await CommentsServices.delete(deleteCommentId, removerId );
     // sendCustomResponse(res, result)
     if (result.status === ResultCode.Success){
-      res.status(204);}
-      else {sendCustomError(res, result)}
+      res.sendStatus(204)
+    } else {sendCustomError(res, result)}
+
   //   }else if (result.status === ResultCode.NotFound){
   //       res.status(404).send(`${result.errorMessage}`);
   //     return;
