@@ -4,10 +4,13 @@ import { BlogDB } from '../models/blog/db/blog-db';
 import { PostDB } from '../models/post/db/post-db';  
 import { UserDB } from '../models/user/db/user-db';
 import { CommentDB } from '../models/comments/db/comment-db';
+import { appConfig } from '../appConfig';
 
-dotenv.config()
+// dotenv.config()
 // const mongoURI = process.env.MONGO_URL || "mongodb://0.0.0.0:27017"; 
-const mongoURI = process.env.MONGO_URL; 
+// const mongoURI = process.env.MONGO_URL; 
+const mongoURI = appConfig.mongoURI; 
+
 if (!mongoURI){
     throw new Error ("No URL for MongoDB conection")
 }

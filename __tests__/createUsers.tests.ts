@@ -2,7 +2,6 @@ import request from "supertest";
 import { app } from "../src/settings";
 import { client } from "../src/BD/db";
 import { createUsers } from "./utils";
-import { OutputPostType } from "../src/models/post/output/post.output";
 
 describe("should return API data", () => {
   const user = {
@@ -14,11 +13,11 @@ describe("should return API data", () => {
     await request(app).delete("/testing/all-data").expect(204);
   });
 
-  it.skip("- GET all users", async () => {
+  it("- GET all users", async () => {
     await request(app).get("/users").expect(200);
   });
 
-  it.skip("- POST create many users", async () => {
+  it("- POST create many users", async () => {
 
     // const create = async ()=>{
     const users:any = []
