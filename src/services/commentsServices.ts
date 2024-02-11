@@ -98,7 +98,7 @@ export class CommentsServices {
     }
     if (commentForUpdate.commentatorInfo.userId !== updaterUserId){
       return {
-        status: ResultCode.Unauthorised,
+        status: ResultCode.Forbidden,
         errorMessage: "You try update the comment that is not your own",
         }
       }
@@ -125,7 +125,7 @@ export class CommentsServices {
     }
     if (commentForDelete.commentatorInfo.userId !== removerId){
       return {
-        status: ResultCode.Unauthorised,
+        status: ResultCode.Forbidden,
         errorMessage: "You try delete the comment that is not your own",
         }
       }
