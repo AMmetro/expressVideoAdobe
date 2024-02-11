@@ -107,18 +107,17 @@ postRoute.post(
 // ----------------------------------------------
 postRoute.post(
   "/:postId/comments",
+  // "/comments",
   jwtValidationMiddleware,
   commentValidation(),
   async (req: RequestWithParams<CommentParams>, res: Response) => {
     const commentedPostId = req.params.postId;
     const userCommentatorId = req.user!.id;
     const content = req.body.content;
-
     if (!ObjectId.isValid(commentedPostId)) {
       res.sendStatus(404);
       return;
     }
-
     const result = await CommentsServices.create(commentedPostId, userCommentatorId, content );
     // sendCustomResponse(res, result)
     if (result.status === ResultCode.Success){

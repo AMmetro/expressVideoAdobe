@@ -83,17 +83,115 @@ describe("should return API data", () => {
     });
   });
 
-  // it("- GET users after request with query", async () => {
-  //   const responseUsers = await request(app)
-  //   .get("/users/?pageSize=15&pageNumber=1&searchLoginTerm=seR&searchEmailTerm=.com&sortDirection=asc&sortBy=login")
-  //    expect(responseUsers.body).toEqual({
-  //       pagesCount: 1,
-  //       page: 1,
-  //       pageSize: 15,
-  //       totalCount: 11,
-  //       items: expect.any(Array<OutputPostType>)
-  //   });
-  // });
+    it("- POST create new BLOG for created User", async function () {
+    // const {memorisedNewBlogId} = expect.getState()
+    const response = await request(app)
+      .post("/blogs/")
+      .auth("admin", "qwerty")
+      // .set('Authorization', token)
+      .send({
+        name: "blog name",
+        description: "description",
+        websiteUrl: "https://www.someadess.com",
+      })
+      .expect(201)
+      
+      expect(response.body).toEqual({
+        id: expect.any(String),
+        isMembership: false,
+        description: expect.any(String),
+        name: expect.any(String),
+        websiteUrl: expect.any(String),
+        createdAt: expect.any(String),
+      });
+
+      expect.setState({ memorisedNewBlogId: response.body.id });
+
+  });
+
+    it("- POST create new POST for created BLOG", async function () {
+    const {memorisedNewBlogId} = expect.getState()
+    const response = await request(app)
+      .post("/posts/")
+      .auth("admin", "qwerty")
+      // .set('Authorization', token)
+      .send({
+        title: "title",
+        shortDescription: "shortDescription",
+        content: "content",
+        blogId: memorisedNewBlogId,
+      })
+      .expect(201);
+
+      expect(response.body).toEqual({
+        blogId: expect.any(String),
+        blogName: expect.any(String),
+        content: expect.any(String),
+        id: expect.any(String),
+        shortDescription: expect.any(String),
+        title: expect.any(String),
+        createdAt: expect.any(String),
+      });
+      expect.setState({ memorisedNewPostId: response.body.id });
+      expect.setState({ memorisedNewBlogId: response.body.blogId });
+  });
+
+    it("- GET created POST", async function () {
+    const {memorisedNewBlogId} = expect.getState()
+    const {memorisedNewPostId} = expect.getState()
+    const responseNewPost = await request(app)
+      .get("/posts/" + memorisedNewPostId)
+      .expect(200)
+
+      expect(responseNewPost.body).toEqual({
+        title: "title",
+        shortDescription: "shortDescription",
+        content: "content",
+        blogId: `${memorisedNewBlogId}`,
+        createdAt: expect.any(String),
+        blogName: "blog name",
+        id: expect.any(String),
+      });
+    });
+
+    it("- POST create new COMMENT for created POST", async function () {
+      const {memorisedNewPostId} = expect.getState()
+      const {memorisedUserToken} = expect.getState()
+      const response = await request(app)
+        .post("/posts/" + memorisedNewPostId + "/comments/")
+        .set('Authorization', `Bearer ${memorisedUserToken}`)
+        .send({
+          content: "comment content > 20 symbol",
+        })
+        .expect(201);
+        expect(response.body).toEqual({
+           commentatorInfo: {
+               userId: expect.any(String),
+               userLogin: expect.any(String),
+               },
+            content: expect.any(String),
+            createdAt: expect.any(String),
+            id: expect.any(String),
+        });
+        expect.setState({ memorisedNewCommentId: response.body.id });
+    });
+
+      it("- PUT update created COMMENT", async function () {
+    const {memorisedNewCommentId} = expect.getState()
+    const {memorisedUserToken} = expect.getState()
+    const {memorisedNewPostId} = expect.getState()
+
+    console.log("============memorisedNewCommentId==========")
+    console.log(memorisedNewCommentId)
+
+    const responseUpdatedPost = await request(app)
+      .put("/comments/" + memorisedNewCommentId)
+      .set('Authorization', `Bearer ${memorisedUserToken}`)
+      .send({
+        content: "updated content updated",
+      })
+      .expect(204);
+    })
 
   // it("- DELETE user with wrong auth", async () => {
   //   // const {memorisedNewBlogId} = expect.getState()
@@ -128,38 +226,9 @@ describe("should return API data", () => {
   //     expect.setState({memorisedNewPostId:response.body.id})
   // });
 
-  // it("- GET created POST", async function () {
-  //   const {memorisedNewBlogId} = expect.getState()
-  //   const {memorisedNewPostId} = expect.getState()
-  //   const responseNewPost = await request(app)
-  //     .get("/posts/" + memorisedNewPostId)
-  //     .expect(200)
 
-  //     expect(responseNewPost.body).toEqual({
-  //       title: "post title",
-  //       shortDescription: "post shortDescription",
-  //       content: "content of post",
-  //       blogId: `${memorisedNewBlogId}`,
-  //       createdAt: expect.any(String),
-  //       blogName: "blog name",
-  //       id: expect.any(String),
-  //     });
-  //   });
 
-  // it("- PUT update created POST", async function () {
-  //   const {memorisedNewBlogId} = expect.getState()
-  //   const {memorisedNewPostId} = expect.getState()
-  //   const responseUpdatedPost = await request(app)
-  //     .put("/posts/" + memorisedNewPostId)
-  //     .auth("admin", "qwerty")
-  //     .send({
-  //       title: "updated title",
-  //       shortDescription: "updated shortDescription",
-  //       content: "updated of post",
-  //       blogId: `${memorisedNewBlogId}`
-  //     })
-  //     .expect(204);
-  //   })
+
 
   //   it("- GET updated POST and CHECK", async function () {
   //     const {memorisedNewBlogId} = expect.getState()
