@@ -11,20 +11,15 @@ export const jwtValidationMiddleware =async (req: Request, res: Response, next: 
      }
      const token = req.headers.authorization.split(" ")[1]
 
-     console.log("token")
-     console.log(token)
-
      const userId = await jwtServise.getUserIdByToken(token)
-     console.log("userId")
-     console.log(userId)
      
      if (userId){
         const user = await UserQueryRepository.getById(userId)
-        if (!user){res.send(403)}
+        if (!user){res.send(401)}
         req.user = user
         next()
         return
      }    
-     res.send(403) 
+     res.send(401) 
 }
 
