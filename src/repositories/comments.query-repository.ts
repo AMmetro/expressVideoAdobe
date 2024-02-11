@@ -28,7 +28,7 @@ export class CommentsQueryRepository {
       pageNumber,
       pageSize,
     } = sortData;
-    let filter = { _id: new ObjectId(id) };
+    let filter = { postId: id };
 
     const postOwner = await PostQueryRepository.getById(id);
     // console.log("postOwner")
