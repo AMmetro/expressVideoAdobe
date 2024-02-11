@@ -79,7 +79,9 @@ commentsRoute.delete(
     // sendCustomResponse(res, result)
     if (result.status === ResultCode.Success){
       res.sendStatus(204)
-    } else {sendCustomError(res, result)}
+    } else {
+      sendCustomError(res, result)
+    }
 
   //   }else if (result.status === ResultCode.NotFound){
   //       res.status(404).send(`${result.errorMessage}`);

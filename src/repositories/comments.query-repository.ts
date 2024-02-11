@@ -30,7 +30,7 @@ export class CommentsQueryRepository {
     } = sortData;
     let filter = { postId: id };
 
-    const postOwner = await PostQueryRepository.getById(id);
+    // const postOwner = await PostQueryRepository.getById(id);
     // console.log("postOwner")
     // console.log(postOwner)
     // let filter = {};
