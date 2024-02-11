@@ -19,7 +19,7 @@ export function sendCustomError(res: any, result: any) {
   if (result.status === ResultCode.NotFound) {
     res.status(404).send(`${result.errorMessage}`);
     return;
-  } else if (result.status === ResultCode.Forbidden) {
+  } else if (result.status === ResultCode.Unauthorised) {
     res.status(401).send(`${result.errorMessage}`);
     return;
   } else if (result.status === ResultCode.Forbidden) {
