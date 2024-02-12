@@ -71,14 +71,11 @@ postRoute.get(
       res.sendStatus(404);
       return;
     }
-
-    const postOwner = PostQueryRepository.getById(postId)
+    const postOwner = await PostQueryRepository.getById(postId)
     if (!postOwner) {
       res.sendStatus(404);
       return;
     }
-    // проверить есть ли такой пост
-
     const basicSortData = basicSortQuery(req.query);
     const sortData = { id: postId, ...basicSortData };
     const comments = await CommentsQueryRepository.getPostComments(sortData);
