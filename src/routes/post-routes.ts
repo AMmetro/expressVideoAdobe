@@ -63,7 +63,6 @@ postRoute.get(
   }
 );
 
-// ------------------------------------------------------------
 postRoute.get(
   "/:postId/comments",
   async (req: RequestWithParams<CommentParams>, res: Response) => {
@@ -72,6 +71,14 @@ postRoute.get(
       res.sendStatus(404);
       return;
     }
+
+    const postOwner = PostQueryRepository.getById(postId)
+    if (!postOwner) {
+      res.sendStatus(404);
+      return;
+    }
+    // проверить есть ли такой пост
+
     const basicSortData = basicSortQuery(req.query);
     const sortData = { id: postId, ...basicSortData };
     const comments = await CommentsQueryRepository.getPostComments(sortData);
@@ -104,10 +111,8 @@ postRoute.post(
   }
 );
 
-// ----------------------------------------------
 postRoute.post(
   "/:postId/comments",
-  // "/comments",
   jwtValidationMiddleware,
   commentValidation(),
   async (req: RequestWithParams<CommentParams>, res: Response) => {
@@ -119,7 +124,6 @@ postRoute.post(
       return;
     }
     const result = await CommentsServices.create(commentedPostId, userCommentatorId, content );
-    // sendCustomResponse(res, result)
     if (result.status === ResultCode.Success){
       res.status(201).send(result.data);
     } else {sendCustomError(res, result)}

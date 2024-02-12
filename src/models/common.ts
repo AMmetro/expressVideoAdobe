@@ -9,11 +9,6 @@ export type RequestWithBodyAndParams<P,B> = Request<P, {}, B>;
 export type RequestWithQueryAndParams<P,Q> = Request<P, {}, {}, Q>;
 export type ResposesType<T> = Response<T,{}>;
 
-export const HTTP_RESPONSE_CODE = {
-    SUCCESS:200,
-    CREATED:201,
-}
-
 export type ErrorMessageType = {
     message:string;
     field:string;

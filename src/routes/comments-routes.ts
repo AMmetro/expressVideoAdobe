@@ -1,14 +1,11 @@
 import { RequestWithQuery, RequestWithQueryAndParams } from './../models/common';
 import { Router, Request, Response } from "express";
 import { ObjectId } from "mongodb";
-
 import {
   Params,
   RequestWithParams,
   ResposesType,
 } from "../models/common";
-
-
 import { CommentsQueryRepository } from '../repositories/comments.query-repository';
 import { OutputCommentType } from '../models/comments/output/comment.output';
 import { jwtValidationMiddleware } from '../auth/jwtAuth-middleware';
@@ -16,7 +13,6 @@ import { CommentsServices } from '../services/commentsServices';
 import { ResultCode } from '../validators/error-validators';
 import { sendCustomError } from '../utils/sendResponse';
 import { commentValidation } from '../validators/comment-validators';
-import { authMiddleware } from '../auth/basicAuth-middleware';
 
 export const commentsRoute = Router({});
 
