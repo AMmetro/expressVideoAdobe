@@ -1,6 +1,5 @@
 import { body, param } from "express-validator";
 import { ObjectId } from "mongodb";
-import { BlogRepository } from "../repositories/blog-repository";
 import { inputValidationMiddleware } from "../inputValidation/input-validation-middleware";
 import { blogsCollection } from "../BD/db";
 

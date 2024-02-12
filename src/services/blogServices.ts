@@ -4,8 +4,7 @@ import { RequestInputBlogPostType } from "../models/post/input/updateposts-input
 import { BlogRepository } from "../repositories/blog-repository";
 import { PostRepository } from "../repositories/post-repository";
 import { PostQueryRepository } from "../repositories/post.query-repository";
-import { InputBlogType, RequestInputBlogType, UpdateBlogType } from "../models/blog/input/updateblog-input-model";
-import { blogsCollection } from "../BD/db";
+import { RequestInputBlogType, UpdateBlogType } from "../models/blog/input/updateblog-input-model";
 import { BlogDB } from "../models/blog/db/blog-db";
 import { BlogQueryRepository } from "../repositories/blog.query-repository";
 import { OutputBlogType } from "../models/blog/output/blog.output";

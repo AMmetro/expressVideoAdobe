@@ -1,10 +1,5 @@
-import { WithId, ObjectId } from "mongodb";
-import { blogsCollection, postsCollection, usersCollection } from "../BD/db";
-import { postMapper } from "../models/post/mapper/post-mapper";
-import { OutputPostType } from "../models/post/output/post.output";
-import { RequestInputPostType, UpdateInputPostType } from "../models/post/input/updateposts-input-model";
-import { PostDB } from "../models/post/db/post-db";
-import { UpdateInputUserType } from "../models/user/input/updateUser-input-model";
+import { ObjectId } from "mongodb";
+import { usersCollection } from "../BD/db";
 import { UserDB } from "../models/user/db/user-db";
 
 export class UserRepository {

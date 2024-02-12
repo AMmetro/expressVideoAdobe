@@ -5,11 +5,3 @@ export type UserDB = {
     email: string,
     createdAt: string,
 }
-
-// export type UserModel = {
-//     login: string,
-//     email: string,
-//     passwordHash: string,
-//     passwordSalt: string,
-//     createdAt: string,
-// }

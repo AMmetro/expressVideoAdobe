@@ -8,7 +8,6 @@ export const createUsers = async (app:any, i:number)=> {
     login: "seR" + i,
     password: "password" + i,
     email: i + "email56010@gg.com",
-    // email: "ema4353",
   })
   .expect(201);
   return response.body 

@@ -4,7 +4,6 @@ import jwt from "jsonwebtoken";
 import { OutputUserType } from "../models/user/output/user.output";
 import { appConfig } from '../appConfig';
 
-// const settings = { JWT_SECRET: process.env.JWT_SECRET || "123" };
 
 export const jwtServise = {
   async createJWT(user: OutputUserType) {

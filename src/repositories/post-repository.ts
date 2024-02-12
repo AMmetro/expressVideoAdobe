@@ -1,9 +1,6 @@
-import { WithId, ObjectId } from "mongodb";
-import { blogsCollection, postsCollection } from "../BD/db";
-import { postMapper } from "../models/post/mapper/post-mapper";
-import { OutputPostType } from "../models/post/output/post.output";
+import { ObjectId } from "mongodb";
+import { postsCollection } from "../BD/db";
 import { RequestInputPostType, UpdateInputPostType } from "../models/post/input/updateposts-input-model";
-import { PostDB } from "../models/post/db/post-db";
 export class PostRepository {
 
   static async create(newPostData: UpdateInputPostType) {

@@ -1,14 +1,4 @@
 import express, { Router, Request, Response } from "express";
-import { authMiddleware } from "../auth/basicAuth-middleware";
-import { blogValidation } from "../validators/blog-validators";
-import { BlogRepository } from "../repositories/blog-repository";
-import { ObjectId } from "mongodb";
-import { OutputBlogType } from "../models/blog/output/blog.output";
-import {
-  InputBlogType,
-  RequestInputBlogType,
-} from "../models/blog/input/updateblog-input-model";
-import { BlogDB } from "../models/blog/db/blog-db";
 import {
   RequestWithBody,
 } from "../models/common";

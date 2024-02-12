@@ -1,7 +1,6 @@
 import request from "supertest";
 import { app } from "../src/settings";
 import { client } from "../src/BD/db";
-import { createUsers } from "./utils";
 import { OutputPostType } from "../src/models/post/output/post.output";
 
 describe("should return API data", () => {
@@ -27,7 +26,6 @@ describe("should return API data", () => {
         login: user.login,
         password: user.password,
         email: "email56010@gg.com",
-        // email: "ema4353",
       })
       .expect(201);
 
@@ -84,7 +82,6 @@ describe("should return API data", () => {
   });
 
     it("- POST create new BLOG for created User", async function () {
-    // const {memorisedNewBlogId} = expect.getState()
     const response = await request(app)
       .post("/blogs/")
       .auth("admin", "qwerty")
@@ -179,7 +176,6 @@ describe("should return API data", () => {
       it("- PUT update created COMMENT", async function () {
     const {memorisedNewCommentId} = expect.getState()
     const {memorisedUserToken} = expect.getState()
-    // const {memorisedNewPostId} = expect.getState()
     const responseUpdatedPost = await request(app)
       .put("/comments/" + memorisedNewCommentId)
       .set('Authorization', `Bearer ${memorisedUserToken}`)
@@ -188,59 +184,6 @@ describe("should return API data", () => {
       })
       .expect(204);
     })
-
-  // it("- DELETE user with wrong auth", async () => {
-  //   // const {memorisedNewBlogId} = expect.getState()
-  //   const responseUser = await request(app)
-  //   .get("/users/")
-  //   const firstUserId = responseUser.body.items[0].id
-
-  //   const deleteUser = await request(app)
-  //   .delete("/users/" + firstUserId)
-  //   .auth("admin", "qwerty")
-  //   .expect(204);
-
-  //   // console.log("--------URL-------------")
-  //   // console.log(deleteUser.request.url)
-
-  // });
-
-  // it("- POST new POST with blog Id", async function () {
-  //   const {memorisedNewBlogId} = expect.getState()
-  //   const response = await request(app)
-  //     .post("/posts/")
-  //     .auth("admin", "qwerty")
-  //     // .set('Authorization', token)
-  //     .send({
-  //       title: "post title",
-  //       shortDescription: "post shortDescription",
-  //       content: "content of post",
-  //       blogId: `${memorisedNewBlogId}`
-  //     })
-  //     .expect(201);
-
-  //     expect.setState({memorisedNewPostId:response.body.id})
-  // });
-
-
-
-
-
-  //   it("- GET updated POST and CHECK", async function () {
-  //     const {memorisedNewBlogId} = expect.getState()
-  //     const {memorisedNewPostId} = expect.getState()
-  //     const responseNewPost = await request(app)
-  //       .get("/posts/" + memorisedNewPostId)
-  //       expect(responseNewPost.body).toEqual({
-  //         title: "updated title",
-  //         shortDescription: "updated shortDescription",
-  //         content: "updated of post",
-  //         blogId: `${memorisedNewBlogId}`,
-  //         createdAt: expect.any(String),
-  //         blogName: "blog name",
-  //         id: expect.any(String),
-  //       });
-  //     });
 
   afterAll((done) => {
     // Closing the DB connection allows Jest to exit successfully.

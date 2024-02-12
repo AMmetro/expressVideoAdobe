@@ -1,9 +1,5 @@
-import { WithId, ObjectId } from "mongodb";
-import { blogsCollection, commentsCollection, db } from "../BD/db";
-import { OutputBlogType } from "../models/blog/output/blog.output";
-import { BlogDB } from "../models/blog/db/blog-db";
-import { blogMapper } from "../models/blog/mapper/blog-mapper";
-import { InputBlogType, UpdateBlogType } from "../models/blog/input/updateblog-input-model";
+import { ObjectId } from "mongodb";
+import { commentsCollection } from "../BD/db";
 import { CommentDB } from "../models/comments/db/comment-db";
 
 export class CommentRepository {

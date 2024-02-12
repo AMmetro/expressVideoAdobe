@@ -1,7 +1,6 @@
 import {NextFunction, Request, Response} from "express";
 
 import { jwtServise } from "../utils/JWTservise";
-import { UserServices } from "../services/userServices";
 import { UserQueryRepository } from "../repositories/user.query-repository";
 
 export const jwtValidationMiddleware =async (req: Request, res: Response, next: NextFunction )=> {

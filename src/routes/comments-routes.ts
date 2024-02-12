@@ -1,5 +1,4 @@
-import { RequestWithQuery, RequestWithQueryAndParams } from './../models/common';
-import { Router, Request, Response } from "express";
+import { Router, Response } from "express";
 import { ObjectId } from "mongodb";
 import {
   Params,
