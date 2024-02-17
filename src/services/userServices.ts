@@ -4,7 +4,7 @@ import { OutputUserType } from "../models/user/output/user.output";
 import { UserDB } from "../models/user/db/user-db";
 import { UserRepository } from "../repositories/user-repository";
 import { UserQueryRepository } from "../repositories/user.query-repository";
-import { AuthUserFindModel } from "../models/user/input/authUser-input-model";
+import { AuthUserInputModel } from "../models/user/input/authUser-input-model";
 import bcrypt from "bcrypt";
 import { userMapper } from "../models/user/mapper/user-mapper";
 
@@ -47,10 +47,10 @@ export class UserServices {
   }
 
   static async checkCredentials(
-    authUserData: AuthUserFindModel
+    authUserData: AuthUserInputModel
   ): Promise<OutputUserType | null> {
     const user: WithId<UserDB> | null = await UserQueryRepository.getOneForAuth(
-      authUserData
+      authUserData.loginOrEmail
     );
     if (!user) {
       return null;

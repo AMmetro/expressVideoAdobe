@@ -3,9 +3,11 @@ import { UserDB } from "../models/user/db/user-db";
 import jwt from "jsonwebtoken";
 import { OutputUserType } from "../models/user/output/user.output";
 import { appConfig } from '../appConfig';
+import bcrypt from "bcrypt";
 
 
 export const jwtServise = {
+  
   async createJWT(user: OutputUserType) {
     const token = jwt.sign({ userId: user.id }, appConfig.JWT_SECRET, {
       expiresIn: "24h",
@@ -29,3 +31,19 @@ export const jwtServise = {
   },
 
 };
+
+
+export const hashServise = {
+  
+  async generateSalt() {
+    const salt = await bcrypt.genSalt(10);
+    return salt
+  },
+
+  async generateHash(password: string, paswordSalt: string) {
+    const hash = await bcrypt.hash(password, paswordSalt);
+    return hash;
+  }
+
+};
+

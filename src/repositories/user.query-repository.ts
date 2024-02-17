@@ -5,7 +5,7 @@ import { PaginationType } from "../models/common";
 import { UserDB } from "../models/user/db/user-db";
 import { userMapper } from "../models/user/mapper/user-mapper";
 import { OutputUserType } from "../models/user/output/user.output";
-import { AuthUserFindModel, AuthUserInputModel } from "../models/user/input/authUser-input-model";
+// import { AuthUserFindModel, AuthUserInputModel } from "../models/user/input/authUser-input-model";
 
 type SortDataType = {
   searchEmailTerm?: string | null;
@@ -86,10 +86,8 @@ export class UserQueryRepository {
     return userMapper(user);
   }
 
-  static async getOneForAuth(
-    authUserModel: AuthUserFindModel
-  ): Promise<WithId<UserDB> | null> {
-    const { loginOrEmail } = authUserModel;
+  static async getOneForAuth(loginOrEmail: string): Promise<WithId<UserDB> | null> {
+    // const { loginOrEmail } = authUserModel;
     const filter = {
       $or: [
         { email: { $regex: loginOrEmail, $options: "i" } },

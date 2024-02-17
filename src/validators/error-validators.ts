@@ -4,6 +4,7 @@ export enum ResultCode {
     NotFound = "NotFound",
     Forbidden = "Forbidden",
     Unauthorised = "Unauthorised",
+    Conflict = "Conflict",
     ServerError = "ServerError",
 }
 

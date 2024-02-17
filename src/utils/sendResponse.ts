@@ -10,6 +10,10 @@ export function sendCustomError(res: any, result: any) {
   } else if (result.status === ResultCode.Forbidden) {
     res.status(403).send(`${result.errorMessage}`);
     return;
+  }
+  else if (result.status === ResultCode.Conflict) {
+    res.status(409).send(`${result.errorMessage}`);
+    return;
   } else if (result.status === ResultCode.ServerError) {
     res.status(503).send(`${result.errorMessage}`);
     return;

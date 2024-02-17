@@ -3,9 +3,7 @@ import { commentsCollection, usersCollection } from "../BD/db";
 import { SortDirection } from "mongodb";
 import { PaginationType } from "../models/common";
 import { UserDB } from "../models/user/db/user-db";
-import { userMapper } from "../models/user/mapper/user-mapper";
-import { OutputUserType } from "../models/user/output/user.output";
-import { AuthUserFindModel, AuthUserInputModel } from "../models/user/input/authUser-input-model";
+import { AuthUserInputModel } from "../models/user/input/authUser-input-model";
 import { CommentDB } from "../models/comments/db/comment-db";
 import { commentMapper } from "../models/comments/mapper/comment-mapper";
 import { OutputCommentType } from "../models/comments/output/comment.output";
@@ -62,7 +60,7 @@ export class CommentsQueryRepository {
   }
 
   static async getOneForAuth(
-    authUserModel: AuthUserFindModel
+    authUserModel: AuthUserInputModel
   ): Promise<WithId<UserDB> | null> {
     const { loginOrEmail } = authUserModel;
     const filter = {

@@ -8,6 +8,10 @@ export class UserRepository {
         const newUserId = await usersCollection.insertOne(newUserData);
        return newUserId.insertedId.toString()
   }
+  static async createWithConfirmation(confirmationNewUserData: UserDB) {
+        const newUserId = await usersCollection.insertOne(confirmationNewUserData);
+       return newUserId.insertedId.toString()
+  }
 
   static async delete(deleteUserId: string): Promise<Boolean> {
     const deletePost = await usersCollection.deleteOne({

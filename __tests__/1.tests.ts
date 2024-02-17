@@ -1,3 +1,9 @@
+// Библиотека для тестирования в виртуальной базе а не реальной
+// import {MongoMemoryServer} from "mongodb-memory-server"
+// const virtualMongoServer = await MongoMemoryServer.create()
+// const mongoURL = virtualMongoServer.getUri() 
+// ---------------------------------------------------------------------
+
 import request from "supertest";
 import { app } from "../src/settings";
 import { client } from "../src/BD/db";
