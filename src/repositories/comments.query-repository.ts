@@ -59,20 +59,22 @@ export class CommentsQueryRepository {
     return commentMapper(comment);
   }
 
-  static async getOneForAuth(
-    authUserModel: AuthUserInputModel
-  ): Promise<WithId<UserDB> | null> {
-    const { loginOrEmail } = authUserModel;
-    const filter = {
-      $or: [
-        { email: { $regex: loginOrEmail, $options: "i" } },
-        { login: { $regex: loginOrEmail, $options: "i" } },
-      ],
-    };
-    const user = await usersCollection.findOne(filter);
-    if (!user) {
-      return null;
-    }
-    return user;
-  }
+  // static async getOneForAuth(
+  //   authUserModel: AuthUserInputModel
+  // ): Promise<WithId<UserDB> | null> {
+  //   const { loginOrEmail } = authUserModel;
+  //   const filter = {
+  //     $or: [
+  //       { email: { $regex: loginOrEmail, $options: "i" } },
+  //       { login: { $regex: loginOrEmail, $options: "i" } },
+  //     ],
+  //   };
+  //   const user = await usersCollection.findOne(filter);
+  //   if (!user) {
+  //     return null;
+  //   }
+  //   return user;
+  // }
+
+
 }

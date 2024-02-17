@@ -9,3 +9,8 @@ export type QueryUserInputModel = {
     pageSize?: number,
 }
 
+export type searchDataType = {
+    login: string,
+    email: string,
+}
+

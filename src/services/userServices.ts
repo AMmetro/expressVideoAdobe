@@ -49,9 +49,12 @@ export class UserServices {
   static async checkCredentials(
     authUserData: AuthUserInputModel
   ): Promise<OutputUserType | null> {
-    const user: WithId<UserDB> | null = await UserQueryRepository.getOneForAuth(
-      authUserData.loginOrEmail
-    );
+
+    const userSearchData = {
+      login:authUserData.loginOrEmail,
+      email:authUserData.loginOrEmail}
+
+    const user: WithId<UserDB> | null = await UserQueryRepository.getOneForAuth(userSearchData);
     if (!user) {
       return null;
     }

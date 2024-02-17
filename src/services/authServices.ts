@@ -20,13 +20,8 @@ export class AuthServices {
     //                          searchLoginTerm: login,
     //                          }
     const userSearchData = {login:login, email:email}
-
-
-
-    const userAllreadyExist = await UserQueryRepository.getOneForAuth(login)
-
-    return userAllreadyExist;
-    
+    // const userAllreadyExist = await UserQueryRepository.getOneForAuth(login)
+    const userAllreadyExist = "temp";   
     // const userExistRespons = await UserQueryRepository.getAll(searchUserData)
 
     // if (userExistRespons && userExistRespons?.items?.length > 0) {
