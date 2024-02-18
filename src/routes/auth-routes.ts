@@ -24,11 +24,11 @@ authRoute.get(
 
 authRoute.post(
   "/registration",
-  passwordValidator,
-  emailValidator,
-  loginValidator,
-  emailExistValidator,
+  // passwordValidator,
+  // emailValidator,
+  // loginValidator,
   loginExistValidator,
+  emailExistValidator,
   // emailOrLoginExistValidation,
   inputValidationMiddleware,
   async (req: RequestWithBody<RegistrationUserInputModel>, res: Response) => {
