@@ -71,7 +71,7 @@ export class AuthServices {
     if (!isConfirmed) {
       return {
         status: ResultCode.ClientError,
-        errorMessage: "If the confirmation code is incorrect, expired or already been applied",
+        errorMessage: "The confirmation code is incorrect, expired or already been applied",
       };
     }
     return {
@@ -87,7 +87,7 @@ export class AuthServices {
        if (emailIsConfirmed) {
       return {
         status: ResultCode.ClientError,
-        errorMessage: "Email is confirmed",
+        errorMessage: "Email is confirmed already",
       };
     }
   // return "userForEmailResending"

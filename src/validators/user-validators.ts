@@ -13,11 +13,20 @@ export const emailValidator = body("email").isString().withMessage("email must b
 // .matches("^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$").withMessage("wrong email type validation") 
 // .matches("/^[w\-.]+@([w\-]+.)+[w\-]{2,4}$/").withMessage("wrong email type validation") 
 
-export const emailsExistValidator = body("email").custom(async (value: string)=>{
+export const emailExistValidator = body("email").custom(async (value: string)=>{
     const existingEmail = await usersCollection.findOne({email: value });
     if (!existingEmail) {
         // false
-         throw Error ("existingEmail")
+         throw Error ("email already exist")
+        }
+        return true
+})
+
+export const loginExistValidator = body("login").custom(async (value: string)=>{
+    const existingLogin = await usersCollection.findOne({login: value });
+    if (!existingLogin) {
+        // false
+         throw Error ("login already exist")
         }
         return true
 })
