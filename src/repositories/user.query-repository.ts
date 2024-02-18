@@ -101,14 +101,6 @@ export class UserQueryRepository {
         { login: { $regex: searchData.login, $options: "i" } },
       ],
     };
-    // const filter = {
-    //   $or: [
-    //     { email: { $regex: searchData.email, $options: "i" } },
-    //     { login: { $regex: searchData.email, $options: "i" } },
-    //   ],
-    // };
-
-
     const user = await usersCollection.findOne(filter);
     if (!user) {
       return null;
