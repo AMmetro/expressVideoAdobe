@@ -22,7 +22,6 @@ export class AuthServices {
       return {
         status: ResultCode.ClientError,
         errorMessage: "User allready exist",
-        // errorMessage: { errorsMessages: [{ message: "Any<String>", field: "email" }] },
       };
     }
     const passwordSalt = await hashServise.generateSalt();
@@ -61,12 +60,23 @@ export class AuthServices {
 
   static async confirmEmail(code: string): Promise<any> {
     const userForConfirmation = await UserQueryRepository.getByConfirmationCode(code);
+    // !userForConfirmation
+
+    const emailInfo = {
+      email: "7656077@mail.ru",
+      subject: "ru",
+      confirmationCode: userForConfirmation,
+    }
+
+    // @ts-ignore
+    await emailAdaper.sendEmailRecoveryMessage(emailInfo)
+
+
     if (userForConfirmation) {
       return {
         status: ResultCode.ClientError,
         errorMessage:
-          // "Confirmation code is incorrect, expired or already been applied",
-          `code==: ${userForConfirmation}`,
+          `Not found user with this confirmation code ${code}`,
       };
     }
     const isConfirmed = await UserRepository.confirmRegistration(
@@ -77,7 +87,7 @@ export class AuthServices {
       return {
         status: ResultCode.ClientError,
         errorMessage:
-          "The confirmation code is incorrect, expired or already been applied",
+          `The confirmation code ${code} expired or already been applied`,
       };
     }
     return {
