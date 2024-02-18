@@ -87,11 +87,14 @@ export class UserQueryRepository {
   }
 
   static async getByConfirmationCode(code: string): Promise<OutputUserType | null> {
-    const user = await usersCollection.findOne({ "emailConfirmation.confirmationCode": code });
+    // const user = await usersCollection.findOne({ "emailConfirmation.confirmationCode": code });
+    const user = await usersCollection.find({});
     if (!user) {
       return null;
     }
-    return userMapper(user);
+    // return userMapper(user);
+    // @ts-ignore
+    return user;
   }
 
   static async getOneByLoginOrEmail(searchData: searchDataType): Promise<WithId<UserDB> | null> {

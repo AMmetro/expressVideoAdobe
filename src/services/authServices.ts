@@ -66,7 +66,7 @@ export class AuthServices {
         status: ResultCode.ClientError,
         errorMessage:
           // "Confirmation code is incorrect, expired or already been applied",
-          `code====: ${userForConfirmation} =======`,
+          `code==: ${userForConfirmation}`,
       };
     }
     const isConfirmed = await UserRepository.confirmRegistration(
