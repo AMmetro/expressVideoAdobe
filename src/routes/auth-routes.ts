@@ -7,7 +7,7 @@ import { UserServices } from "../services/userServices";
 import { UserQueryRepository } from "../repositories/user.query-repository";
 import { jwtServise } from "../utils/JWTservise";
 import { jwtValidationMiddleware } from "../auth/jwtAuth-middleware";
-import { emailExistValidator, emailValidator, loginExistValidator, loginValidator, passwordValidator } from "../validators/user-validators";
+import { emailExistValidator, emailIsAplliedValidator, emailValidator, loginExistValidator, loginValidator, passwordValidator } from "../validators/user-validators";
 import { inputValidationMiddleware } from "../inputValidation/input-validation-middleware";
 import { AuthServices } from "../services/authServices";
 import { ResultCode } from "../validators/error-validators";
@@ -59,18 +59,11 @@ authRoute.post(
   } 
 );
 
-// --------------------------------------------
-// authRoute.get(
-//   "/registration-confirmation",
-//   async (req: RequestWithBody<{code:string}>, res: Response) => {
-//  res.send("hello")
-//   }
-// );
-// ----------------------------------------------
-
 authRoute.post(
   "/registration-email-resending",
   emailValidator,
+  emailIsAplliedValidator,
+  inputValidationMiddleware,
   async (req: RequestWithBody<{email:string}>, res: Response) => {
     const { email } = req.body;
     const result = await AuthServices.emailResending(email);

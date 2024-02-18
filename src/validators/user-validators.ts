@@ -47,6 +47,18 @@ export const loginExistValidator = body("login").custom(
   }
 );
 
+export const emailIsAplliedValidator = body("email").custom(
+  async (value: string) => {
+    const userForValidation = await usersCollection.findOne({ email: value });
+    const emailIsApllied = userForValidation.emailConfirmation.isConfirmed;
+    if (emailIsApllied) {
+      // false
+      throw Error("email is already applied");
+    }
+    return true;
+  }
+);
+
 export const userValidation = () => [
   loginValidator,
   passwordValidator,
