@@ -40,13 +40,6 @@ export class AuthServices {
       },
     };
     const newUserId = await UserRepository.createWithConfirmation(newUser);
-
-    // ------------------------------------------------------------------
-    const users = await usersCollection.find().toArray();
-    console.log("-------------")
-    console.log(users)
-    // ------------------------------------------------------------------
-
     if (!newUserId) {
       return {
         status: ResultCode.ClientError,
@@ -63,31 +56,11 @@ export class AuthServices {
     return {
       status: ResultCode.Success,
       data: true,
-      // data: newUser,
     };
   }
 
   static async confirmEmail(code: string): Promise<any> {
-    // const userForConfirmation = await UserQueryRepository.getByConfirmationCode(code);
     const userForConfirmation = await UserQueryRepository.getByConfirmationCode(code);
-    // !userForConfirmation
-
-    // console.log("code")
-    // console.log(code)
-    console.log("1111111111111111111111111111111")
-    console.log(userForConfirmation)
-
-// --------------------------------------------------------
-    // const emailInfo = {
-    //   email: "7656077@mail.ru",
-    //   subject: "debug",
-    //   confirmationCode: JSON.stringify(userForConfirmation),
-    // }
-
-    // // @ts-ignore
-    // await emailAdaper.sendEmailRecoveryMessage(emailInfo)
-// -------------------------------------------------------------
-
     if (!userForConfirmation) {
       return {
         status: ResultCode.ClientError,

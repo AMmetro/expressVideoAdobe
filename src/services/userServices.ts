@@ -8,12 +8,9 @@ import { AuthUserInputModel } from "../models/user/input/authUser-input-model";
 import bcrypt from "bcrypt";
 import { userMapper } from "../models/user/mapper/user-mapper";
 import { hashServise } from "../utils/JWTservise";
+import { randomUUID } from "crypto";
 
 export class UserServices {
-  // static async _generateHash(password: string, paswordSalt: string) {
-  //   const hash = await bcrypt.hash(password, paswordSalt);
-  //   return hash;
-  // }
 
   static async create(
     createUserModel: RequestInputUserType
@@ -23,11 +20,17 @@ export class UserServices {
     const passwordHash = await hashServise.generateHash(password, passwordSalt);
     const newUserModal: UserDB = {
       login: login,
-      passwordSalt: passwordSalt,
-      passwordHash: passwordHash,
       email: email,
+      passwordHash: passwordHash,
+      passwordSalt: passwordSalt,
       createdAt: new Date().toISOString(),
+      emailConfirmation: {
+        confirmationCode: randomUUID(),
+        expirationDate: new Date().toISOString(),
+        isConfirmed: true,
+      },
     };
+
     const newUserId = await UserRepository.createWithOutConfirmation(newUserModal);
     if (!newUserId) {
       return null;

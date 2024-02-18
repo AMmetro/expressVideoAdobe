@@ -4,7 +4,7 @@ export type UserDB = {
   passwordSalt: string;
   email: string;
   createdAt: string;
-  emailConfirmation?: emailConfirmationType;
+  emailConfirmation: emailConfirmationType;
 };
 
 type emailConfirmationType = {
