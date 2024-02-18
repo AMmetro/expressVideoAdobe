@@ -1,4 +1,9 @@
-// import { nodemailer } from "nodemailer"
+export type emailInfoType = {
+email: string,
+subject: string,
+confirmationCode: string,
+}
+
 const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
@@ -14,7 +19,7 @@ const transporter = nodemailer.createTransport({
 
 // async..await is not allowed in global scope, must use a wrapper
 export const emailAdaper = {
-  async sendEmailRecoveryMessage(emailInfo: any) {
+  async sendEmailRecoveryMessage(emailInfo: emailInfoType) {
     // const mailLayout = `<b>${emailInfo.message}</b>`;
     const mailLayout = HTML_TEMPLATE(emailInfo.confirmationCode);
     try {

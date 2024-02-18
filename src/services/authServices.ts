@@ -59,19 +59,25 @@ export class AuthServices {
     };
   }
 
-  static async confirmEmail(code:string): Promise<any> {
-    const userForConfirmation = await UserQueryRepository.getByConfirmationCode(code);
+  static async confirmEmail(code: string): Promise<any> {
+    const userForConfirmation = await UserQueryRepository.getByConfirmationCode(
+      code
+    );
     if (!userForConfirmation) {
       return {
         status: ResultCode.ClientError,
-        errorMessage: "If the confirmation code is incorrect, expired or already been applied",
+        errorMessage:
+          "If the confirmation code is incorrect, expired or already been applied",
       };
     }
-    const isConfirmed = await UserRepository.confirmRegistration(new ObjectId(userForConfirmation.id));
+    const isConfirmed = await UserRepository.confirmRegistration(
+      new ObjectId(userForConfirmation.id)
+    );
     if (!isConfirmed) {
       return {
         status: ResultCode.ClientError,
-        errorMessage: "The confirmation code is incorrect, expired or already been applied",
+        errorMessage:
+          "The confirmation code is incorrect, expired or already been applied",
       };
     }
     return {
@@ -80,27 +86,32 @@ export class AuthServices {
     };
   }
 
-  static async emailResending(email:string): Promise<any> {
-   const userSearchData = { email: email, login:" " }; // search by login " " false for all login 
-   const userForEmailResending = await UserQueryRepository.getOneByLoginOrEmail(userSearchData);
-   const emailIsConfirmed = userForEmailResending?.emailConfirmation?.isConfirmed
-       if (emailIsConfirmed) {
+  static async emailResending(email: string): Promise<any> {
+    const userSearchData = { email: email, login: " " }; // search by login " " false for all login
+    const userForEmailResending =
+      await UserQueryRepository.getOneByLoginOrEmail(userSearchData);
+    if (!userForEmailResending) {
+      return {
+        status: ResultCode.NotFound,
+        errorMessage: "Not found user with this email",
+      };
+    }
+    const emailIsConfirmed =
+      userForEmailResending.emailConfirmation?.isConfirmed;
+    if (emailIsConfirmed) {
       return {
         status: ResultCode.ClientError,
         errorMessage: "Email is confirmed already",
       };
     }
-
     const emailInfo = {
-      email: userForEmailResending?.email, 
-      confirmationcode: userForEmailResending?.emailConfirmation?.confirmationCode, 
-      subject: "resendin confirmation code", 
-     }
-
+      email: userForEmailResending.email,
+      confirmationCode: userForEmailResending.emailConfirmation!.confirmationCode,
+      subject: "resendin confirmation code",
+    };
     await emailAdaper.sendEmailRecoveryMessage(emailInfo);
 
-
-  // return "userForEmailResending"
+    // return "userForEmailResending"
 
     // if (!userForConfirmation) {
     //   return {
@@ -117,13 +128,7 @@ export class AuthServices {
     // }
     return {
       status: ResultCode.Success,
-      data: emailIsConfirmed,
+      data: true,
     };
   }
-
-
-
-
-
-  }
-
+}
