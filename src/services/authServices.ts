@@ -22,7 +22,7 @@ export class AuthServices {
       return {
         status: ResultCode.ClientError,
         // errorMessage: "User allready exist",
-        errorMessage: [{ message: "Any<String>", field: "email" }],
+        errorMessage: { errorsMessages: [{ message: "Any<String>", field: "email" }] },
       };
     }
     const passwordSalt = await hashServise.generateSalt();
