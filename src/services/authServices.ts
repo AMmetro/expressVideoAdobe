@@ -55,6 +55,7 @@ export class AuthServices {
     return {
       status: ResultCode.Success,
       data: true,
+      // data: newUser,
     };
   }
 
