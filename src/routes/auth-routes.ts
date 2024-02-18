@@ -49,7 +49,7 @@ authRoute.post(
   async (req: RequestWithBody<{code:string}>, res: Response) => {
     const { code } = req.body;
     if (!code) {
-      res.sendStatus(400);
+      res.sendStatus(409);
       return;
     }
     const result = await AuthServices.confirmEmail(code);

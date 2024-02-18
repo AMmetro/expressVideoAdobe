@@ -110,22 +110,6 @@ export class AuthServices {
       subject: "resendin confirmation code",
     };
     await emailAdaper.sendEmailRecoveryMessage(emailInfo);
-
-    // return "userForEmailResending"
-
-    // if (!userForConfirmation) {
-    //   return {
-    //     status: ResultCode.ClientError,
-    //     errorMessage: "If the confirmation code is incorrect, expired or already been applied",
-    //   };
-    // }
-    // const isConfirmed = await UserRepository.confirmRegistration(new ObjectId(userForConfirmation.id));
-    // if (!isConfirmed) {
-    //   return {
-    //     status: ResultCode.ClientError,
-    //     errorMessage: "If the confirmation code is incorrect, expired or already been applied",
-    //   };
-    // }
     return {
       status: ResultCode.Success,
       data: true,
