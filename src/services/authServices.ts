@@ -95,9 +95,7 @@ export class AuthServices {
           `Not found user with this confirmation code ${code}`,
       };
     }
-    const isConfirmed = await UserRepository.confirmRegistration(
-      new ObjectId(userForConfirmation.id)
-    );
+    const isConfirmed = await UserRepository.confirmRegistration(userForConfirmation.id);
     if (!isConfirmed) {
       return {
         status: ResultCode.ClientError,
@@ -106,8 +104,8 @@ export class AuthServices {
       };
     }
 
-    console.log("isConfirmed")
-    console.log(isConfirmed)
+    // console.log("isConfirmed")
+    // console.log(isConfirmed)
 
     return {
       status: ResultCode.Success,

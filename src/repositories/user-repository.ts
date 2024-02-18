@@ -20,9 +20,15 @@ export class UserRepository {
     return !!deletePost.deletedCount;
   }
 
-  static async confirmRegistration(userId: ObjectId): Promise<boolean> {
+  static async confirmRegistration(userId: string): Promise<boolean> {
+
+    // const test = await usersCollection.findOne({ _id: new ObjectId(userId) })
+
+    // // console.log("-----test--------")
+    // // console.log(test)
+
     const user = await usersCollection.updateOne(
-      { id: userId },
+      { _id: new ObjectId(userId) },
       { $set: { "emailConfirmation.isConfirmed": true } }
     );
     return user.modifiedCount === 1;
