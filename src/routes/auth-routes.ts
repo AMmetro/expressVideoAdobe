@@ -58,12 +58,12 @@ authRoute.post(
 );
 
 // --------------------------------------------
-authRoute.get(
-  "/registration-confirmation",
-  async (req: RequestWithBody<{code:string}>, res: Response) => {
- res.send("hello")
-  }
-);
+// authRoute.get(
+//   "/registration-confirmation",
+//   async (req: RequestWithBody<{code:string}>, res: Response) => {
+//  res.send("hello")
+//   }
+// );
 // ----------------------------------------------
 
 authRoute.post(

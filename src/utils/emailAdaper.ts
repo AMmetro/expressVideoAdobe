@@ -19,8 +19,8 @@ export const emailAdaper = {
     const mailLayout = HTML_TEMPLATE(emailInfo.confirmationCode);
     try {
       const info = await transporter.sendMail({
-        from: "nodeMailer <nodemailer@mail.com>", // sender address
-        to: "7656077@mail.ru", // list of receivers
+        from: "nodeMailer <nodemailerstud@gmail.com>", // sender address
+        to: emailInfo.email, // list of receivers
         subject: emailInfo.subject,
         // text: "plain text body", // - for old version supported only
         html: mailLayout,
