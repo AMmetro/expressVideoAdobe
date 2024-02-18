@@ -78,5 +78,41 @@ export class AuthServices {
       data: isConfirmed,
     };
   }
+
+  static async emailResending(email:string): Promise<any> {
+   const userSearchData = { email: email, login:" " }; // search by login " " false for all login 
+   const userForEmailResending = await UserQueryRepository.getOneByLoginOrEmail(userSearchData);
+   const emailIsConfirmed = userForEmailResending?.emailConfirmation?.isConfirmed
+       if (emailIsConfirmed) {
+      return {
+        status: ResultCode.ClientError,
+        errorMessage: "Email is confirmed",
+      };
+    }
+  // return "userForEmailResending"
+
+    // if (!userForConfirmation) {
+    //   return {
+    //     status: ResultCode.ClientError,
+    //     errorMessage: "If the confirmation code is incorrect, expired or already been applied",
+    //   };
+    // }
+    // const isConfirmed = await UserRepository.confirmRegistration(new ObjectId(userForConfirmation.id));
+    // if (!isConfirmed) {
+    //   return {
+    //     status: ResultCode.ClientError,
+    //     errorMessage: "If the confirmation code is incorrect, expired or already been applied",
+    //   };
+    // }
+    return {
+      status: ResultCode.Success,
+      data: emailIsConfirmed,
+    };
+  }
+
+
+
+
+
   }
 

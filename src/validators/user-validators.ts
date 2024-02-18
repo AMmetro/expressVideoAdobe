@@ -8,7 +8,9 @@ export const passwordValidator = body("password").isString().withMessage("passwo
 isLength({min:6, max:20}).withMessage("Incorect length of password")
 
 export const emailValidator = body("email").isString().withMessage("email must be a string")
-.isEmail().withMessage("wrong email")
+.isEmail().withMessage("wrong email type")
+// .matches("^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$").withMessage("wrong email type validation") 
+// .matches("/^[w\-.]+@([w\-]+.)+[w\-]{2,4}$/").withMessage("wrong email type validation") 
 
 export const userValidation=()=>[loginValidator, passwordValidator, emailValidator, inputValidationMiddleware]
 

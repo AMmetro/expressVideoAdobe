@@ -8,7 +8,7 @@ const transporter = nodemailer.createTransport({
   secure: false,
   auth: {
     user: "nodeMailerStud@gmail.com",
-    pass: "nju2!56Dkyku",
+    pass: "uobl xxkm ecwp ygek",
   },
 });
 
@@ -22,7 +22,7 @@ export const emailAdaper = {
         from: "Dimych <DimychDeveloper@example.com>", // sender address
         to: "resiver@example.com", // list of receivers
         subject: emailInfo.subject,
-        // text: "Hello world?", // plain text body - for old version supported only
+        // text: "plain text body", // - for old version supported only
         html: mailLayout,
       });
       console.log("Message sent: %s", info.messageId);

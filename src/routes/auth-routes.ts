@@ -58,8 +58,22 @@ authRoute.post(
     if (result.status === ResultCode.Success){
       res.status(204);
     } else {sendCustomError(res, result)}
-  }
+  } 
+);
+
+authRoute.post(
+  "/registration-email-resending",
+  emailValidator,
+  async (req: RequestWithBody<{email:string}>, res: Response) => {
+    const { email } = req.body;
+    const result = await AuthServices.emailResending(email);
+    // res.status(200).send(result);
+
+      if (result.status === ResultCode.Success){
+      res.status(204);
+    } else {sendCustomError(res, result)}
   
+} 
 );
 
 
