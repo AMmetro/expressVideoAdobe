@@ -39,10 +39,6 @@ authRoute.post(
     if (result.status === ResultCode.Success){
       res.sendStatus(204)
     } else {sendCustomError(res, result)}
-
-    // const accessToken = await jwtServise.createJWT(authUsers)
-    // res.status(200).send({accessToken});
-    // res.send(registrationUser);
   }
 );
 
@@ -60,6 +56,15 @@ authRoute.post(
     } else {sendCustomError(res, result)}
   } 
 );
+
+// --------------------------------------------
+authRoute.get(
+  "/registration-confirmation",
+  async (req: RequestWithBody<{code:string}>, res: Response) => {
+ res.send("hello")
+  }
+);
+// ----------------------------------------------
 
 authRoute.post(
   "/registration-email-resending",

@@ -41,7 +41,7 @@ export class AuthServices {
     const newUserId = await UserRepository.createWithOutConfirmation(newUser);
     if (!newUserId) {
       return {
-        status: ResultCode.ServerError,
+        status: ResultCode.ClientError,
         errorMessage: "Some error",
       };
     }

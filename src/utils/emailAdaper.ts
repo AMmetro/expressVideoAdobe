@@ -19,8 +19,8 @@ export const emailAdaper = {
     const mailLayout = HTML_TEMPLATE(emailInfo.confirmationCode);
     try {
       const info = await transporter.sendMail({
-        from: "Dimych <DimychDeveloper@example.com>", // sender address
-        to: "resiver@example.com", // list of receivers
+        from: "nodeMailer <nodemailer@mail.com>", // sender address
+        to: "7656077@mail.ru", // list of receivers
         subject: emailInfo.subject,
         // text: "plain text body", // - for old version supported only
         html: mailLayout,
@@ -45,7 +45,7 @@ const HTML_TEMPLATE = (confirmationCode: string) => {
         <div class="container">
         <h1>Thank for your registration</h1>
         <p>To finish registration please follow the link below:
-            <a href='https://somesite.com/confirm-email?code=${confirmationCode}'>complete registration</a>
+            <a href='https://express-video-adobe.vercel.app/auth/registration-confirmation?code=${confirmationCode}'>complete registration</a>
         </p>   
         </div>
       </body>
