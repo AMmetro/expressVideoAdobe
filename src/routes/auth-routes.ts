@@ -24,9 +24,9 @@ authRoute.get(
 
 authRoute.post(
   "/registration",
-  // passwordValidator,
-  // emailValidator,
-  // loginValidator,
+  passwordValidator,
+  emailValidator,
+  loginValidator,
   loginExistValidator,
   emailExistValidator,
   // emailOrLoginExistValidation,

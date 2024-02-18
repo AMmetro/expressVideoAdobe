@@ -15,7 +15,7 @@ export const emailValidator = body("email").isString().withMessage("email must b
 
 export const emailExistValidator = body("email").custom(async (value: string)=>{
     const existingEmail = await usersCollection.findOne({email: value });
-    if (!existingEmail) {
+    if (existingEmail) {
         // false
          throw Error ("email already exist")
         }
@@ -24,7 +24,7 @@ export const emailExistValidator = body("email").custom(async (value: string)=>{
 
 export const loginExistValidator = body("login").custom(async (value: string)=>{
     const existingLogin = await usersCollection.findOne({login: value });
-    if (!existingLogin) {
+    if (existingLogin) {
         // false
          throw Error ("login already exist")
         }
