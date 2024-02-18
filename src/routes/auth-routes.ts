@@ -47,12 +47,12 @@ authRoute.post(
 authRoute.post(
   "/registration-confirmation",
   async (req: RequestWithBody<{code:string}>, res: Response) => {
-    const { code } = req.body;
-    if (!code) {
-      res.sendStatus(409);
+    const  confirmationCode = req.body.code;
+    if (!confirmationCode) {
+      res.sendStatus(400);
       return;
     }
-    const result = await AuthServices.confirmEmail(code);
+    const result = await AuthServices.confirmEmail(confirmationCode);
     if (result.status === ResultCode.Success){
       res.sendStatus(204); 
     } else {sendCustomError(res, result)}

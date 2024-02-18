@@ -60,14 +60,12 @@ export class AuthServices {
   }
 
   static async confirmEmail(code: string): Promise<any> {
-    const userForConfirmation = await UserQueryRepository.getByConfirmationCode(
-      code
-    );
+    const userForConfirmation = await UserQueryRepository.getByConfirmationCode(code);
     if (!userForConfirmation) {
       return {
         status: ResultCode.ClientError,
         errorMessage:
-          "If the confirmation code is incorrect, expired or already been applied",
+          "Confirmation code is incorrect, expired or already been applied",
       };
     }
     const isConfirmed = await UserRepository.confirmRegistration(
