@@ -29,7 +29,6 @@ authRoute.post(
   loginValidator,
   loginExistValidator,
   emailExistValidator,
-  // emailOrLoginExistValidation,
   inputValidationMiddleware,
   async (req: RequestWithBody<RegistrationUserInputModel>, res: Response) => {
     const {password, login, email} = req.body

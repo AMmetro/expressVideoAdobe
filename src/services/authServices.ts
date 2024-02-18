@@ -90,6 +90,16 @@ export class AuthServices {
         errorMessage: "Email is confirmed already",
       };
     }
+
+    const emailInfo = {
+      email: userForEmailResending?.email, 
+      confirmationcode: userForEmailResending?.emailConfirmation?.confirmationCode, 
+      subject: "resendin confirmation code", 
+     }
+
+    await emailAdaper.sendEmailRecoveryMessage(emailInfo);
+
+
   // return "userForEmailResending"
 
     // if (!userForConfirmation) {
