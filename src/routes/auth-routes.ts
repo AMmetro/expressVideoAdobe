@@ -7,7 +7,7 @@ import { UserServices } from "../services/userServices";
 import { UserQueryRepository } from "../repositories/user.query-repository";
 import { jwtServise } from "../utils/JWTservise";
 import { jwtValidationMiddleware } from "../auth/jwtAuth-middleware";
-import { emailExistValidator, emailOrLoginExistValidation, emailValidator, loginExistValidator, loginValidator, passwordValidator } from "../validators/user-validators";
+import { emailExistValidator, emailValidator, loginExistValidator, loginValidator, passwordValidator } from "../validators/user-validators";
 import { inputValidationMiddleware } from "../inputValidation/input-validation-middleware";
 import { AuthServices } from "../services/authServices";
 import { ResultCode } from "../validators/error-validators";
