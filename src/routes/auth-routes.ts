@@ -74,7 +74,6 @@ authRoute.post(
   async (req: RequestWithBody<{email:string}>, res: Response) => {
     const { email } = req.body;
     const result = await AuthServices.emailResending(email);
-    // res.status(200).send(result);
       if (result.status === ResultCode.Success){
       res.sendStatus(204);
     } else {sendCustomError(res, result)}

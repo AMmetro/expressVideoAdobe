@@ -104,10 +104,12 @@ export class AuthServices {
         errorMessage: "Email is confirmed already",
       };
     }
+    const newConfirmationCode = randomUUID();
+    await UserRepository.updateConfirmationCode(userForEmailResending._id, newConfirmationCode)
     const emailInfo = {
       email: userForEmailResending.email,
-      confirmationCode: userForEmailResending.emailConfirmation!.confirmationCode,
-      subject: "resendin confirmation code",
+      confirmationCode: newConfirmationCode,
+      subject: "resending confirmation code",
     };
     await emailAdaper.sendEmailRecoveryMessage(emailInfo);
     return {
