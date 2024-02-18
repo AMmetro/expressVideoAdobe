@@ -36,11 +36,9 @@ authRoute.post(
     }
     const registrationData = {login:login, password: password, email: email }
     const result = await AuthServices.registrationUserWithConfirmation(registrationData) 
-  
     if (result.status === ResultCode.Success){
       res.sendStatus(204)
-    }
-      else {sendCustomError(res, result)}
+    } else {sendCustomError(res, result)}
 
     // const accessToken = await jwtServise.createJWT(authUsers)
     // res.status(200).send({accessToken});

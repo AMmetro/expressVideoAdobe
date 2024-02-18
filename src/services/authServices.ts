@@ -20,7 +20,7 @@ export class AuthServices {
     );
     if (userAllreadyExist) {
       return {
-        status: ResultCode.Conflict,
+        status: ResultCode.ClientError,
         errorMessage: "User allready exist",
       };
     }
