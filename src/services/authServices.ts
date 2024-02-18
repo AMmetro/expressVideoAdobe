@@ -100,7 +100,8 @@ export class AuthServices {
       return {
         status: ResultCode.ClientError,
         errorMessage:
-          `This confirmation code ${code} already been applied`,
+          // `This confirmation code ${code} already been applied`,
+          JSON.stringify({ errorsMessages: [{ message: "applied error", field: "code" }] })
       };
     }
 
