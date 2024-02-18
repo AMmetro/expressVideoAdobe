@@ -61,7 +61,7 @@ export class AuthServices {
 
   static async confirmEmail(code: string): Promise<any> {
     const userForConfirmation = await UserQueryRepository.getByConfirmationCode(code);
-    if (!userForConfirmation) {
+    if (userForConfirmation) {
       return {
         status: ResultCode.ClientError,
         errorMessage:
@@ -70,6 +70,7 @@ export class AuthServices {
       };
     }
     const isConfirmed = await UserRepository.confirmRegistration(
+      // @ts-ignore
       new ObjectId(userForConfirmation.id)
     );
     if (!isConfirmed) {
