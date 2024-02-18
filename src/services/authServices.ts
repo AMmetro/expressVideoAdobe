@@ -95,12 +95,22 @@ export class AuthServices {
           `Not found user with this confirmation code ${code}`,
       };
     }
+
+    if (userForConfirmation.emailConfirmation.isConfirmed) {
+      return {
+        status: ResultCode.ClientError,
+        errorMessage:
+          `This confirmation code ${code} already been applied`,
+      };
+    }
+
     const isConfirmed = await UserRepository.confirmRegistration(userForConfirmation.id);
     if (!isConfirmed) {
       return {
         status: ResultCode.ClientError,
         errorMessage:
-          `The confirmation code ${code} expired or already been applied`,
+          // `The confirmation code ${code} expired or already been applied`,
+          JSON.stringify({ errorsMessages: [{ message: "applied error", field: "code" }] })
       };
     }
 
