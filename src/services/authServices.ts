@@ -8,6 +8,7 @@ import { add } from "date-fns/add";
 import { UserRepository } from "../repositories/user-repository";
 import { emailAdaper } from "../utils/emailAdaper";
 import { ObjectId } from "mongodb";
+import { usersCollection } from "../BD/db";
 
 export class AuthServices {
   static async registrationUserWithConfirmation(
@@ -38,7 +39,14 @@ export class AuthServices {
         isConfirmed: false,
       },
     };
-    const newUserId = await UserRepository.createWithOutConfirmation(newUser);
+    const newUserId = await UserRepository.createWithConfirmation(newUser);
+
+    // ------------------------------------------------------------------
+    const users = await usersCollection.find().toArray();
+    console.log("-------------")
+    console.log(users)
+    // ------------------------------------------------------------------
+
     if (!newUserId) {
       return {
         status: ResultCode.ClientError,
@@ -60,20 +68,27 @@ export class AuthServices {
   }
 
   static async confirmEmail(code: string): Promise<any> {
+    // const userForConfirmation = await UserQueryRepository.getByConfirmationCode(code);
     const userForConfirmation = await UserQueryRepository.getByConfirmationCode(code);
     // !userForConfirmation
 
-    const emailInfo = {
-      email: "7656077@mail.ru",
-      subject: "debug",
-      confirmationCode: JSON.stringify(userForConfirmation),
-    }
+    // console.log("code")
+    // console.log(code)
+    console.log("1111111111111111111111111111111")
+    console.log(userForConfirmation)
 
-    // @ts-ignore
-    await emailAdaper.sendEmailRecoveryMessage(emailInfo)
+// --------------------------------------------------------
+    // const emailInfo = {
+    //   email: "7656077@mail.ru",
+    //   subject: "debug",
+    //   confirmationCode: JSON.stringify(userForConfirmation),
+    // }
 
+    // // @ts-ignore
+    // await emailAdaper.sendEmailRecoveryMessage(emailInfo)
+// -------------------------------------------------------------
 
-    if (userForConfirmation) {
+    if (!userForConfirmation) {
       return {
         status: ResultCode.ClientError,
         errorMessage:
@@ -81,7 +96,6 @@ export class AuthServices {
       };
     }
     const isConfirmed = await UserRepository.confirmRegistration(
-      // @ts-ignore
       new ObjectId(userForConfirmation.id)
     );
     if (!isConfirmed) {
@@ -91,6 +105,10 @@ export class AuthServices {
           `The confirmation code ${code} expired or already been applied`,
       };
     }
+
+    console.log("isConfirmed")
+    console.log(isConfirmed)
+
     return {
       status: ResultCode.Success,
       data: isConfirmed,

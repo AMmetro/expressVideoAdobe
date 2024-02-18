@@ -13,14 +13,3 @@ type emailConfirmationType = {
   isConfirmed: boolean;
 };
 
-// export type createWithConfirmationType = {
-//   login: string;
-//   email: string;
-//   passwordHash: string;
-//   createdAd: string;
-//   emailConfirmation: {
-//     confirmationCode: string;
-//     expirationDate: any;
-//     isConfirmed: boolean;
-//   };
-// };
