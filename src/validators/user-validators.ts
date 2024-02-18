@@ -33,6 +33,8 @@ export const loginExistValidator = body("login").custom(async (value: string)=>{
 
 export const userValidation=()=>[loginValidator, passwordValidator, emailValidator, inputValidationMiddleware]
 
+// export const emailOrLoginExistValidation=()=>[emailExistValidator, loginExistValidator, inputValidationMiddleware]
+
 
 
 

@@ -21,8 +21,8 @@ export class AuthServices {
     if (userAllreadyExist) {
       return {
         status: ResultCode.ClientError,
-        // errorMessage: "User allready exist",
-        errorMessage: { errorsMessages: [{ message: "Any<String>", field: "email" }] },
+        errorMessage: "User allready exist",
+        // errorMessage: { errorsMessages: [{ message: "Any<String>", field: "email" }] },
       };
     }
     const passwordSalt = await hashServise.generateSalt();

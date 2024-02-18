@@ -7,7 +7,7 @@ import { UserServices } from "../services/userServices";
 import { UserQueryRepository } from "../repositories/user.query-repository";
 import { jwtServise } from "../utils/JWTservise";
 import { jwtValidationMiddleware } from "../auth/jwtAuth-middleware";
-import { emailValidator, emailsExistValidator, loginValidator, passwordValidator } from "../validators/user-validators";
+import { emailExistValidator, emailOrLoginExistValidation, emailValidator, loginExistValidator, loginValidator, passwordValidator } from "../validators/user-validators";
 import { inputValidationMiddleware } from "../inputValidation/input-validation-middleware";
 import { AuthServices } from "../services/authServices";
 import { ResultCode } from "../validators/error-validators";
@@ -26,8 +26,10 @@ authRoute.post(
   "/registration",
   passwordValidator,
   emailValidator,
-  emailsExistValidator,
   loginValidator,
+  emailExistValidator,
+  loginExistValidator,
+  // emailOrLoginExistValidation,
   inputValidationMiddleware,
   async (req: RequestWithBody<RegistrationUserInputModel>, res: Response) => {
     const {password, login, email} = req.body
