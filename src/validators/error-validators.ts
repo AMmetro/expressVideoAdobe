@@ -2,6 +2,7 @@ import { ErrorMessageType } from './../models/common';
 export enum ResultCode {
     Success = "Success",
     NotFound = "NotFound",
+    ClientError = "ClientError",
     Forbidden = "Forbidden",
     Unauthorised = "Unauthorised",
     Conflict = "Conflict",

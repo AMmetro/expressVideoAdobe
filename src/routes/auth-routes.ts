@@ -10,6 +10,8 @@ import { jwtValidationMiddleware } from "../auth/jwtAuth-middleware";
 import { emailValidator, loginValidator, passwordValidator } from "../validators/user-validators";
 import { inputValidationMiddleware } from "../inputValidation/input-validation-middleware";
 import { AuthServices } from "../services/authServices";
+import { ResultCode } from "../validators/error-validators";
+import { sendCustomError } from "../utils/sendResponse";
 export const authRoute = Router({});
 
 authRoute.get(
@@ -33,16 +35,58 @@ authRoute.post(
       return;  
     }
     const registrationData = {login:login, password: password, email: email }
-    const registrationUser = await AuthServices.registrationUserWithConfirmation(registrationData) 
-    // if (!authUsers) {
-    //   res.sendStatus(401); 
-    //   return;
-    // }
+    const result = await AuthServices.registrationUserWithConfirmation(registrationData) 
+  
+    if (result.status === ResultCode.Success){
+      res.sendStatus(204)
+    }
+      else {sendCustomError(res, result)}
+
     // const accessToken = await jwtServise.createJWT(authUsers)
     // res.status(200).send({accessToken});
-    res.send(registrationUser);
+    // res.send(registrationUser);
   }
 );
+
+authRoute.post(
+  "/registration-confirmation",
+  async (req: RequestWithBody<{code:string}>, res: Response) => {
+    const { code } = req.body;
+    if (!code) {
+      res.sendStatus(400);
+      return;
+    }
+    const result = await AuthServices.confirmEmail(code);
+    if (result.status === ResultCode.Success){
+      res.status(204);
+    } else {sendCustomError(res, result)}
+  }
+  
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 authRoute.post(
   "/login",

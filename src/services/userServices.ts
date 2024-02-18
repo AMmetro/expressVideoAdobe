@@ -7,21 +7,20 @@ import { UserQueryRepository } from "../repositories/user.query-repository";
 import { AuthUserInputModel } from "../models/user/input/authUser-input-model";
 import bcrypt from "bcrypt";
 import { userMapper } from "../models/user/mapper/user-mapper";
+import { hashServise } from "../utils/JWTservise";
 
 export class UserServices {
-  static async _generateHash(password: string, paswordSalt: string) {
-    const hash = await bcrypt.hash(password, paswordSalt);
-    return hash;
-  }
+  // static async _generateHash(password: string, paswordSalt: string) {
+  //   const hash = await bcrypt.hash(password, paswordSalt);
+  //   return hash;
+  // }
 
   static async create(
     createUserModel: RequestInputUserType
   ): Promise<OutputUserType | null> {
     const { login, password, email } = createUserModel;
-
     const passwordSalt = await bcrypt.genSalt(10);
-    const passwordHash = await this._generateHash(password, passwordSalt);
-
+    const passwordHash = await hashServise.generateHash(password, passwordSalt);
     const newUserModal: UserDB = {
       login: login,
       passwordSalt: passwordSalt,
@@ -29,8 +28,7 @@ export class UserServices {
       email: email,
       createdAt: new Date().toISOString(),
     };
-
-    const newUserId = await UserRepository.create(newUserModal);
+    const newUserId = await UserRepository.createWithOutConfirmation(newUserModal);
     if (!newUserId) {
       return null;
     }
@@ -54,15 +52,19 @@ export class UserServices {
       login:authUserData.loginOrEmail,
       email:authUserData.loginOrEmail}
 
-    const user: WithId<UserDB> | null = await UserQueryRepository.getOneForAuth(userSearchData);
+    const user: WithId<UserDB> | null = await UserQueryRepository.getOneByLoginOrEmail(userSearchData);
     if (!user) {
       return null;
     }
-    const requestedPasswordHash = await this._generateHash(
+    // const requestedPasswordHash = await this._generateHash(
+    //   authUserData.password,
+    //   user.passwordSalt
+    // );
+    const userLogInPasswordHash = await hashServise.generateHash(
       authUserData.password,
       user.passwordSalt
     );
-    if (user.passwordHash !== requestedPasswordHash || !user) {
+    if (user.passwordHash !== userLogInPasswordHash || !user) {
       return null;
     }
     return userMapper(user);

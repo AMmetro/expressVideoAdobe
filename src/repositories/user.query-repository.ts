@@ -55,7 +55,6 @@ export class UserQueryRepository {
         ],
       };
     }
-
     try {
       const users: WithId<UserDB>[] = await usersCollection
         .find(filter)
@@ -87,7 +86,15 @@ export class UserQueryRepository {
     return userMapper(user);
   }
 
-  static async getOneForAuth(searchData: searchDataType): Promise<WithId<UserDB> | null> {
+  static async getByConfirmationCode(code: string): Promise<OutputUserType | null> {
+    const user = await usersCollection.findOne({ "emailConfirmation.confirmationCode": code });
+    if (!user) {
+      return null;
+    }
+    return userMapper(user);
+  }
+
+  static async getOneByLoginOrEmail(searchData: searchDataType): Promise<WithId<UserDB> | null> {
     const filter = {
       $or: [
         { email: { $regex: searchData.email, $options: "i" } },
