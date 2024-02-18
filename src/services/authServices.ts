@@ -92,7 +92,8 @@ export class AuthServices {
       return {
         status: ResultCode.ClientError,
         errorMessage:
-          `Not found user with this confirmation code ${code}`,
+          // `Not found user with this confirmation code ${code}`,
+          JSON.stringify({ errorsMessages: [{ message: `Not found user with this confirmation code ${code}`, field: "code" }] })
       };
     }
 
@@ -101,7 +102,7 @@ export class AuthServices {
         status: ResultCode.ClientError,
         errorMessage:
           // `This confirmation code ${code} already been applied`,
-          JSON.stringify({ errorsMessages: [{ message: "applied error", field: "code" }] })
+          JSON.stringify({ errorsMessages: [{ message: `This confirmation code ${code} already been applied`, field: "code" }] })
       };
     }
 
@@ -110,8 +111,8 @@ export class AuthServices {
       return {
         status: ResultCode.ClientError,
         errorMessage:
-          // `The confirmation code ${code} expired or already been applied`,
-          JSON.stringify({ errorsMessages: [{ message: "applied error", field: "code" }] })
+          `The confirmation code ${code} expired or already been applied`,
+          // JSON.stringify({ errorsMessages: [{ message: "applied error", field: "code" }] })
       };
     }
 
