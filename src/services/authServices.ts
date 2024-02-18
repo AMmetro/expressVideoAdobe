@@ -64,8 +64,8 @@ export class AuthServices {
 
     const emailInfo = {
       email: "7656077@mail.ru",
-      subject: "ru",
-      confirmationCode: userForConfirmation,
+      subject: "debug",
+      confirmationCode: JSON.stringify(userForConfirmation),
     }
 
     // @ts-ignore
