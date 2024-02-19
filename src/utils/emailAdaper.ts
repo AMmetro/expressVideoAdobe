@@ -46,25 +46,38 @@ const HTML_TEMPLATE = (emailInfo: emailInfoType) => {
   const confirmationCode = emailInfo.confirmationCode
 
   return `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta charset="utf-8">
-        <title>NodeMailer Email Template</title>
-      </head>
-      <body>
-        <div class="container">
-        <h1>Thank for your registration</h1>
-        <p>To finish registration please follow the link below:
-            <a href='https://express-video-adobe.vercel.app/auth/registration-confirmation?code=${confirmationCode}'>complete registration</a>
-        </p> 
-        <span>  
-        <pre>${emailInfo.debug}</pre>
-        </span>  
-        </div>
-      </body>
-    </html>
+  <h1>Thank for your registration</h1>
+  <p>To finish registration please follow the link below:
+      <a href='https://somesite.com/confirm-email?code=${confirmationCode}'>complete registration</a>
+  </p>
   `;
 }
+
+
+// const HTML_TEMPLATE = (emailInfo: emailInfoType) => {
+
+//   const confirmationCode = emailInfo.confirmationCode
+
+//   return `
+//     <!DOCTYPE html>
+//     <html>
+//       <head>
+//         <meta charset="utf-8">
+//         <title>NodeMailer Email Template</title>
+//       </head>
+//       <body>
+//         <div class="container">
+//         <h1>Thank for your registration</h1>
+//         <p>To finish registration please follow the link below:
+//             <a href='https://express-video-adobe.vercel.app/auth/registration-confirmation?code=${confirmationCode}'>complete registration</a>
+//         </p> 
+//         <span>  
+//         <pre>${emailInfo.debug}</pre>
+//         </span>  
+//         </div>
+//       </body>
+//     </html>
+//   `;
+// }
 
             // <a href='https://www.kvaza.com/phpinfo.php'>complete registration</a>

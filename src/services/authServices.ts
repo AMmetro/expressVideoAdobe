@@ -57,17 +57,25 @@ export class AuthServices {
     // -----------------------------------------------------------------------------
 
     // const findedUsers = await usersCollection.findOne({ "emailConfirmation.confirmationCode": code });
-    const findedUsers = await usersCollection.find().toArray();
-    const emailInfoDebug = {
-      email: "7656077@mail.ru",
-      message: "debug",
-      subject: "debug created user",
-      confirmationCode: newUser.emailConfirmation!.confirmationCode,
-      debug: JSON.stringify(findedUsers),
-    };
-    await emailAdaper.sendEmailRecoveryMessage(emailInfoDebug);
+    // const findedUsers = await usersCollection.find().toArray();
+    // const emailInfoDebug = {
+    //   email: "7656077@mail.ru",
+    //   message: "debug",
+    //   subject: "debug created user",
+    //   confirmationCode: newUser.emailConfirmation!.confirmationCode,
+    //   debug: JSON.stringify(findedUsers),
+    // };
+    // await emailAdaper.sendEmailRecoveryMessage(emailInfoDebug);
     // -----------------------------------------------------------------------------
 
+       const emailInfo = {
+      email: newUser.email,
+      message: "message",
+      subject: "debug confirmEmail",
+      confirmationCode: newUser.emailConfirmation.confirmationCode,
+      // debug: JSON.stringify(findedUsers),
+    };
+    await emailAdaper.sendEmailRecoveryMessage(emailInfo);
 
     return {
       status: ResultCode.Success,
@@ -75,21 +83,22 @@ export class AuthServices {
     };
   }
 
+
   static async confirmEmail(code: string): Promise<any> {
     const userForConfirmation = await UserQueryRepository.getByConfirmationCode(code);
 
     // -----------------------------------------------------------------------------
 
     // const findedUsers = await usersCollection.findOne({ "emailConfirmation.confirmationCode": code });
-    const findedUsers = await usersCollection.find();
-    const emailInfo = {
-      email: "7656077@mail.ru",
-      message: "debug",
-      subject: "debug confirmEmail",
-      confirmationCode: code,
-      debug: JSON.stringify(findedUsers),
-    };
-    await emailAdaper.sendEmailRecoveryMessage(emailInfo);
+    // const findedUsers = await usersCollection.find();
+    // const emailInfo = {
+    //   email: "7656077@mail.ru",
+    //   message: "debug",
+    //   subject: "debug confirmEmail",
+    //   confirmationCode: code,
+    //   debug: JSON.stringify(findedUsers),
+    // };
+    // await emailAdaper.sendEmailRecoveryMessage(emailInfo);
     // -----------------------------------------------------------------------------
 
     console.log("--userForConfirmation----")
@@ -152,6 +161,7 @@ export class AuthServices {
       email: userForEmailResending.email,
       confirmationCode: newConfirmationCode,
       subject: "resending confirmation code",
+      message: "debug resending code",
     };
     await emailAdaper.sendEmailRecoveryMessage(emailInfo);
     return {
