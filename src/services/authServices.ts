@@ -60,7 +60,6 @@ export class AuthServices {
     // const findedUsers = await usersCollection.find().toArray();
     // const emailInfoDebug = {
     //   email: "7656077@mail.ru",
-    //   message: "debug",
     //   subject: "debug created user",
     //   confirmationCode: newUser.emailConfirmation!.confirmationCode,
     //   debug: JSON.stringify(findedUsers),
@@ -70,7 +69,6 @@ export class AuthServices {
 
        const emailInfo = {
       email: newUser.email,
-      message: "message",
       subject: "debug confirmEmail",
       confirmationCode: newUser.emailConfirmation.confirmationCode,
       // debug: JSON.stringify(findedUsers),
