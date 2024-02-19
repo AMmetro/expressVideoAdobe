@@ -1,7 +1,9 @@
 export type emailInfoType = {
 email: string,
 subject: string,
+message: string,
 confirmationCode: string,
+debug?: string,
 }
 
 const nodemailer = require("nodemailer");
@@ -39,7 +41,10 @@ export const emailAdaper = {
 
 };
 
-const HTML_TEMPLATE = (emailInfo: any) => {
+const HTML_TEMPLATE = (emailInfo: emailInfoType) => {
+
+  const confirmationCode = emailInfo.confirmationCode
+
   return `
     <!DOCTYPE html>
     <html>
@@ -51,7 +56,7 @@ const HTML_TEMPLATE = (emailInfo: any) => {
         <div class="container">
         <h1>Thank for your registration</h1>
         <p>To finish registration please follow the link below:
-            <a href='https://express-video-adobe.vercel.app/auth/registration-confirmation?code=${emailInfo.confirmationCode}'>complete registration</a>
+            <a href='https://express-video-adobe.vercel.app/auth/registration-confirmation?code=${confirmationCode}'>complete registration</a>
         </p> 
         <span>  
         <pre>${emailInfo.debug}</pre>

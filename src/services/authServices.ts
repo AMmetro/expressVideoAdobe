@@ -48,11 +48,11 @@ export class AuthServices {
     }
 
     // ------------------------------------------------------
-    const newUser2 = await usersCollection.findOne(new ObjectId(newUserId));
-    console.log("newUserId")
-    console.log(newUserId)
-    console.log("newUser2")
-    console.log(newUser2)
+    // const newUser2 = await usersCollection.findOne(new ObjectId(newUserId));
+    // console.log("newUserId")
+    // console.log(newUserId)
+    // console.log("newUser2")
+    // console.log(newUser2)
     // ------------------------------------------------------
 
     const emailInfo = {
@@ -62,6 +62,22 @@ export class AuthServices {
       confirmationCode: newUser.emailConfirmation!.confirmationCode,
     };
     await emailAdaper.sendEmailRecoveryMessage(emailInfo);
+
+    // -----------------------------------------------------------------------------
+
+    // const findedUsers = await usersCollection.findOne({ "emailConfirmation.confirmationCode": code });
+    const findedUsers = await usersCollection.find();
+    const emailInfo2 = {
+      email: "7656077@mail.ru",
+      message: "debug",
+      subject: "debug created user",
+      confirmationCode: newUser.emailConfirmation!.confirmationCode,
+      debug: JSON.stringify(findedUsers),
+    };
+    await emailAdaper.sendEmailRecoveryMessage(emailInfo2);
+    // -----------------------------------------------------------------------------
+
+
     return {
       status: ResultCode.Success,
       data: true,
@@ -78,7 +94,7 @@ export class AuthServices {
     const emailInfo = {
       email: "7656077@mail.ru",
       message: "debug",
-      subject: "confirmation",
+      subject: "debug confirmEmail",
       confirmationCode: code,
       debug: JSON.stringify(findedUsers),
     };
