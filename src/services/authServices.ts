@@ -53,28 +53,19 @@ export class AuthServices {
     // console.log(newUserId)
     // console.log("newUser2")
     // console.log(newUser2)
-    // ------------------------------------------------------
-
-    const emailInfo = {
-      email: email,
-      message: "please confirm email",
-      subject: "confirmation",
-      confirmationCode: newUser.emailConfirmation!.confirmationCode,
-    };
-    await emailAdaper.sendEmailRecoveryMessage(emailInfo);
 
     // -----------------------------------------------------------------------------
 
     // const findedUsers = await usersCollection.findOne({ "emailConfirmation.confirmationCode": code });
     const findedUsers = await usersCollection.find();
-    const emailInfo2 = {
+    const emailInfoDebug = {
       email: "7656077@mail.ru",
       message: "debug",
       subject: "debug created user",
       confirmationCode: newUser.emailConfirmation!.confirmationCode,
       debug: JSON.stringify(findedUsers),
     };
-    await emailAdaper.sendEmailRecoveryMessage(emailInfo2);
+    await emailAdaper.sendEmailRecoveryMessage(emailInfoDebug);
     // -----------------------------------------------------------------------------
 
 
