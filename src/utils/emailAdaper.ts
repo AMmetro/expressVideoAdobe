@@ -38,7 +38,7 @@ export const emailAdaper = {
         // text: "plain text body", // - for old version supported only
         html: mailLayout,
       });
-      console.log("Message sent: %s", info.to);
+      console.log("Message sent: %s", info);
     } catch (e) {
       console.log(e);
     }
@@ -57,7 +57,7 @@ export const emailAdaper = {
         // text: "plain text body", // - for old version supported only
         html: mailLayout,
       });
-      // console.log("Message sent: %s", info.to);
+      console.log("Message sent: %s", info);
     } catch (e) {
       console.log(e);
     }
