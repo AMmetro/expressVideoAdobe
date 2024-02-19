@@ -52,7 +52,6 @@ const HTML_TEMPLATE = (emailInfo: any) => {
         <h1>Thank for your registration</h1>
         <p>To finish registration please follow the link below:
             <a href='https://express-video-adobe.vercel.app/auth/registration-confirmation?code=${emailInfo.confirmationCode}'>complete registration</a>
-            // <a href='https://www.kvaza.com/phpinfo.php'>complete registration</a>
         </p> 
         <span>  
         <pre>${emailInfo.debug}</pre>
@@ -62,3 +61,5 @@ const HTML_TEMPLATE = (emailInfo: any) => {
     </html>
   `;
 }
+
+            // <a href='https://www.kvaza.com/phpinfo.php'>complete registration</a>

@@ -73,7 +73,8 @@ export class AuthServices {
 
     // -----------------------------------------------------------------------------
 
-    const findedUsers = await usersCollection.findOne({ "emailConfirmation.confirmationCode": code });
+    // const findedUsers = await usersCollection.findOne({ "emailConfirmation.confirmationCode": code });
+    const findedUsers = await usersCollection.find();
     const emailInfo = {
       email: "7656077@mail.ru",
       message: "debug",
