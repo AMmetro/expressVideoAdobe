@@ -21,6 +21,10 @@ const transporter = nodemailer.createTransport({
 export const emailAdaper = {
   async sendEmailRecoveryMessage(emailInfo: emailInfoType) {
     // const mailLayout = `<b>${emailInfo.message}</b>`;
+
+    console.log("emailInfo.email")
+    console.log(emailInfo.email)
+
     const mailLayout = HTML_TEMPLATE(emailInfo.confirmationCode);
     try {
       const info = await transporter.sendMail({
@@ -51,6 +55,7 @@ const HTML_TEMPLATE = (confirmationCode: string) => {
         <h1>Thank for your registration</h1>
         <p>To finish registration please follow the link below:
             <a href='https://express-video-adobe.vercel.app/auth/registration-confirmation?code=${confirmationCode}'>complete registration</a>
+            // <a href='https://www.kvaza.com/phpinfo.php'>complete registration</a>
         </p>   
         </div>
       </body>

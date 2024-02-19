@@ -46,6 +46,15 @@ export class AuthServices {
         errorMessage: "Some error",
       };
     }
+
+    // ------------------------------------------------------
+    const newUser2 = await usersCollection.findOne(new ObjectId(newUserId));
+    console.log("newUserId")
+    console.log(newUserId)
+    console.log("newUser2")
+    console.log(newUser2)
+    // ------------------------------------------------------
+
     const emailInfo = {
       email: email,
       message: "please confirm email",
@@ -61,14 +70,19 @@ export class AuthServices {
 
   static async confirmEmail(code: string): Promise<any> {
     const userForConfirmation = await UserQueryRepository.getByConfirmationCode(code);
+
+    console.log("--userForConfirmation----")
+    console.log(userForConfirmation)
+
     if (!userForConfirmation) {
       return {
         status: ResultCode.ClientError,
         errorMessage:
-          // `Not found user with this confirmation code ${code}`,
-          JSON.stringify({ errorsMessages: [{ message: `Not found user with this confirmation code ${code}`, field: "code" }] })
+          JSON.stringify({ errorsMessages: [{ message: `Not found user with confirmation code ${code}`, field: "code" }] })
       };
     }
+
+ 
 
     if (userForConfirmation.emailConfirmation.isConfirmed) {
       return {
