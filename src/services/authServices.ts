@@ -141,7 +141,7 @@ export class AuthServices {
       await UserQueryRepository.getOneByLoginOrEmail(userSearchData);
     if (!userForEmailResending) {
       return {
-        status: ResultCode.NotFound,
+        status: ResultCode.ClientError,
         errorMessage: JSON.stringify({ errorsMessages: [{ message: `Not found user with ${email}`, field: "email" }] }),
       };
     }
@@ -159,7 +159,6 @@ export class AuthServices {
       email: userForEmailResending.email,
       confirmationCode: newConfirmationCode,
       subject: "resending confirmation code",
-      yyyyyyyyyyyyy: "debug resending code",
     };
      emailAdaper.sendEmailRecoveryMessage(emailInfo);
     return {
