@@ -7,7 +7,7 @@ import { UserServices } from "../services/userServices";
 import { UserQueryRepository } from "../repositories/user.query-repository";
 import { jwtServise } from "../utils/JWTservise";
 import { jwtValidationMiddleware } from "../auth/jwtAuth-middleware";
-import { emailExistValidator, emailIsAplliedValidator, emailValidator, loginExistValidator, loginValidator, passwordValidator } from "../validators/user-validators";
+import { codeExistValidator, emailExistValidator, emailIsAplliedValidator, emailValidator, loginExistValidator, loginValidator, passwordValidator } from "../validators/user-validators";
 import { inputValidationMiddleware } from "../inputValidation/input-validation-middleware";
 import { AuthServices } from "../services/authServices";
 import { ResultCode } from "../validators/error-validators";
@@ -46,6 +46,8 @@ authRoute.post(
 
 authRoute.post(
   "/registration-confirmation",
+  codeExistValidator,
+  inputValidationMiddleware,
   async (req: RequestWithBody<{code:string}>, res: Response) => {
     const  confirmationCode = req.body.code;
     if (!confirmationCode) {

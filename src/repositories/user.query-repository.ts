@@ -96,6 +96,8 @@ export class UserQueryRepository {
     if (!user) {
       return null;
     }
+    console.log("userMapper")
+    console.log(userMapper(user))
     return userMapper(user);
   }
 

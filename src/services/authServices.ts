@@ -78,7 +78,7 @@ export class AuthServices {
       return {
         status: ResultCode.ClientError,
         errorMessage:
-          JSON.stringify({ errorsMessages: [{ message: `2Not found user with confirmation code ${userForConfirmation}`, field: "code" }] })
+          JSON.stringify({ errorsMessages: [{ message: `Not found user with confirmation code ${code}`, field: "code" }] })
       };
     }
 

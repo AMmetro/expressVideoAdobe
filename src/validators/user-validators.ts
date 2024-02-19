@@ -36,6 +36,17 @@ export const emailExistValidator = body("email").custom(
   }
 );
 
+export const codeExistValidator = body("code").custom(
+  async (value: string) => {
+    const existingUser  = await usersCollection.findOne({ "emailConfirmation.confirmationCode": value })
+    if (!existingUser) {
+      // false
+      throw Error(`user with code ${value} not found`);
+    }
+    return true;
+  }
+);
+
 export const loginExistValidator = body("login").custom(
   async (value: string) => {
     const existingLogin = await usersCollection.findOne({ login: value });
