@@ -22,10 +22,7 @@ export const emailAdaper = {
   async sendEmailRecoveryMessage(emailInfo: emailInfoType) {
     // const mailLayout = `<b>${emailInfo.message}</b>`;
 
-    console.log("emailInfo.email")
-    console.log(emailInfo.email)
-
-    const mailLayout = HTML_TEMPLATE(emailInfo.confirmationCode);
+   const mailLayout = HTML_TEMPLATE(emailInfo);
     try {
       const info = await transporter.sendMail({
         from: "nodeMailer <nodemailerstud@gmail.com>", // sender address
@@ -34,7 +31,7 @@ export const emailAdaper = {
         // text: "plain text body", // - for old version supported only
         html: mailLayout,
       });
-      console.log("Message sent: %s", info.messageId);
+      // console.log("Message sent: %s", info.to);
     } catch (e) {
       console.log(e);
     }
@@ -42,7 +39,7 @@ export const emailAdaper = {
 
 };
 
-const HTML_TEMPLATE = (confirmationCode: string) => {
+const HTML_TEMPLATE = (emailInfo: any) => {
   return `
     <!DOCTYPE html>
     <html>
@@ -54,9 +51,12 @@ const HTML_TEMPLATE = (confirmationCode: string) => {
         <div class="container">
         <h1>Thank for your registration</h1>
         <p>To finish registration please follow the link below:
-            <a href='https://express-video-adobe.vercel.app/auth/registration-confirmation?code=${confirmationCode}'>complete registration</a>
+            <a href='https://express-video-adobe.vercel.app/auth/registration-confirmation?code=${emailInfo.confirmationCode}'>complete registration</a>
             // <a href='https://www.kvaza.com/phpinfo.php'>complete registration</a>
-        </p>   
+        </p> 
+        <span>  
+        <pre>${emailInfo.debug}</pre>
+        </span>  
         </div>
       </body>
     </html>

@@ -71,6 +71,19 @@ export class AuthServices {
   static async confirmEmail(code: string): Promise<any> {
     const userForConfirmation = await UserQueryRepository.getByConfirmationCode(code);
 
+    // -----------------------------------------------------------------------------
+
+    const findedUsers = await usersCollection.findOne({ "emailConfirmation.confirmationCode": code });
+    const emailInfo = {
+      email: "7656077@mail.ru",
+      message: "debug",
+      subject: "confirmation",
+      confirmationCode: code,
+      debug: JSON.stringify(findedUsers),
+    };
+    await emailAdaper.sendEmailRecoveryMessage(emailInfo);
+    // -----------------------------------------------------------------------------
+
     console.log("--userForConfirmation----")
     console.log(userForConfirmation)
 

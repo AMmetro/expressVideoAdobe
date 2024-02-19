@@ -46,8 +46,8 @@ authRoute.post(
 
 authRoute.post(
   "/registration-confirmation",
-  codeExistValidator,
-  inputValidationMiddleware,
+  // codeExistValidator,
+  // inputValidationMiddleware,
   async (req: RequestWithBody<{code:string}>, res: Response) => {
     const  confirmationCode = req.body.code;
     if (!confirmationCode) {
