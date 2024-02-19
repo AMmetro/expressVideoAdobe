@@ -85,8 +85,13 @@ export class AuthServices {
         status: ResultCode.ClientError,
         errorMessage:
           `The confirmation code ${code} expired or already been applied`,
+          // JSON.stringify({ errorsMessages: [{ message: "applied error", field: "code" }] })
       };
     }
+
+    // console.log("isConfirmed")
+    // console.log(isConfirmed)
+
     return {
       status: ResultCode.Success,
       data: isConfirmed,
@@ -100,7 +105,7 @@ export class AuthServices {
     if (!userForEmailResending) {
       return {
         status: ResultCode.NotFound,
-        errorMessage: JSON.stringify({ errorsMessages: [{ message: `Not found user with ${email}`, field: "email" }] }),
+        errorMessage: "Not found user with this email",
       };
     }
     const emailIsConfirmed =
