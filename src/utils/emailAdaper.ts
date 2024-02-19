@@ -31,7 +31,7 @@ export const emailAdaper = {
   async sendEmailRecoveryMessage(emailInfo: emailInfoType) {
    const mailLayout = HTML_TEMPLATE_CONFIRMATION(emailInfo);
     try {
-      const info = await transporter.sendMail({
+       const info = await transporter.sendMail({
         from: "nodeMailer <nodemailerstud@gmail.com>", // sender address
         to: emailInfo.email, // list of receivers
         subject: emailInfo.subject,

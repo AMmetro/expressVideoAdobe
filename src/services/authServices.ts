@@ -69,7 +69,7 @@ export class AuthServices {
 
        const emailInfo = {
       email: newUser.email,
-      subject: "debug confirmEmail",
+      subject: "confirm Email",
       confirmationCode: newUser.emailConfirmation.confirmationCode,
       // debug: JSON.stringify(findedUsers),
     };
@@ -159,9 +159,9 @@ export class AuthServices {
       email: userForEmailResending.email,
       confirmationCode: newConfirmationCode,
       subject: "resending confirmation code",
-      message: "debug resending code",
+      yyyyyyyyyyyyy: "debug resending code",
     };
-    await emailAdaper.sendEmailRecoveryMessage(emailInfo);
+     emailAdaper.sendEmailRecoveryMessage(emailInfo);
     return {
       status: ResultCode.Success,
       data: true,
