@@ -88,16 +88,9 @@ export class UserQueryRepository {
 
   static async getByConfirmationCode(code: string): Promise<OutputUserType | null> {
     const user = await usersCollection.findOne({ "emailConfirmation.confirmationCode": code });
-    console.log("code")
-    console.log(code)
-    console.log("user")
-    console.log(user)
-    // const user = await usersCollection.find({});
     if (!user) {
       return null;
     }
-    console.log("userMapper")
-    console.log(userMapper(user))
     return userMapper(user);
   }
 

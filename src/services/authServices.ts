@@ -48,11 +48,9 @@ export class AuthServices {
     }
 
     // ------------------------------------------------------
-    // const newUser2 = await usersCollection.findOne(new ObjectId(newUserId));
-    // console.log("newUserId")
-    // console.log(newUserId)
-    // console.log("newUser2")
-    // console.log(newUser2)
+    const newUserPrint = await usersCollection.findOne(new ObjectId(newUserId));
+    console.log("newUserPrint")
+    console.log(newUserPrint)
 
     // -----------------------------------------------------------------------------
 
@@ -99,8 +97,8 @@ export class AuthServices {
     // await emailAdaper.sendEmailRecoveryMessage(emailInfo);
     // -----------------------------------------------------------------------------
 
-    console.log("--userForConfirmation----")
-    console.log(userForConfirmation)
+    // console.log("--userForConfirmation----")
+    // console.log(userForConfirmation)
 
     if (!userForConfirmation) {
       return {
@@ -109,9 +107,6 @@ export class AuthServices {
           JSON.stringify({ errorsMessages: [{ message: `Not found user with confirmation code ${code}`, field: "code" }] })
       };
     }
-
- 
-
     if (userForConfirmation.emailConfirmation.isConfirmed) {
       return {
         status: ResultCode.ClientError,
@@ -120,13 +115,19 @@ export class AuthServices {
           JSON.stringify({ errorsMessages: [{ message: `This confirmation code ${code} already been applied`, field: "code" }] })
       };
     }
-
-    const isConfirmed = await UserRepository.confirmRegistration(userForConfirmation.id);
-    if (!isConfirmed) {
+    if (userForConfirmation.emailConfirmation.expirationDate < new Date()) {
       return {
         status: ResultCode.ClientError,
         errorMessage:
-          `The confirmation code ${code} expired or already been applied`,
+          JSON.stringify({ errorsMessages: [{ message: `Confirmation code ${code} expired`, field: "code" }] })
+      };
+    }
+    const isConfirmed = await UserRepository.confirmRegistration(userForConfirmation.id);
+    if (!isConfirmed) {
+      return {
+        status: ResultCode.Conflict,
+        errorMessage:
+          `Confirmation code ${code}`,
       };
     }
     return {
@@ -161,6 +162,16 @@ export class AuthServices {
       subject: "resending confirmation code",
     };
      emailAdaper.sendEmailRecoveryMessage(emailInfo);
+
+    //  ---------------------------------------------------------
+    // const emailDebug = {
+    //   email: userForEmailResending.email,
+    //   confirmationCode: newConfirmationCode,
+    //   subject: "resending confirmation code",
+    //   debug: "debug",
+    // };
+    //  emailAdaper.sendEmailDebug(emailDebug);
+    //  --------------------------------------------------------
     return {
       status: ResultCode.Success,
       data: true,
