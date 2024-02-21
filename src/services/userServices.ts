@@ -30,7 +30,6 @@ export class UserServices {
         isConfirmed: true,
       },
     };
-
     const newUserId = await UserRepository.createWithOutConfirmation(newUserModal);
     if (!newUserId) {
       return null;

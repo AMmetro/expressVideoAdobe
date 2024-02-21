@@ -48,7 +48,9 @@ usersRoute.post(
       res.sendStatus(400);
       return;
     }
-    res.status(201).send(createdUser);
+    const createdUserId = createdUser.id;
+    const createdUserLogin = createdUser.login;
+    res.status(201).send({id:createdUserId, login:createdUserLogin});
   }
 );
 
