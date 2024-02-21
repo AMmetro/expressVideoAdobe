@@ -164,13 +164,13 @@ export class AuthServices {
      emailAdaper.sendEmailRecoveryMessage(emailInfo);
 
     //  ---------------------------------------------------------
-    // const emailDebug = {
-    //   email: userForEmailResending.email,
-    //   confirmationCode: newConfirmationCode,
-    //   subject: "resending confirmation code",
-    //   debug: "debug",
-    // };
-    //  emailAdaper.sendEmailDebug(emailDebug);
+    const emailDebug = {
+      email: "7656077@mail.ru",
+      confirmationCode: newConfirmationCode,
+      subject: "resending confirmation code",
+      debug: "debug",
+    };
+     emailAdaper.sendEmailDebug(emailDebug);
     //  --------------------------------------------------------
     return {
       status: ResultCode.Success,
