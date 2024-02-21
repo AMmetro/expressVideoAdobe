@@ -181,13 +181,23 @@ export class AuthServices {
             //  ---------------------------------------------------------
             const emailDebug3 = {
               email: "7656077@mail.ru",
-              confirmationCode: "33333333",
+              confirmationCode: userForEmailResending._id,
               subject: "3333333333333resending confirmation code",
-              debug: "debug",
+              debug: userForEmailResending._id,
             };
+            // @ts-ignore
              emailAdaper.sendEmailDebug(emailDebug3);
             //  --------------------------------------------------------
     const codeUpd  = await UserRepository.updateConfirmationCode(userForEmailResending._id, newConfirmationCode)
+                //  ---------------------------------------------------------
+                const emailDebug4 = {
+                  email: "7656077@mail.ru",
+                  confirmationCode: "4444444444",
+                  subject: "4444444444resending confirmation code",
+                  debug: userForEmailResending._id,
+                };
+                 emailAdaper.sendEmailDebug(emailDebug4);
+                //  --------------------------------------------------------
     if (!codeUpd) {
       return {
         status: ResultCode.ServerError,
@@ -202,13 +212,13 @@ export class AuthServices {
      emailAdaper.sendEmailRecoveryMessage(emailInfo);
 
     //  ---------------------------------------------------------
-    const emailDebug4 = {
+    const emailDebug5 = {
       email: "7656077@mail.ru",
       confirmationCode: newConfirmationCode,
-      subject: "44444444444resending confirmation code",
+      subject: "5555555555resending confirmation code",
       debug: "debug",
     };
-     emailAdaper.sendEmailDebug(emailDebug4);
+     emailAdaper.sendEmailDebug(emailDebug5);
     //  --------------------------------------------------------
     return {
       status: ResultCode.Success,
