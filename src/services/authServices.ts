@@ -187,7 +187,13 @@ export class AuthServices {
             };
              emailAdaper.sendEmailDebug(emailDebug3);
             //  --------------------------------------------------------
-    await UserRepository.updateConfirmationCode(userForEmailResending._id, newConfirmationCode)
+    const codeUpd  = await UserRepository.updateConfirmationCode(userForEmailResending._id, newConfirmationCode)
+    if (!codeUpd) {
+      return {
+        status: ResultCode.ServerError,
+        errorMessage: "Som eerror",
+      };
+    }
     const emailInfo = {
       email: userForEmailResending.email,
       confirmationCode: newConfirmationCode,
@@ -196,13 +202,13 @@ export class AuthServices {
      emailAdaper.sendEmailRecoveryMessage(emailInfo);
 
     //  ---------------------------------------------------------
-    const emailDebug = {
+    const emailDebug4 = {
       email: "7656077@mail.ru",
       confirmationCode: newConfirmationCode,
-      subject: "resending confirmation code",
+      subject: "44444444444resending confirmation code",
       debug: "debug",
     };
-     emailAdaper.sendEmailDebug(emailDebug);
+     emailAdaper.sendEmailDebug(emailDebug4);
     //  --------------------------------------------------------
     return {
       status: ResultCode.Success,

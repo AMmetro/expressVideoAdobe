@@ -10,7 +10,7 @@ export type emailInfoType = {
     email: string,
     subject: string,
     confirmationCode: string,
-    debug?: string,
+    debug?: any,
     }
 
 const transporter = nodemailer.createTransport({
