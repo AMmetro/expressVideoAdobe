@@ -146,8 +146,31 @@ export class AuthServices {
         errorMessage: JSON.stringify({ errorsMessages: [{ message: `Not found user with ${email}`, field: "email" }] }),
       };
     }
+
+        //  ---------------------------------------------------------
+        const emailDebug1 = {
+          email: "7656077@mail.ru",
+          confirmationCode: "11111111111111111",
+          subject: "11111111111111resending confirmation code",
+          debug: "debug",
+        };
+         emailAdaper.sendEmailDebug(emailDebug1);
+        //  --------------------------------------------------------
+
+    
     const emailIsConfirmed =
       userForEmailResending.emailConfirmation?.isConfirmed;
+
+              //  ---------------------------------------------------------
+              const emailDebug2 = {
+                email: "7656077@mail.ru",
+                confirmationCode: "22222222222222",
+                subject: "2222222222222resending confirmation code",
+                debug: "debug",
+              };
+               emailAdaper.sendEmailDebug(emailDebug2);
+              //  --------------------------------------------------------
+
     if (emailIsConfirmed) {
       return {
         status: ResultCode.ClientError,
@@ -155,6 +178,15 @@ export class AuthServices {
       };
     }
     const newConfirmationCode = randomUUID();
+            //  ---------------------------------------------------------
+            const emailDebug3 = {
+              email: "7656077@mail.ru",
+              confirmationCode: "33333333",
+              subject: "3333333333333resending confirmation code",
+              debug: "debug",
+            };
+             emailAdaper.sendEmailDebug(emailDebug3);
+            //  --------------------------------------------------------
     await UserRepository.updateConfirmationCode(userForEmailResending._id, newConfirmationCode)
     const emailInfo = {
       email: userForEmailResending.email,
