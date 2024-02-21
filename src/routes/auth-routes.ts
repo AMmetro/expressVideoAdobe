@@ -23,6 +23,74 @@ authRoute.get(
 );
 
 authRoute.post(
+  "/refresh-token",
+  jwtValidationMiddleware,
+  async (req: Request, res: Response) => {
+    const refresh_token= req.cookies.refresh_token 
+    const userId = await jwtServise.getUserIdByRefreshToken(refresh_token)
+    // добавить юзеру обнуляемый токен в массив блокированных !!!!!!!!!!!
+     const reAuthUsers = await UserQueryRepository.getById(userId) 
+    if (!reAuthUsers) {
+      res.sendStatus(401); 
+      return;
+    }
+    const accessToken = await jwtServise.createAccessTokenJWT(reAuthUsers)
+    const refreshToken = await jwtServise.createRefreshTokenJWT(reAuthUsers)
+    return res
+    .cookie("refresh_token", refreshToken, {
+      httpOnly: true,
+      secure: true,
+    })
+    .status(200)
+    .send({accessToken});
+  }
+);
+
+authRoute.post(
+  "/login",
+  async (req: RequestWithBody<AuthUserInputModel>, res: Response) => {
+    const {password, loginOrEmail} = req.body
+    if (!password || !loginOrEmail){
+      res.sendStatus(400);
+      return;  
+    } 
+    const authData = {loginOrEmail:loginOrEmail, password: password }
+    const authUsers = await UserServices.checkCredentials(authData) 
+    if (!authUsers) {
+      res.sendStatus(401); 
+      return;
+    }
+    const accessToken = await jwtServise.createAccessTokenJWT(authUsers)
+    const refreshToken = await jwtServise.createRefreshTokenJWT(authUsers)
+    // res.status(200).send({accessToken});
+    return res
+    .cookie("refresh_token", refreshToken, {
+      httpOnly: true,
+      secure: true,
+    })
+    .status(200)
+    .send({accessToken});
+  }
+);
+
+authRoute.post(
+  "/logout", jwtValidationMiddleware,
+  async (req: Request, res: Response) => {
+    const user = await UserQueryRepository.getById(req.user!.id)
+    if (!user) {
+      res.sendStatus(401); 
+      return;
+    }
+    const refresh_token= req.cookies.refresh_token 
+    // добавить юзеру обнуляемый токен в массив блокированных 
+
+    return res
+    .clearCookie("refresh_token")
+    .sendStatus(204)
+  }
+);
+
+authRoute.post(
   "/registration",
   passwordValidator,
   emailValidator,
@@ -76,44 +144,3 @@ authRoute.post(
 );
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-authRoute.post(
-  "/login",
-  async (req: RequestWithBody<AuthUserInputModel>, res: Response) => {
-    const {password, loginOrEmail} = req.body
-    if (!password || !loginOrEmail){
-      res.sendStatus(401);
-      return;  
-    } 
-    const authData = {loginOrEmail:loginOrEmail, password: password }
-    const authUsers = await UserServices.checkCredentials(authData) 
-    if (!authUsers) {
-      res.sendStatus(401); 
-      return;
-    }
-    const accessToken = await jwtServise.createJWT(authUsers)
-    res.status(200).send({accessToken});
-  }
-);

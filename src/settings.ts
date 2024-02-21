@@ -7,9 +7,13 @@ import { authRoute } from './routes/auth-routes';
 import { commentsRoute } from './routes/comments-routes';
 
 
+
 export const app = express();
+const cookieParser = require('cookie-parser');
+
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.use("/auth", authRoute);
 app.use("/blogs", blogRoute);

@@ -10,7 +10,7 @@ export const jwtValidationMiddleware =async (req: Request, res: Response, next: 
      }
      const token = req.headers.authorization.split(" ")[1]
 
-     const userId = await jwtServise.getUserIdByToken(token)
+     const userId = await jwtServise.getUserIdByAcssToken(token)
      
      if (userId){
         const user = await UserQueryRepository.getById(userId)

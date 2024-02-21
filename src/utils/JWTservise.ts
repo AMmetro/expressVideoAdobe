@@ -5,11 +5,10 @@ import { OutputUserType } from "../models/user/output/user.output";
 import { appConfig } from '../appConfig';
 import bcrypt from "bcrypt";
 
-
 export const jwtServise = {
   
-  async createJWT(user: OutputUserType) {
-    const token = jwt.sign({ userId: user.id }, appConfig.JWT_SECRET, {
+  async createAccessTokenJWT(user: OutputUserType) {
+    const token = jwt.sign({ userId: user.id }, appConfig.JWT_ACSS_SECRET, {
       expiresIn: "24h",
     });
     return token
@@ -19,10 +18,30 @@ export const jwtServise = {
 //     };
   },
 
-  async getUserIdByToken(token: string) {
+  async createRefreshTokenJWT(user: OutputUserType) {
+    const token = jwt.sign({ userId: user.id }, appConfig.JWT_REFRESH_SECRET, {
+      expiresIn: "24h",
+    });
+    return token
+//     return {
+//       resultCode: 0,
+//       data: { token: token },
+//     };
+  },
+
+  async getUserIdByAcssToken(token: string) {
     try {
-      const result: any = await jwt.verify(token, appConfig.JWT_SECRET)
-      // return new ObjectId(result.userId)
+      const result: any = await jwt.verify(token, appConfig.JWT_ACSS_SECRET)
+      return result.userId
+    }
+    catch (e){
+      return null
+    }
+  },
+
+  async getUserIdByRefreshToken(token: string) {
+    try {
+      const result: any = await jwt.verify(token, appConfig.JWT_REFRESH_SECRET)
       return result.userId
     }
     catch (e){
