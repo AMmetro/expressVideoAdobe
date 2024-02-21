@@ -58,10 +58,6 @@ export class UserServices {
     if (!user) {
       return null;
     }
-    // const requestedPasswordHash = await this._generateHash(
-    //   authUserData.password,
-    //   user.passwordSalt
-    // );
     const userLogInPasswordHash = await hashServise.generateHash(
       authUserData.password,
       user.passwordSalt
@@ -71,4 +67,32 @@ export class UserServices {
     }
     return userMapper(user);
   }
+
+  static async updUserRefresh(
+    refreshToken: string
+  // ): Promise<OutputUserType | null> {
+  ): Promise<any> {
+
+  //   const userSearchData = {
+  //     login:authUserData.loginOrEmail,
+  //     email:authUserData.loginOrEmail}
+
+  //   const user: WithId<UserDB> | null = await UserQueryRepository.getOneByLoginOrEmail(userSearchData);
+  //   if (!user) {
+  //     return null;
+  //   }
+  //   const userLogInPasswordHash = await hashServise.generateHash(
+  //     authUserData.password,
+  //     user.passwordSalt
+  //   );
+  //   if (user.passwordHash !== userLogInPasswordHash || !user) {
+  //     return null;
+  //   }
+  //   return userMapper(user);
+  }
+
+
+
+
+
 }
