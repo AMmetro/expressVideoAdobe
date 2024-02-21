@@ -22,11 +22,6 @@ export class UserRepository {
 
   static async confirmRegistration(userId: string): Promise<boolean> {
 
-    // const test = await usersCollection.findOne({ _id: new ObjectId(userId) })
-
-    // // console.log("-----test--------")
-    // // console.log(test)
-
     const user = await usersCollection.updateOne(
       { _id: new ObjectId(userId) },
       { $set: { "emailConfirmation.isConfirmed": true } }
@@ -39,7 +34,7 @@ export class UserRepository {
     newConfirmationCode: string
   ): Promise<boolean> {
     const user = await usersCollection.updateOne(
-      { id: userId },
+      { _id: new ObjectId(userId) },
       { $set: { "emailConfirmation.confirmationCode": newConfirmationCode } }
     );
     return user.modifiedCount === 1;

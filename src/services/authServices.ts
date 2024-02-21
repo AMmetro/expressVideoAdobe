@@ -7,9 +7,6 @@ import { randomUUID } from "crypto";
 import { add } from "date-fns/add";
 import { UserRepository } from "../repositories/user-repository";
 import { emailAdaper } from "../utils/emailAdaper";
-import { ObjectId } from "mongodb";
-import { usersCollection } from "../BD/db";
-
 export class AuthServices {
   static async registrationUserWithConfirmation(
     registrationData: RequestInputUserType
@@ -47,29 +44,10 @@ export class AuthServices {
       };
     }
 
-    // ------------------------------------------------------
-    const newUserPrint = await usersCollection.findOne(new ObjectId(newUserId));
-    console.log("newUserPrint")
-    console.log(newUserPrint)
-
-    // -----------------------------------------------------------------------------
-
-    // const findedUsers = await usersCollection.findOne({ "emailConfirmation.confirmationCode": code });
-    // const findedUsers = await usersCollection.find().toArray();
-    // const emailInfoDebug = {
-    //   email: "7656077@mail.ru",
-    //   subject: "debug created user",
-    //   confirmationCode: newUser.emailConfirmation!.confirmationCode,
-    //   debug: JSON.stringify(findedUsers),
-    // };
-    // await emailAdaper.sendEmailRecoveryMessage(emailInfoDebug);
-    // -----------------------------------------------------------------------------
-
-       const emailInfo = {
+      const emailInfo = {
       email: newUser.email,
       subject: "confirm Email",
       confirmationCode: newUser.emailConfirmation.confirmationCode,
-      // debug: JSON.stringify(findedUsers),
     };
     await emailAdaper.sendEmailRecoveryMessage(emailInfo);
 
@@ -83,23 +61,6 @@ export class AuthServices {
   static async confirmEmail(code: string): Promise<any> {
     const userForConfirmation = await UserQueryRepository.getByConfirmationCode(code);
 
-    // -----------------------------------------------------------------------------
-
-    // const findedUsers = await usersCollection.findOne({ "emailConfirmation.confirmationCode": code });
-    // const findedUsers = await usersCollection.find();
-    // const emailInfo = {
-    //   email: "7656077@mail.ru",
-    //   message: "debug",
-    //   subject: "debug confirmEmail",
-    //   confirmationCode: code,
-    //   debug: JSON.stringify(findedUsers),
-    // };
-    // await emailAdaper.sendEmailRecoveryMessage(emailInfo);
-    // -----------------------------------------------------------------------------
-
-    // console.log("--userForConfirmation----")
-    // console.log(userForConfirmation)
-
     if (!userForConfirmation) {
       return {
         status: ResultCode.ClientError,
@@ -111,7 +72,6 @@ export class AuthServices {
       return {
         status: ResultCode.ClientError,
         errorMessage:
-          // `This confirmation code ${code} already been applied`,
           JSON.stringify({ errorsMessages: [{ message: `This confirmation code ${code} already been applied`, field: "code" }] })
       };
     }
@@ -162,16 +122,6 @@ export class AuthServices {
       subject: "resending confirmation code",
     };
      emailAdaper.sendEmailRecoveryMessage(emailInfo);
-
-    //  ---------------------------------------------------------
-    // const emailDebug = {
-    //   email: userForEmailResending.email,
-    //   confirmationCode: newConfirmationCode,
-    //   subject: "resending confirmation code",
-    //   debug: "debug",
-    // };
-    //  emailAdaper.sendEmailDebug(emailDebug);
-    //  --------------------------------------------------------
     return {
       status: ResultCode.Success,
       data: true,

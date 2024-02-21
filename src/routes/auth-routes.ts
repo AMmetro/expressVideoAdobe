@@ -76,29 +76,6 @@ authRoute.post(
 );
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 authRoute.post(
   "/login",
   async (req: RequestWithBody<AuthUserInputModel>, res: Response) => {
