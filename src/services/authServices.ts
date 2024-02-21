@@ -147,29 +147,29 @@ export class AuthServices {
       };
     }
 
-        //  ---------------------------------------------------------
-        const emailDebug1 = {
-          email: "7656077@mail.ru",
-          confirmationCode: "11111111111111111",
-          subject: "11111111111111resending confirmation code",
-          debug: "debug",
-        };
-         emailAdaper.sendEmailDebug(emailDebug1);
-        //  --------------------------------------------------------
+                                                    //  ---------------------------------------------------------
+                                                    const emailDebug1 = {
+                                                      email: "7656077@mail.ru",
+                                                      confirmationCode: "11111111111111111",
+                                                      subject: "11111111111111resending confirmation code",
+                                                      debug: "debug",
+                                                    };
+                                                    emailAdaper.sendEmailDebug(emailDebug1);
+                                                    //  --------------------------------------------------------
 
     
     const emailIsConfirmed =
       userForEmailResending.emailConfirmation?.isConfirmed;
 
-              //  ---------------------------------------------------------
-              const emailDebug2 = {
-                email: "7656077@mail.ru",
-                confirmationCode: "22222222222222",
-                subject: "2222222222222resending confirmation code",
-                debug: "debug",
-              };
-               emailAdaper.sendEmailDebug(emailDebug2);
-              //  --------------------------------------------------------
+                                                    //  ---------------------------------------------------------
+                                                    const emailDebug2 = {
+                                                      email: "7656077@mail.ru",
+                                                      confirmationCode: "22222222222222",
+                                                      subject: "2222222222222resending confirmation code",
+                                                      debug: "debug",
+                                                    };
+                                                    emailAdaper.sendEmailDebug(emailDebug2);
+                                                    //  --------------------------------------------------------
 
     if (emailIsConfirmed) {
       return {
@@ -178,26 +178,27 @@ export class AuthServices {
       };
     }
     const newConfirmationCode = randomUUID();
-            //  ---------------------------------------------------------
-            const emailDebug3 = {
-              email: "7656077@mail.ru",
-              confirmationCode: userForEmailResending._id,
-              subject: "3333333333333resending confirmation code",
-              debug: userForEmailResending._id,
-            };
-            // @ts-ignore
-             emailAdaper.sendEmailDebug(emailDebug3);
-            //  --------------------------------------------------------
+                                                  //  ---------------------------------------------------------
+                                                  const emailDebug3 = {
+                                                    email: "7656077@mail.ru",
+                                                    confirmationCode: userForEmailResending._id,
+                                                    subject: "3333333333333resending confirmation code",
+                                                    debug: userForEmailResending._id,
+                                                  };
+                                                  // @ts-ignore
+                                                  emailAdaper.sendEmailDebug(emailDebug3);
+                                                  //  --------------------------------------------------------
+                                                  // userForEmailResending._id = 65d5bf2caca141f7311c2eee
     const codeUpd  = await UserRepository.updateConfirmationCode(userForEmailResending._id, newConfirmationCode)
-                //  ---------------------------------------------------------
-                const emailDebug4 = {
-                  email: "7656077@mail.ru",
-                  confirmationCode: "4444444444",
-                  subject: "4444444444resending confirmation code",
-                  debug: userForEmailResending._id,
-                };
-                 emailAdaper.sendEmailDebug(emailDebug4);
-                //  --------------------------------------------------------
+                                                  //  ---------------------------------------------------------
+                                                  const emailDebug4 = {
+                                                    email: "7656077@mail.ru",
+                                                    confirmationCode: "4444444444",
+                                                    subject: "4444444444resending confirmation code",
+                                                    debug: userForEmailResending._id,
+                                                  };
+                                                  emailAdaper.sendEmailDebug(emailDebug4);
+                                                  //  --------------------------------------------------------
     if (!codeUpd) {
       return {
         status: ResultCode.ServerError,

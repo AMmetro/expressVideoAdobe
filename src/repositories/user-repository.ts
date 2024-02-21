@@ -39,7 +39,7 @@ export class UserRepository {
     newConfirmationCode: string
   ): Promise<boolean> {
     const user = await usersCollection.updateOne(
-      { id: userId },
+      { _id: userId },
       { $set: { "emailConfirmation.confirmationCode": newConfirmationCode } }
     );
     return user.modifiedCount === 1;
