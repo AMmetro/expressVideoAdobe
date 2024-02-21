@@ -62,7 +62,6 @@ authRoute.post(
     }
     const accessToken = await jwtServise.createAccessTokenJWT(authUsers)
     const refreshToken = await jwtServise.createRefreshTokenJWT(authUsers)
-    // res.status(200).send({accessToken});
     return res
     .cookie("refresh_token", refreshToken, {
       httpOnly: true,

@@ -48,14 +48,12 @@ usersRoute.post(
       res.sendStatus(400);
       return;
     }
-
     const transformdedUser = {
        id: createdUser.id,
        login: createdUser.login,
        email: createdUser.login,
        createdAt: createdUser.createdAt,
     }
-
     res.status(201).send(transformdedUser);
   }
 );
