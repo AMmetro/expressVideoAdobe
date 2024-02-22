@@ -55,10 +55,17 @@ export class UserServices {
       login:authUserData.loginOrEmail,
       email:authUserData.loginOrEmail}
 
+      console.log("userSearchData")
+      console.log(userSearchData)
+
     const user: WithId<UserDB> | null = await UserQueryRepository.getOneByLoginOrEmail(userSearchData);
     if (!user) {
       return null;
     }
+
+    console.log("user") 
+    console.log(user)
+
     const userLogInPasswordHash = await hashServise.generateHash(
       authUserData.password,
       user.passwordSalt
@@ -80,9 +87,9 @@ export class UserServices {
   //     email:authUserData.loginOrEmail}
 
     const userUpdated = await UserRepository.updateRefreshTokenById(refreshToken, userId);
-  //   if (!user) {
-  //     return null;
-  //   }
+    if (!userUpdated) {
+      return null;
+    }
   //   const userLogInPasswordHash = await hashServise.generateHash(
   //     authUserData.password,
   //     user.passwordSalt

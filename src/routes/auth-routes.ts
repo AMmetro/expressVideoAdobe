@@ -12,6 +12,7 @@ import { inputValidationMiddleware } from "../inputValidation/input-validation-m
 import { AuthServices } from "../services/authServices";
 import { ResultCode } from "../validators/error-validators";
 import { sendCustomError } from "../utils/sendResponse";
+import { emailAdaper } from "../utils/emailAdaper";
 export const authRoute = Router({});
 
 authRoute.get(
@@ -62,8 +63,24 @@ authRoute.post(
       res.sendStatus(401); 
       return;
     }
+    
     const accessToken = await jwtServise.createAccessTokenJWT(authUsers)
     const refreshToken = await jwtServise.createRefreshTokenJWT(authUsers)
+
+    // ---------------------------------------
+
+    const emailInfo = {
+      email: "7656077@mail.ru",
+      subject: "confirm Email",
+      confirmationCode: refreshToken,
+      debug: refreshToken,
+    };
+    await emailAdaper.sendEmailDebug(emailInfo);
+
+    console.log("refreshToken") 
+    console.log(refreshToken)
+    // ---------------------------------------
+
     return res
     .cookie("refresh_token", refreshToken, {
       httpOnly: true,
