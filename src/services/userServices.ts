@@ -23,6 +23,7 @@ export class UserServices {
       email: email,
       passwordHash: passwordHash,
       passwordSalt: passwordSalt,
+      blackListToken: [],
       createdAt: new Date().toISOString(),
       emailConfirmation: {
         confirmationCode: randomUUID(),
@@ -68,8 +69,9 @@ export class UserServices {
     return userMapper(user);
   }
 
-  static async updUserRefresh(
-    refreshToken: string
+  static async updateRefreshToken(
+    refreshToken: string,
+    userId: string
   // ): Promise<OutputUserType | null> {
   ): Promise<any> {
 
@@ -77,7 +79,7 @@ export class UserServices {
   //     login:authUserData.loginOrEmail,
   //     email:authUserData.loginOrEmail}
 
-  //   const user: WithId<UserDB> | null = await UserQueryRepository.getOneByLoginOrEmail(userSearchData);
+    const userUpdated = await UserRepository.updateRefreshTokenById(refreshToken, userId);
   //   if (!user) {
   //     return null;
   //   }

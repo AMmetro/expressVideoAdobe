@@ -44,4 +44,23 @@ export class UserRepository {
     );
     return user.modifiedCount === 1;
   }
+
+  static async updateRefreshTokenById(
+    refreshToken: string,
+    userId: string
+  ): Promise<boolean> {
+    const user = await usersCollection.updateOne(
+      { _id: new ObjectId(userId) },
+      {$push: {blackListToken: refreshToken}}
+      )
+  
+    // const user = await usersCollection.updateOne(
+    //   { _id: new ObjectId(userId) },
+    //   { $set: { blackListToken: refreshToken } }
+    // );
+    return user.modifiedCount === 1;
+  }
+
+
+
 }

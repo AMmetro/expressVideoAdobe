@@ -30,7 +30,6 @@ authRoute.post(
   async (req: Request, res: Response) => {
     const refresh_token= req.cookies.refresh_token 
     const userId = await jwtServise.getUserIdByRefreshToken(refresh_token)
-    // добавить юзеру обнуляемый токен в массив блокированных !!!!!!!!!!!
      const reAuthUsers = await UserQueryRepository.getById(userId) 
     if (!reAuthUsers) {
       res.sendStatus(401); 
@@ -38,6 +37,7 @@ authRoute.post(
     }
     const accessToken = await jwtServise.createAccessTokenJWT(reAuthUsers)
     const refreshToken = await jwtServise.createRefreshTokenJWT(reAuthUsers)
+    await UserServices.updateRefreshToken(refresh_token, userId)
     return res
     .cookie("refresh_token", refreshToken, {
       httpOnly: true,

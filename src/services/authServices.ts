@@ -29,6 +29,7 @@ export class AuthServices {
       email: email,
       passwordHash: passwordHash,
       passwordSalt: passwordSalt,
+      blackListToken: [],
       createdAt: new Date().toISOString(),
       emailConfirmation: {
         confirmationCode: randomUUID(),
