@@ -57,18 +57,14 @@ authRoute.post(
       res.sendStatus(400);
       return;  
     } 
-    
-
     const authData = {loginOrEmail:loginOrEmail, password: password }
     const authUsers = await UserServices.checkCredentials(authData) 
     if (!authUsers) {
       res.sendStatus(401); 
       return;
     }
-    
     const accessToken = await jwtServise.createAccessTokenJWT(authUsers)
     const refreshToken = await jwtServise.createRefreshTokenJWT(authUsers)
-
     return res
     .cookie("refreshToken", refreshToken, {
       httpOnly: true,
