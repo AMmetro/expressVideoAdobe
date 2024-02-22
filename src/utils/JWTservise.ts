@@ -8,7 +8,7 @@ import bcrypt from "bcrypt";
 export const jwtServise = {
   async createAccessTokenJWT(user: OutputUserType) {
     const token = jwt.sign({ userId: user.id }, appConfig.JWT_ACSS_SECRET, {
-      expiresIn: "10h",
+      expiresIn: "10s",
     });
     return token;
     //     return {
@@ -19,7 +19,7 @@ export const jwtServise = {
 
   async createRefreshTokenJWT(user: OutputUserType) {
     const token: any = jwt.sign({ userId: user.id }, appConfig.JWT_REFRESH_SECRET, {
-      expiresIn: "20h",
+      expiresIn: "20s",
     });
     return token;
     //     return {
@@ -30,22 +30,22 @@ export const jwtServise = {
 
   async getUserIdByAcssToken(token: string) {
     try {
-      const result = jwt.verify(
+      const result:any = jwt.verify(
         token,
         appConfig.JWT_ACSS_SECRET,
-        (err, decoded) => {
-          if (err) {
-            if (err.name === "TokenExpiredError") {
-              console.log("Token expired");
-              return "Token expired";
-            } else {
-              console.log("Token is broken");
-              return "Token is broken";
-            }
-          } else {
-            return decoded;
-          }
-        }
+        // (err, decoded) => {
+        //   if (err) {
+        //     if (err.name === "TokenExpiredError") {
+        //       console.log("Token expired");
+        //       return "Token expired";
+        //     } else {
+        //       console.log("Token is broken");
+        //       return "Token is broken";
+        //     }
+        //   } else {
+        //     return decoded;
+        //   }
+        // }
       );
 
       return result.userId;
