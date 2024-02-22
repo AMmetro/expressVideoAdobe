@@ -21,12 +21,6 @@ export class UserRepository {
   }
 
   static async confirmRegistration(userId: string): Promise<boolean> {
-
-    // const test = await usersCollection.findOne({ _id: new ObjectId(userId) })
-
-    // // console.log("-----test--------")
-    // // console.log(test)
-
     const user = await usersCollection.updateOne(
       { _id: new ObjectId(userId) },
       { $set: { "emailConfirmation.isConfirmed": true } }
@@ -45,7 +39,7 @@ export class UserRepository {
     return user.modifiedCount === 1;
   }
 
-  static async updateRefreshTokenById(
+  static async addOldTokenBlackListById(
     refreshToken: string,
     userId: string
   ): Promise<boolean> {
@@ -53,11 +47,6 @@ export class UserRepository {
       { _id: new ObjectId(userId) },
       {$push: {blackListToken: refreshToken}}
       )
-  
-    // const user = await usersCollection.updateOne(
-    //   { _id: new ObjectId(userId) },
-    //   { $set: { blackListToken: refreshToken } }
-    // );
     return user.modifiedCount === 1;
   }
 

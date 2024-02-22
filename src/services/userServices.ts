@@ -1,6 +1,6 @@
 import { WithId } from "mongodb";
 import { RequestInputUserType } from "../models/user/input/updateUser-input-model";
-import { OutputUserType } from "../models/user/output/user.output";
+import { OutputUserType, ResultType } from "../models/user/output/user.output";
 import { UserDB } from "../models/user/db/user-db";
 import { UserRepository } from "../repositories/user-repository";
 import { UserQueryRepository } from "../repositories/user.query-repository";
@@ -9,6 +9,7 @@ import bcrypt from "bcrypt";
 import { userMapper } from "../models/user/mapper/user-mapper";
 import { hashServise } from "../utils/JWTservise";
 import { randomUUID } from "crypto";
+import { ResultCode } from "../validators/error-validators";
 
 export class UserServices {
 
@@ -54,17 +55,10 @@ export class UserServices {
     const userSearchData = {
       login:authUserData.loginOrEmail,
       email:authUserData.loginOrEmail}
-
-      console.log("userSearchData")
-      console.log(userSearchData)
-
     const user: WithId<UserDB> | null = await UserQueryRepository.getOneByLoginOrEmail(userSearchData);
     if (!user) {
       return null;
     }
-
-    console.log("user") 
-    console.log(user)
 
     const userLogInPasswordHash = await hashServise.generateHash(
       authUserData.password,
@@ -76,28 +70,22 @@ export class UserServices {
     return userMapper(user);
   }
 
-  static async updateRefreshToken(
+  static async addTokenBlackList(
     refreshToken: string,
     userId: string
-  // ): Promise<OutputUserType | null> {
-  ): Promise<any> {
+  ): Promise<ResultType> {
 
-  //   const userSearchData = {
-  //     login:authUserData.loginOrEmail,
-  //     email:authUserData.loginOrEmail}
-
-    const userUpdated = await UserRepository.updateRefreshTokenById(refreshToken, userId);
+    const userUpdated = await UserRepository.addOldTokenBlackListById(refreshToken, userId);
     if (!userUpdated) {
-      return null;
+      return {
+        status: ResultCode.ServerError,
+        errorMessage: "Can't update user refresh token black list",
+      };
     }
-  //   const userLogInPasswordHash = await hashServise.generateHash(
-  //     authUserData.password,
-  //     user.passwordSalt
-  //   );
-  //   if (user.passwordHash !== userLogInPasswordHash || !user) {
-  //     return null;
-  //   }
-  //   return userMapper(user);
+    return {
+      status: ResultCode.Success,
+      data: true,
+    };
   }
 
 

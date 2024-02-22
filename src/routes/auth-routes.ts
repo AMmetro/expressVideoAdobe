@@ -29,8 +29,8 @@ authRoute.post(
   "/refresh-token",
   jwtValidationMiddleware,
   async (req: Request, res: Response) => {
-    const refresh_token= req.cookies.refresh_token 
-    const userId = await jwtServise.getUserIdByRefreshToken(refresh_token)
+    const oldRefreshToken= req.cookies.refresh_token 
+    const userId = await jwtServise.getUserIdByRefreshToken(oldRefreshToken)
      const reAuthUsers = await UserQueryRepository.getById(userId) 
     if (!reAuthUsers) {
       res.sendStatus(401); 
@@ -38,16 +38,18 @@ authRoute.post(
     }
     const newAccessToken = await jwtServise.createAccessTokenJWT(reAuthUsers)
     const newRefreshToken = await jwtServise.createRefreshTokenJWT(reAuthUsers)
-    await UserServices.updateRefreshToken(refresh_token, userId)
-    return res
-    .cookie("refreshToken", newRefreshToken, {
-      httpOnly: true,
-      secure: true,
-    })
-    .status(200)
-    .send({newAccessToken});
-  }
-);
+    const result = await UserServices.addTokenBlackList(oldRefreshToken, userId)
+    if (result.status === ResultCode.Success){
+      res.cookie("refreshToken", newRefreshToken, {
+        httpOnly: true,
+        secure: true,
+      })
+      .status(200)
+      .send({accessToken: newAccessToken});
+      return;
+    } else {sendCustomError(res, result)}
+ 
+  });
 
 authRoute.post(
   "/login",
