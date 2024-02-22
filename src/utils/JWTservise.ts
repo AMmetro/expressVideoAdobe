@@ -8,7 +8,7 @@ import bcrypt from "bcrypt";
 export const jwtServise = {
   async createAccessTokenJWT(user: OutputUserType) {
     const token = jwt.sign({ userId: user.id }, appConfig.JWT_ACSS_SECRET, {
-      expiresIn: "10s",
+      expiresIn: "10h",
     });
     return token;
     //     return {
@@ -19,7 +19,7 @@ export const jwtServise = {
 
   async createRefreshTokenJWT(user: OutputUserType) {
     const token: any = jwt.sign({ userId: user.id }, appConfig.JWT_REFRESH_SECRET, {
-      expiresIn: "20s",
+      expiresIn: "20h",
     });
     return token;
     //     return {
@@ -47,7 +47,6 @@ export const jwtServise = {
         //   }
         // }
       );
-
       return result.userId;
     } catch (e) {
       return null;
@@ -55,8 +54,14 @@ export const jwtServise = {
   },
 
   async getUserIdByRefreshToken(token: string) {
+    console.log("------token-IN-----")
+    console.log(token)
     try {
       const result: any = await jwt.verify(token, appConfig.JWT_REFRESH_SECRET);
+
+      console.log("------result-IN-----")
+      console.log(result)
+
       return result.userId;
     } catch (e) {
       return null;
