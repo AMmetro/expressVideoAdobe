@@ -97,13 +97,12 @@ authRoute.post(
       res.sendStatus(401); 
       return;
     }
-    const refresh_token= req.cookies.refresh_token 
-    // добавить юзеру обнуляемый токен в массив блокированных 
-
-    return res
-    .clearCookie("refreshToken")
-    .sendStatus(204)
-  }
+    const oldRefreshToken= req.cookies.refresh_token 
+    const result = await UserServices.addTokenBlackList(oldRefreshToken, user.id)
+    if (result.status === ResultCode.Success){
+      return res.clearCookie("refreshToken").sendStatus(204)
+  } else {sendCustomError(res, result)}
+}
 );
 
 authRoute.post(
