@@ -18,10 +18,14 @@ export const authRoute = Router({});
 authRoute.get(
   "/me",
    jwtValidationMiddleware,
-
   async (req: Request, res: Response) => {
   const me = await UserQueryRepository.getById(req.user!.id)
-    res.status(200).send(me);
+  if (!me){
+    res.sendStatus(401); 
+    return; 
+  }
+    const meModel = {userId: me.id, login: me.login, email: me.email }
+    res.status(200).send(meModel);
   }
 );
 
