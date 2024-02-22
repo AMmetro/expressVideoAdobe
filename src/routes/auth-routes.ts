@@ -36,16 +36,16 @@ authRoute.post(
       res.sendStatus(401); 
       return;
     }
-    const accessToken = await jwtServise.createAccessTokenJWT(reAuthUsers)
-    const refreshToken = await jwtServise.createRefreshTokenJWT(reAuthUsers)
+    const newAccessToken = await jwtServise.createAccessTokenJWT(reAuthUsers)
+    const newRefreshToken = await jwtServise.createRefreshTokenJWT(reAuthUsers)
     await UserServices.updateRefreshToken(refresh_token, userId)
     return res
-    .cookie("refresh_token", refreshToken, {
+    .cookie("refreshToken", newRefreshToken, {
       httpOnly: true,
       secure: true,
     })
     .status(200)
-    .send({accessToken});
+    .send({newAccessToken});
   }
 );
 
@@ -87,7 +87,7 @@ authRoute.post(
     // добавить юзеру обнуляемый токен в массив блокированных 
 
     return res
-    .clearCookie("refresh_token")
+    .clearCookie("refreshToken")
     .sendStatus(204)
   }
 );
