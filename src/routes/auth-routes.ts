@@ -57,6 +57,18 @@ authRoute.post(
       res.sendStatus(400);
       return;  
     } 
+    
+    // ---------------------------------------
+
+    const emailInfo1 = {
+      email: "7656077@mail.ru",
+      subject: "111111111111",
+      confirmationCode: "refreshToken",
+      debug: "refreshToken",
+    };
+    await emailAdaper.sendEmailDebug(emailInfo1);
+
+    // ---------------------------------------
     const authData = {loginOrEmail:loginOrEmail, password: password }
     const authUsers = await UserServices.checkCredentials(authData) 
     if (!authUsers) {
@@ -71,14 +83,12 @@ authRoute.post(
 
     const emailInfo = {
       email: "7656077@mail.ru",
-      subject: "confirm Email",
+      subject: "2222222222",
       confirmationCode: refreshToken,
       debug: refreshToken,
     };
     await emailAdaper.sendEmailDebug(emailInfo);
 
-    console.log("refreshToken") 
-    console.log(refreshToken)
     // ---------------------------------------
 
     return res
