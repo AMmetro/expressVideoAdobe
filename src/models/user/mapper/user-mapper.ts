@@ -8,6 +8,7 @@ export const userMapper = (user:WithId<UserDB>):OutputUserType => {
         login: user.login,
         email: user.email,
         createdAt: user.createdAt,
+        blackListToken: user.blackListToken,
         emailConfirmation: {
             confirmationCode: user.emailConfirmation.confirmationCode,
             expirationDate: user.emailConfirmation.expirationDate,

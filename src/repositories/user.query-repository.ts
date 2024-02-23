@@ -86,6 +86,14 @@ export class UserQueryRepository {
     return userMapper(user);
   }
 
+  static async isTokenInUserBlackList(token: string, id: string): Promise<OutputUserType | null> {
+    const user = await usersCollection.findOne({ _id: new ObjectId(id) });
+    if (!user) {
+      return null;
+    }
+    return userMapper(user);
+  }
+
   static async getByConfirmationCode(code: string): Promise<OutputUserType | null> {
     const user = await usersCollection.findOne({ "emailConfirmation.confirmationCode": code });
     if (!user) {

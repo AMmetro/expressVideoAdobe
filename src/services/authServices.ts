@@ -1,11 +1,12 @@
 import { RequestInputUserType } from "../models/user/input/updateUser-input-model";
 import { UserQueryRepository } from "../repositories/user.query-repository";
 import { ResultCode } from "../validators/error-validators";
-import { hashServise } from "../utils/JWTservise";
+import { hashServise, jwtServise } from "../utils/JWTservise";
 import { randomUUID } from "crypto";
 import { add } from "date-fns/add";
 import { UserRepository } from "../repositories/user-repository";
 import { emailAdaper } from "../utils/emailAdaper";
+import { UserServices } from "./userServices";
 
 export class AuthServices {
   static async registrationUserWithConfirmation(
@@ -129,4 +130,38 @@ export class AuthServices {
       data: true,
     };
   }
+
+  static async refreshToken(token: string): Promise<any> {
+    const userId = await jwtServise.getUserIdByRefreshToken(token)
+    const user = await UserQueryRepository.getById(userId);
+    if (!user) {
+      return {
+        status: ResultCode.NotFound,
+        errorMessage: "Not found user with id " + userId,
+      };
+    }
+    const isTokenInBlackListAlready = user?.blackListToken?.some(token => token === token)
+    if (isTokenInBlackListAlready) {
+      return {
+        status: ResultCode.Forbidden,
+        errorMessage: `Token ${token} in black list already`,
+      };
+    }
+    const tokenAddedToBlackList = await UserRepository.addOldTokenBlackListById(token, userId);
+    if (!tokenAddedToBlackList) {
+      return {
+        status: ResultCode.ServerError,
+        errorMessage: `Can't write token to user black list in database`,
+      };
+    }
+    const newAccessToken = await jwtServise.createAccessTokenJWT(user)
+    const newRefreshToken = await jwtServise.createRefreshTokenJWT(user)
+    return {
+      status: ResultCode.Success,
+      data: {newAccessToken, newRefreshToken },
+    };
+  }
+
+
+
 }

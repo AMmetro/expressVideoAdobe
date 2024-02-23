@@ -34,22 +34,15 @@ authRoute.post(
   // jwtValidationMiddleware,
   async (req: Request, res: Response) => {
     const oldRefreshToken= req.cookies.refreshToken 
-    const userId = await jwtServise.getUserIdByRefreshToken(oldRefreshToken)
-    const reAuthUsers = await UserQueryRepository.getById(userId) 
-    if (!reAuthUsers) {
-      res.sendStatus(401); 
-      return;
-    }
-    const newAccessToken = await jwtServise.createAccessTokenJWT(reAuthUsers)
-    const newRefreshToken = await jwtServise.createRefreshTokenJWT(reAuthUsers)
-    const result = await UserServices.addTokenBlackList(oldRefreshToken, userId)
+    const result = await AuthServices.refreshToken(oldRefreshToken)
+    // const result = await UserServices.addTokenBlackList(oldRefreshToken, userId)
     if (result.status === ResultCode.Success){
-      res.cookie("refreshToken", newRefreshToken, {
+      res.cookie("refreshToken", result.data.newRefreshToken, {
         httpOnly: true,
         secure: true,
       })
       .status(200)
-      .send({accessToken: newAccessToken});
+      .send({accessToken: result.data.newAccessToken});
       return;
     } else {sendCustomError(res, result)}
  

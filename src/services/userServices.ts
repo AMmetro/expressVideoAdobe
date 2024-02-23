@@ -74,7 +74,6 @@ export class UserServices {
     refreshToken: string,
     userId: string
   ): Promise<ResultType> {
-
     const userUpdated = await UserRepository.addOldTokenBlackListById(refreshToken, userId);
     if (!userUpdated) {
       return {
