@@ -37,7 +37,7 @@ authRoute.post(
     const userId = await jwtServise.getUserIdByAcssToken(oldRefreshToken)
     const reAuthUsers = await UserQueryRepository.getById(userId) 
     if (!reAuthUsers) {
-      res.sendStatus(403); 
+      res.sendStatus(401); 
       return;
     }
     const newAccessToken = await jwtServise.createAccessTokenJWT(reAuthUsers)
