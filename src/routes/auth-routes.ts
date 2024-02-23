@@ -34,7 +34,7 @@ authRoute.post(
   // jwtValidationMiddleware,
   async (req: Request, res: Response) => {
     const oldRefreshToken= req.cookies.refreshToken 
-    const userId = await jwtServise.getUserIdByAcssToken(oldRefreshToken)
+    const userId = await jwtServise.getUserIdByRefreshToken(oldRefreshToken)
     const reAuthUsers = await UserQueryRepository.getById(userId) 
     if (!reAuthUsers) {
       res.sendStatus(401); 
