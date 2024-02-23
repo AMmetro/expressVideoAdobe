@@ -31,19 +31,11 @@ authRoute.get(
 
 authRoute.post(
   "/refresh-token",
-  jwtValidationMiddleware,
+  // jwtValidationMiddleware,
   async (req: Request, res: Response) => {
     const oldRefreshToken= req.cookies.refreshToken 
     const userId = await jwtServise.getUserIdByAcssToken(oldRefreshToken)
-
-    // console.log("------userId------")
-    // console.log(userId)
-
-     const reAuthUsers = await UserQueryRepository.getById(userId) 
-
-     console.log("------reAuthUsers------")
-     console.log(reAuthUsers)
-
+    const reAuthUsers = await UserQueryRepository.getById(userId) 
     if (!reAuthUsers) {
       res.sendStatus(401); 
       return;
