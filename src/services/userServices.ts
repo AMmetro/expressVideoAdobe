@@ -78,7 +78,7 @@ export class UserServices {
     if (!userUpdated) {
       return {
         status: ResultCode.ServerError,
-        errorMessage: "Can't update user refresh token black list",
+        errorMessage: "Can't write user refresh token to black list",
       };
     }
     return {
