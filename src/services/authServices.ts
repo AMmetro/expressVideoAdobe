@@ -143,7 +143,7 @@ export class AuthServices {
     const isTokenInBlackListAlready = user?.blackListToken?.some(token => token === token)
     if (isTokenInBlackListAlready) {
       return {
-        status: ResultCode.Forbidden,
+        status: ResultCode.Unauthorised,
         errorMessage: `Token ${token} in black list already`,
       };
     }
