@@ -10,9 +10,9 @@ import { userMapper } from "../models/user/mapper/user-mapper";
 import { hashServise } from "../utils/JWTservise";
 import { randomUUID } from "crypto";
 import { ResultCode } from "../validators/error-validators";
+import { AuthServices } from "./authServices";
 
 export class UserServices {
-
   static async create(
     createUserModel: RequestInputUserType
   ): Promise<OutputUserType | null> {
@@ -32,7 +32,9 @@ export class UserServices {
         isConfirmed: true,
       },
     };
-    const newUserId = await UserRepository.createWithOutConfirmation(newUserModal);
+    const newUserId = await UserRepository.createWithOutConfirmation(
+      newUserModal
+    );
     if (!newUserId) {
       return null;
     }
@@ -51,11 +53,12 @@ export class UserServices {
   static async checkCredentials(
     authUserData: AuthUserInputModel
   ): Promise<OutputUserType | null> {
-
     const userSearchData = {
-      login:authUserData.loginOrEmail,
-      email:authUserData.loginOrEmail}
-    const user: WithId<UserDB> | null = await UserQueryRepository.getOneByLoginOrEmail(userSearchData);
+      login: authUserData.loginOrEmail,
+      email: authUserData.loginOrEmail,
+    };
+    const user: WithId<UserDB> | null =
+      await UserQueryRepository.getOneByLoginOrEmail(userSearchData);
     if (!user) {
       return null;
     }
@@ -71,10 +74,21 @@ export class UserServices {
   }
 
   static async addTokenToBlackList(
-    refreshToken: string,
-    userId: string
+    refreshToken: string
+    // userId: string
   ): Promise<ResultType> {
-    const userBlackListUpdated = await UserRepository.addTokenToBlackListById(refreshToken, userId);
+    const userId = await AuthServices.getUserIdFromToken(refreshToken);
+    if (!userId) {
+      return {
+        status: ResultCode.Unauthorised,
+        errorMessage: "No correct user Id in refresh token",
+      };
+    }
+
+    const userBlackListUpdated = await UserRepository.addTokenToBlackListById(
+      refreshToken,
+      userId
+    );
     if (!userBlackListUpdated) {
       return {
         status: ResultCode.ServerError,
@@ -86,6 +100,4 @@ export class UserServices {
       data: true,
     };
   }
-
-
 }

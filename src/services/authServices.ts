@@ -1,6 +1,6 @@
 import { RequestInputUserType } from "../models/user/input/updateUser-input-model";
 import { UserQueryRepository } from "../repositories/user.query-repository";
-import { Result, ResultCode } from "../validators/error-validators";
+import { ResultCode } from "../validators/error-validators";
 import { hashServise, jwtServise } from "../utils/JWTservise";
 import { randomUUID } from "crypto";
 import { add } from "date-fns/add";
@@ -11,7 +11,7 @@ import { UserServices } from "./userServices";
 export class AuthServices {
   static async registrationUserWithConfirmation(
     registrationData: RequestInputUserType
-  ): Promise<Result<boolean>> {
+  ): Promise<any | null> {
     const { login, password, email } = registrationData;
     const userSearchData = { login: login, email: email };
     const userAllreadyExist = await UserQueryRepository.getOneByLoginOrEmail(
@@ -56,8 +56,7 @@ export class AuthServices {
       data: true,
     };
   }
-
-  static async confirmEmail(code: string): Promise<Result<Boolean>> {
+  static async confirmEmail(code: string): Promise<any> {
     const userForConfirmation = await UserQueryRepository.getByConfirmationCode(code);
     if (!userForConfirmation) {
       return {
@@ -163,6 +162,18 @@ export class AuthServices {
     };
   }
 
+  static async getUserIdFromToken(authRequest: string): Promise<any> {   
+    const token = authRequest.split(" ");   
+    const authMethod = token[0];
+    if (authMethod !== "Bearer") {
+      return null
+    }
+    const userId = await jwtServise.getUserIdByRefreshToken(token[1]);
+    if (!userId) {
+      return null
+    }
+    return userId
+  }
 
 
 }

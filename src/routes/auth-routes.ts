@@ -29,10 +29,13 @@ authRoute.get(
   jwtValidationMiddleware,
   async (req: Request, res: Response) => {
 
+    // ---------------------------------------------------------
+    // почему двойная проверка ?
     if (req.user!.id){
       res.sendStatus(401);
       return;
     }
+    // --------------------------------------------------------
 
     const me = await UserQueryRepository.getById(req.user!.id);
     if (!me) {
@@ -46,7 +49,7 @@ authRoute.get(
 
 authRoute.post(
   "/refresh-token",
-  // jwtValidationMiddleware,
+  jwtValidationMiddleware,
   async (req: Request, res: Response) => {
     const oldRefreshToken = req.cookies.refreshToken;
     const result = await AuthServices.refreshToken(oldRefreshToken);
@@ -92,19 +95,20 @@ authRoute.post(
   }
 );
 
+// !!!!!!!!!!!!!!!!!!
 authRoute.post(
   "/logout",
   // jwtValidationMiddleware,
   async (req: Request, res: Response) => {
-    const user = await UserQueryRepository.getById(req.user!.id);
-    if (!user) {
-      res.sendStatus(401);
-      return;
-    }
+    // const user = await UserQueryRepository.getById(req.user!.id);
+    // if (!user) {
+    //   res.sendStatus(401);
+    //   return;
+    // }
     const oldRefreshToken = req.cookies.refreshToken;
     const result = await UserServices.addTokenToBlackList(
-      oldRefreshToken,
-      user.id
+      oldRefreshToken
+      // user.id
     );
     if (result.status === ResultCode.Success) {
       res.clearCookie("refreshToken").sendStatus(204);
