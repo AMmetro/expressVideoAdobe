@@ -186,7 +186,7 @@ export class AuthServices {
     if (authMethod !== "Bearer") {
       return null
     }
-    const userId = await jwtServise.getUserIdByRefreshToken(token[1]);
+    const userId = await jwtServise.getUserIdByAcssToken(token[1]);
     if (!userId) {
       return null
     }
