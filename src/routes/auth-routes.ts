@@ -75,7 +75,9 @@ authRoute.post(
 );
 
 authRoute.post(
-  "/logout", jwtValidationMiddleware,
+  "/logout",
+  //  jwtValidationMiddleware,
+
   async (req: Request, res: Response) => {
     const user = await UserQueryRepository.getById(req.user!.id)
     if (!user) {

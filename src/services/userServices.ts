@@ -74,8 +74,8 @@ export class UserServices {
     refreshToken: string,
     userId: string
   ): Promise<ResultType> {
-    const userUpdated = await UserRepository.addOldTokenBlackListById(refreshToken, userId);
-    if (!userUpdated) {
+    const userBlackListUpdated = await UserRepository.addOldTokenBlackListById(refreshToken, userId);
+    if (!userBlackListUpdated) {
       return {
         status: ResultCode.ServerError,
         errorMessage: "Can't write user refresh token to black list",
