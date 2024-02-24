@@ -70,11 +70,11 @@ export class UserServices {
     return userMapper(user);
   }
 
-  static async addTokenBlackList(
+  static async addTokenToBlackList(
     refreshToken: string,
     userId: string
   ): Promise<ResultType> {
-    const userBlackListUpdated = await UserRepository.addOldTokenBlackListById(refreshToken, userId);
+    const userBlackListUpdated = await UserRepository.addTokenToBlackListById(refreshToken, userId);
     if (!userBlackListUpdated) {
       return {
         status: ResultCode.ServerError,

@@ -39,7 +39,7 @@ export class UserRepository {
     return user.modifiedCount === 1;
   }
 
-  static async addOldTokenBlackListById(
+  static async addTokenToBlackListById(
     refreshToken: string,
     userId: string
   ): Promise<boolean> {

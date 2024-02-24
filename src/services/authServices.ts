@@ -147,7 +147,7 @@ export class AuthServices {
         errorMessage: `Token ${token} in black list already`,
       };
     }
-    const tokenAddedToBlackList = await UserRepository.addOldTokenBlackListById(token, userId);
+    const tokenAddedToBlackList = await UserRepository.addTokenToBlackListById(token, userId);
     if (!tokenAddedToBlackList) {
       return {
         status: ResultCode.ServerError,

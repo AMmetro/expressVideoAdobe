@@ -31,11 +31,10 @@ authRoute.get(
 
 authRoute.post(
   "/refresh-token",
-  // jwtValidationMiddleware,
+  jwtValidationMiddleware,
   async (req: Request, res: Response) => {
     const oldRefreshToken= req.cookies.refreshToken 
     const result = await AuthServices.refreshToken(oldRefreshToken)
-    // const result = await UserServices.addTokenBlackList(oldRefreshToken, userId)
     if (result.status === ResultCode.Success){
       res.cookie("refreshToken", result.data.newRefreshToken, {
         httpOnly: true,
@@ -45,7 +44,6 @@ authRoute.post(
       .send({accessToken: result.data.newAccessToken});
       return;
     } else {sendCustomError(res, result)}
- 
   });
 
 authRoute.post(
@@ -80,13 +78,14 @@ authRoute.post(
   async (req: Request, res: Response) => {
     const user = await UserQueryRepository.getById(req.user!.id)
     if (!user) {
-      res.sendStatus(403); 
+      res.sendStatus(401); 
       return;
     }
     const oldRefreshToken= req.cookies.refresh_token 
-    const result = await UserServices.addTokenBlackList(oldRefreshToken, user.id)
+    const result = await UserServices.addTokenToBlackList(oldRefreshToken, user.id)
     if (result.status === ResultCode.Success){
-      return res.clearCookie("refreshToken").sendStatus(204)
+      res.clearCookie("refreshToken").sendStatus(204)
+      return
   } else {sendCustomError(res, result)}
 }
 );
