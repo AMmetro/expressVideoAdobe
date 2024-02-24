@@ -1,6 +1,6 @@
 import { RequestInputUserType } from "../models/user/input/updateUser-input-model";
 import { UserQueryRepository } from "../repositories/user.query-repository";
-import { ResultCode } from "../validators/error-validators";
+import { Result, ResultCode } from "../validators/error-validators";
 import { hashServise, jwtServise } from "../utils/JWTservise";
 import { randomUUID } from "crypto";
 import { add } from "date-fns/add";
@@ -11,7 +11,7 @@ import { UserServices } from "./userServices";
 export class AuthServices {
   static async registrationUserWithConfirmation(
     registrationData: RequestInputUserType
-  ): Promise<any | null> {
+  ): Promise<Result<boolean>> {
     const { login, password, email } = registrationData;
     const userSearchData = { login: login, email: email };
     const userAllreadyExist = await UserQueryRepository.getOneByLoginOrEmail(
@@ -56,7 +56,8 @@ export class AuthServices {
       data: true,
     };
   }
-  static async confirmEmail(code: string): Promise<any> {
+
+  static async confirmEmail(code: string): Promise<Result<Boolean>> {
     const userForConfirmation = await UserQueryRepository.getByConfirmationCode(code);
     if (!userForConfirmation) {
       return {

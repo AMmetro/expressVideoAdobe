@@ -1,6 +1,12 @@
+import { Response } from "express";
 import { ResultCode } from "../validators/error-validators";
 
-export function sendCustomError(res: any, result: any) {
+type IncomResultType = {
+  status: string;
+  errorMessage?: string;
+}
+
+export function sendCustomError(res: Response, result: IncomResultType) {
   if (result.status === ResultCode.NotFound) {
     res.status(404).send(result.errorMessage);
     return;

@@ -11,7 +11,7 @@ export enum ResultCode {
 
 export type Result <T = null> = {
     status: ResultCode;
-    ErrorMessage: string;
-    data: T;
+    errorMessage?: string;
+    data?: T;
 }
 

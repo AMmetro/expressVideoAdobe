@@ -54,14 +54,8 @@ export const jwtServise = {
   },
 
   async getUserIdByRefreshToken(token: string) {
-    console.log("------token-IN-----")
-    console.log(token)
     try {
       const result: any = await jwt.verify(token, appConfig.JWT_REFRESH_SECRET);
-
-      console.log("------result-IN-----")
-      console.log(result)
-
       return result.userId;
     } catch (e) {
       return null;
