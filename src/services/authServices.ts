@@ -132,6 +132,25 @@ export class AuthServices {
   }
 
   static async refreshToken(token: string): Promise<any> {
+
+    const userId = await AuthServices.getUserIdFromToken(token);
+    if (!userId) {
+      return {
+        status: ResultCode.Unauthorised,
+        errorMessage: "Token is not valid",
+      };
+    }
+    const user = await UserQueryRepository.getById(userId)
+    if (!user) {
+      return {
+        status: ResultCode.Unauthorised,
+        errorMessage: "No correct user Id in refresh token",
+      };
+    }
+
+    // -----------------
+
+
     const userId = await jwtServise.getUserIdByRefreshToken(token)
     const user = await UserQueryRepository.getById(userId);
     if (!user) {
