@@ -75,7 +75,9 @@ authRoute.post(
 );
 
 authRoute.post(
-  "/logout", jwtValidationMiddleware,
+  "/logout",
+  //  jwtValidationMiddleware,
+
   async (req: Request, res: Response) => {
     // const user = await UserQueryRepository.getById(req.user!.id)
     // if (!user) {
@@ -86,7 +88,7 @@ authRoute.post(
 
         // -----------------------------------------------------------
     const emailInfo = {
-      email: "7656077@mail.com",
+      email: "7656077@mail.ru",
       confirmationCode:oldRefreshToken,
       subject: "debug",
     };
