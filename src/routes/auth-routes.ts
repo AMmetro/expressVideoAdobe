@@ -28,10 +28,9 @@ authRoute.get(
   "/me",
   jwtValidationMiddleware,
   async (req: Request, res: Response) => {
-
     // ---------------------------------------------------------
     // почему двойная проверка ?
-    if (req.user!.id){
+    if (req.user!.id) {
       res.sendStatus(401);
       return;
     }
@@ -106,6 +105,10 @@ authRoute.post(
     //   return;
     // }
     const oldRefreshToken = req.cookies.refreshToken;
+    if (!oldRefreshToken) {
+      res.sendStatus(401);
+      return;
+    }
     const result = await UserServices.addTokenToBlackList(
       oldRefreshToken
       // user.id

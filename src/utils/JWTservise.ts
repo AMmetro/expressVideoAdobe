@@ -53,7 +53,7 @@ export const jwtServise = {
     }
   },
 
-  async getUserIdByRefreshToken(token: string) {
+  async getUserIdByRefreshToken(token: string):Promise<any> {
     try {
       const result: any = await jwt.verify(token, appConfig.JWT_REFRESH_SECRET);
       return result.userId;

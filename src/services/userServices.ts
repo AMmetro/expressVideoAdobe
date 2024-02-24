@@ -81,10 +81,16 @@ export class UserServices {
     if (!userId) {
       return {
         status: ResultCode.Unauthorised,
+        errorMessage: "Token is not valid",
+      };
+    }
+    const user = await UserQueryRepository.getById(userId)
+    if (!user) {
+      return {
+        status: ResultCode.Unauthorised,
         errorMessage: "No correct user Id in refresh token",
       };
     }
-
     const userBlackListUpdated = await UserRepository.addTokenToBlackListById(
       refreshToken,
       userId

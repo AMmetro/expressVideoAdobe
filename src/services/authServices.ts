@@ -162,8 +162,8 @@ export class AuthServices {
     };
   }
 
-  static async getUserIdFromToken(authRequest: string): Promise<any> {   
-    const token = authRequest.split(" ");   
+  static async getUserIdFromToken(request: string): Promise<null | string> {   
+    const token = request.split(" ");   
     const authMethod = token[0];
     if (authMethod !== "Bearer") {
       return null
