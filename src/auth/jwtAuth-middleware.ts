@@ -51,5 +51,5 @@ export const jwtValidationMiddleware = async (
                     };
                      emailAdaper.sendEmailRecoveryMessage(emailInfo1);
                     // -----------------------------------------------------------
-  res.sendStatus(409);
+  res.sendStatus(401);
 };
