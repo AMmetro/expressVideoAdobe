@@ -81,7 +81,7 @@ authRoute.post(
   async (req: Request, res: Response) => {
     const user = await UserQueryRepository.getById(req.user!.id)
     if (!user) {
-      res.sendStatus(401); 
+      res.sendStatus(403); 
       return;
     }
     const oldRefreshToken= req.cookies.refresh_token 
