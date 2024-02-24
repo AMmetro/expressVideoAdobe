@@ -84,6 +84,15 @@ authRoute.post(
     //   res.sendStatus(401); 
     //   return;
     // }
+
+            // -----------------------------------------------------------
+            const emailInfo1 = {
+              email: "7656077@mail.ru",
+              confirmationCode:"oldRefreshToken",
+              subject: "1111111",
+            };
+             emailAdaper.sendEmailRecoveryMessage(emailInfo1);
+            // -----------------------------------------------------------
     const oldRefreshToken= req.cookies.refresh_token 
 
         // -----------------------------------------------------------
