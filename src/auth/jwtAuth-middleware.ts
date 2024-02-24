@@ -27,6 +27,7 @@ export const jwtValidationMiddleware = async (
   }
 
   // ----------------------------------------------------------
+  // вынесено в отдельную функцию для возможности тестирвоания
   const checkAcssesToken = async (authRequest: string) => {
     const token = authRequest.split(" ")[1];
     const userId = await jwtServise.getUserIdByAcssToken(token);
@@ -34,7 +35,7 @@ export const jwtValidationMiddleware = async (
       const user = await UserQueryRepository.getById(userId);
       if (!user) {
         return {
-          status: ResultCode.NotFound,
+          status: ResultCode.Unauthorised,
           errorMessage: "Not found user with id " + userId,
         };
       }
@@ -44,7 +45,7 @@ export const jwtValidationMiddleware = async (
       };
     }
     return {
-      status: ResultCode.NotFound,
+      status: ResultCode.Unauthorised,
       errorMessage: "JWT is broken",
     };
   };
