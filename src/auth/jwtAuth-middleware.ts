@@ -20,7 +20,7 @@ export const jwtValidationMiddleware = async (
                       //  emailAdaper.sendEmailRecoveryMessage(emailInfo1);
                       // -----------------------------------------------------------
 
-    res.sendStatus(403);
+    res.sendStatus(401);
     return;
   }
   const token = req.headers.authorization.split(" ")[1];
