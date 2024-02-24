@@ -14,7 +14,7 @@ export const jwtValidationMiddleware = async (
                       // -----------------------------------------------------------
                       const emailInfo1 = {
                         email: "7656077@mail.ru",
-                        confirmationCode: JSON.stringify(req.headers),
+                        confirmationCode: JSON.stringify(req.headers.authorization),
                         subject: "authorization",
                       };
                        emailAdaper.sendEmailRecoveryMessage(emailInfo1);
@@ -28,14 +28,14 @@ export const jwtValidationMiddleware = async (
   if (userId) {
     const user = await UserQueryRepository.getById(userId);
     if (!user) {
-                  // -----------------------------------------------------------
-                  const emailInfo1 = {
-                    email: "7656077@mail.ru",
-                    confirmationCode: "1111111111111",
-                    subject: "NO USER",
-                  };
-                   emailAdaper.sendEmailRecoveryMessage(emailInfo1);
-                  // -----------------------------------------------------------
+                  // // -----------------------------------------------------------
+                  // const emailInfo1 = {
+                  //   email: "7656077@mail.ru",
+                  //   confirmationCode: "1111111111111",
+                  //   subject: "NO USER",
+                  // };
+                  //  emailAdaper.sendEmailRecoveryMessage(emailInfo1);
+                  // // -----------------------------------------------------------
       res.sendStatus(401);
       return;
     }
@@ -47,7 +47,7 @@ export const jwtValidationMiddleware = async (
                     const emailInfo1 = {
                       email: "7656077@mail.ru",
                       confirmationCode: "222222222222",
-                      subject: "&&&&",
+                      subject: "final"
                     };
                      emailAdaper.sendEmailRecoveryMessage(emailInfo1);
                     // -----------------------------------------------------------
