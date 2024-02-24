@@ -79,22 +79,22 @@ authRoute.post(
   //  jwtValidationMiddleware,
 
   async (req: Request, res: Response) => {
-    // const user = await UserQueryRepository.getById(req.user!.id)
-    // if (!user) {
-    //   res.sendStatus(401); 
-    //   return;
-    // }
+    const user = await UserQueryRepository.getById(req.user!.id)
+    if (!user) {
+      res.sendStatus(401); 
+      return;
+    }
 
+        const oldRefreshToken= req.cookies.refreshToken 
             // -----------------------------------------------------------
-            // const emailInfo1 = {
-            //   email: "7656077@mail.ru",
-            //   confirmationCode:"oldRefreshToken",
-            //   subject: "1111111",
-            // };
-            //  emailAdaper.sendEmailRecoveryMessage(emailInfo1);
+            const emailInfo1 = {
+              email: "7656077@mail.ru",
+              confirmationCode: oldRefreshToken,
+              subject: "debug",
+            };
+             emailAdaper.sendEmailRecoveryMessage(emailInfo1);
             // -----------------------------------------------------------
-    // const oldRefreshToken= req.cookies
-    const oldRefreshToken= req.cookies.refresh_token 
+
     // console.log(oldRefreshToken)
     // console.log(oldRefreshToken)
     // console.log(oldRefreshToken)
@@ -111,7 +111,7 @@ authRoute.post(
     // };
     //  emailAdaper.sendEmailRecoveryMessage(emailInfo);
     // -----------------------------------------------------------
-    const result = await UserServices.addTokenToBlackList(oldRefreshToken, req.user!.id)
+    const result = await UserServices.addTokenToBlackList(oldRefreshToken, user.id)
     if (result.status === ResultCode.Success){
       res.clearCookie("refreshToken").sendStatus(204)
       return
