@@ -30,6 +30,14 @@ export const jwtValidationMiddleware = async (
   // вынесено в отдельную функцию для возможности тестирвоания
   const checkAcssesToken = async (authRequest: string) => {
     const token = authRequest.split(" ")[1];
+    
+    const token2 = authRequest.split(" ")[0];
+    if (token2 !== "Bearer") {
+      res.sendStatus(401);
+      return;
+    }
+
+
     const userId = await jwtServise.getUserIdByAcssToken(token);
     if (userId) {
       const user = await UserQueryRepository.getById(userId);

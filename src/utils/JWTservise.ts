@@ -37,8 +37,7 @@ export const jwtServise = {
           if (err) {
             if (err.name === "TokenExpiredError") {
               console.log("Token expired");
-              // return "Token expired";
-              return null;
+              return "Token expired";
             } else {
               console.log("Token is broken");
               return "Token is broken";
