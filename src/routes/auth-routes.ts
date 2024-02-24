@@ -28,6 +28,12 @@ authRoute.get(
   "/me",
   jwtValidationMiddleware,
   async (req: Request, res: Response) => {
+
+    if (req.user!.id){
+      res.sendStatus(401);
+      return;
+    }
+
     const me = await UserQueryRepository.getById(req.user!.id);
     if (!me) {
       res.sendStatus(401);
