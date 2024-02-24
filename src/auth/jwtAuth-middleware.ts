@@ -12,15 +12,15 @@ export const jwtValidationMiddleware = async (
   if (!req.headers.authorization) {
 
                       // -----------------------------------------------------------
-                      const emailInfo1 = {
-                        email: "7656077@mail.ru",
-                        confirmationCode: JSON.stringify(req.headers.authorization),
-                        subject: "authorization",
-                      };
-                       emailAdaper.sendEmailRecoveryMessage(emailInfo1);
+                      // const emailInfo1 = {
+                      //   email: "7656077@mail.ru",
+                      //   confirmationCode: JSON.stringify(req.headers.authorization),
+                      //   subject: "authorization",
+                      // };
+                      //  emailAdaper.sendEmailRecoveryMessage(emailInfo1);
                       // -----------------------------------------------------------
 
-    res.sendStatus(401);
+    res.sendStatus(403);
     return;
   }
   const token = req.headers.authorization.split(" ")[1];
