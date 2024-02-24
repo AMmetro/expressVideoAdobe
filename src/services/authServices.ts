@@ -6,7 +6,6 @@ import { randomUUID } from "crypto";
 import { add } from "date-fns/add";
 import { UserRepository } from "../repositories/user-repository";
 import { emailAdaper } from "../utils/emailAdaper";
-import { UserServices } from "./userServices";
 
 export class AuthServices {
   static async registrationUserWithConfirmation(
@@ -136,14 +135,14 @@ export class AuthServices {
     const userId = await AuthServices.getUserIdFromToken(token);
     if (!userId) {
       return {
-        status: ResultCode.Unauthorised,
+        status: ResultCode.Forbidden,
         errorMessage: "Token is not valid",
       };
     }
     const user = await UserQueryRepository.getById(userId)
     if (!user) {
       return {
-        status: ResultCode.Unauthorised,
+        status: ResultCode.NotFound,
         errorMessage: "Not found user with id " + userId,
       };
     }
@@ -162,7 +161,7 @@ export class AuthServices {
     const isTokenInBlackListAlready = user?.blackListToken?.some(token => token === token)
     if (isTokenInBlackListAlready) {
       return {
-        status: ResultCode.Unauthorised,
+        status: ResultCode.Conflict,
         errorMessage: `Token ${token} in black list already`,
       };
     }
