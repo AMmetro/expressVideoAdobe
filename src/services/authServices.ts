@@ -142,7 +142,7 @@ export class AuthServices {
     const user = await UserQueryRepository.getById(userId)
     if (!user) {
       return {
-        status: ResultCode.NotFound,
+        status: ResultCode.Unauthorised,
         errorMessage: "Not found user with id " + userId,
       };
     }
@@ -161,7 +161,7 @@ export class AuthServices {
     const isTokenInBlackListAlready = user?.blackListToken?.some(token => token === token)
     if (isTokenInBlackListAlready) {
       return {
-        status: ResultCode.Conflict,
+        status: ResultCode.Unauthorised,
         errorMessage: `Token ${token} in black list already`,
       };
     }

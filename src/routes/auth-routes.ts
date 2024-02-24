@@ -53,7 +53,7 @@ authRoute.post(
   async (req: Request, res: Response) => {
     const oldRefreshToken = req.cookies.refreshToken;
     if (!oldRefreshToken) {
-      res.sendStatus(405);
+      res.sendStatus(401);
       return;
     }
     const result = await AuthServices.refreshToken(oldRefreshToken);
