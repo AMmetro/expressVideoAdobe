@@ -144,21 +144,21 @@ export class AuthServices {
     if (!user) {
       return {
         status: ResultCode.Unauthorised,
-        errorMessage: "No correct user Id in refresh token",
+        errorMessage: "Not found user with id " + userId,
       };
     }
 
     // -----------------
 
 
-    const userId = await jwtServise.getUserIdByRefreshToken(token)
-    const user = await UserQueryRepository.getById(userId);
-    if (!user) {
-      return {
-        status: ResultCode.Unauthorised,
-        errorMessage: "Not found user with id " + userId,
-      };
-    }
+    // const userId = await jwtServise.getUserIdByRefreshToken(token)
+    // const user = await UserQueryRepository.getById(userId);
+    // if (!user) {
+    //   return {
+    //     status: ResultCode.Unauthorised,
+    //     errorMessage: "Not found user with id " + userId,
+    //   };
+    // }
     const isTokenInBlackListAlready = user?.blackListToken?.some(token => token === token)
     if (isTokenInBlackListAlready) {
       return {
