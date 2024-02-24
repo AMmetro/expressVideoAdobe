@@ -135,8 +135,8 @@ export class AuthServices {
     const userId = await AuthServices.getUserIdFromToken(token);
     if (!userId) {
       return {
-        status: ResultCode.Forbidden,
-        errorMessage: "Token is not valid",
+        status: ResultCode.Conflict,
+        errorMessage: "Not id in token",
       };
     }
     const user = await UserQueryRepository.getById(userId)

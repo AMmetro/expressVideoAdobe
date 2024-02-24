@@ -81,7 +81,7 @@ export class UserServices {
     if (!userId) {
       return {
         status: ResultCode.Unauthorised,
-        errorMessage: "Token is not valid",
+        errorMessage: "No correct Id in token",
       };
     }
     const user = await UserQueryRepository.getById(userId)
