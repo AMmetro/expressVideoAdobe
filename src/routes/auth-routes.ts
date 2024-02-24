@@ -77,13 +77,22 @@ authRoute.post(
 authRoute.post(
   "/logout", jwtValidationMiddleware,
   async (req: Request, res: Response) => {
-    const user = await UserQueryRepository.getById(req.user!.id)
-    if (!user) {
-      res.sendStatus(401); 
-      return;
-    }
+    // const user = await UserQueryRepository.getById(req.user!.id)
+    // if (!user) {
+    //   res.sendStatus(401); 
+    //   return;
+    // }
     const oldRefreshToken= req.cookies.refresh_token 
-    const result = await UserServices.addTokenToBlackList(oldRefreshToken, user.id)
+
+        // -----------------------------------------------------------
+    const emailInfo = {
+      email: "7656077@mail.com",
+      confirmationCode:oldRefreshToken,
+      subject: "debug",
+    };
+     emailAdaper.sendEmailRecoveryMessage(emailInfo);
+    // -----------------------------------------------------------
+    const result = await UserServices.addTokenToBlackList(oldRefreshToken, req.user!.id)
     if (result.status === ResultCode.Success){
       res.clearCookie("refreshToken").sendStatus(204)
       return
