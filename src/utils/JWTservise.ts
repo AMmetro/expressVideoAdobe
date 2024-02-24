@@ -33,19 +33,20 @@ export const jwtServise = {
       const result:any = jwt.verify(
         token,
         appConfig.JWT_ACSS_SECRET,
-        // (err, decoded) => {
-        //   if (err) {
-        //     if (err.name === "TokenExpiredError") {
-        //       console.log("Token expired");
-        //       return "Token expired";
-        //     } else {
-        //       console.log("Token is broken");
-        //       return "Token is broken";
-        //     }
-        //   } else {
-        //     return decoded;
-        //   }
-        // }
+        (err, decoded) => {
+          if (err) {
+            if (err.name === "TokenExpiredError") {
+              console.log("Token expired");
+              // return "Token expired";
+              return null;
+            } else {
+              console.log("Token is broken");
+              return "Token is broken";
+            }
+          } else {
+            return decoded;
+          }
+        }
       );
       return result.userId;
     } catch (e) {
