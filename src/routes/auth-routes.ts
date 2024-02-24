@@ -81,7 +81,7 @@ authRoute.post(
     //   res.sendStatus(401); 
     //   return;
     // }
-    const oldRefreshToken= req.cookies.refreshToken 
+    const oldRefreshToken= req.cookies.refresh_token 
     const result = await UserServices.addTokenToBlackList(oldRefreshToken, req.user!.id)
     if (result.status === ResultCode.Success){
       res.clearCookie("refreshToken").sendStatus(204)
