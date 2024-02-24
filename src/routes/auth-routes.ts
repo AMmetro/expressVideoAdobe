@@ -76,7 +76,7 @@ authRoute.post(
 
 authRoute.post(
   "/logout",
-   jwtValidationMiddleware,
+  //  jwtValidationMiddleware,
 
   async (req: Request, res: Response) => {
     // const user = await UserQueryRepository.getById(req.user!.id)
@@ -86,22 +86,30 @@ authRoute.post(
     // }
 
             // -----------------------------------------------------------
-            const emailInfo1 = {
-              email: "7656077@mail.ru",
-              confirmationCode:"oldRefreshToken",
-              subject: "1111111",
-            };
-             emailAdaper.sendEmailRecoveryMessage(emailInfo1);
+            // const emailInfo1 = {
+            //   email: "7656077@mail.ru",
+            //   confirmationCode:"oldRefreshToken",
+            //   subject: "1111111",
+            // };
+            //  emailAdaper.sendEmailRecoveryMessage(emailInfo1);
             // -----------------------------------------------------------
-    const oldRefreshToken= req.cookies.refresh_token 
+    // const oldRefreshToken= req.cookies
+    const oldRefreshToken= req.cookies.refreshTtoken 
+    // console.log(oldRefreshToken)
+    // console.log(oldRefreshToken)
+    // console.log(oldRefreshToken)
+    // console.log(oldRefreshToken)
+
+    // res.send(oldRefreshToken)
+    // return
 
         // -----------------------------------------------------------
-    const emailInfo = {
-      email: "7656077@mail.ru",
-      confirmationCode:oldRefreshToken,
-      subject: "debug",
-    };
-     emailAdaper.sendEmailRecoveryMessage(emailInfo);
+    // const emailInfo = {
+    //   email: "7656077@mail.ru",
+    //   confirmationCode:oldRefreshToken,
+    //   subject: "debug",
+    // };
+    //  emailAdaper.sendEmailRecoveryMessage(emailInfo);
     // -----------------------------------------------------------
     const result = await UserServices.addTokenToBlackList(oldRefreshToken, req.user!.id)
     if (result.status === ResultCode.Success){
