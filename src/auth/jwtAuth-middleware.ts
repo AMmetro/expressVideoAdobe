@@ -29,16 +29,17 @@ export const jwtValidationMiddleware = async (
   // ----------------------------------------------------------
   // вынесено в отдельную функцию для возможности тестирвоания
   const checkAcssesToken = async (authRequest: string) => {
-    const token = authRequest.split(" ")[1];
+    const token = authRequest.split(" ");
     
-    const token2 = authRequest.split(" ")[0];
-    if (token2 !== "Bearer") {
-      res.sendStatus(401);
-      return;
+    const authMethod = token[0];
+    if (authMethod !== "Bearer") {
+      return {
+        status: ResultCode.Unauthorised,
+        errorMessage: "auth method is not Bearer",
+      };
     }
 
-
-    const userId = await jwtServise.getUserIdByAcssToken(token);
+    const userId = await jwtServise.getUserIdByAcssToken(token[1]);
     if (userId) {
       const user = await UserQueryRepository.getById(userId);
       if (!user) {
