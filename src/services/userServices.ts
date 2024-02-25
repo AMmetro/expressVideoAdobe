@@ -73,7 +73,7 @@ export class UserServices {
     return userMapper(user);
   }
 
-  static async addTokenToBlackList(
+  static async logout(
     refreshToken: string
     // userId: string
   ): Promise<ResultType> {
@@ -88,9 +88,18 @@ export class UserServices {
     if (!user) {
       return {
         status: ResultCode.Unauthorised,
-        errorMessage: "No correct user Id in refresh token",
+        errorMessage: "Not found user by id in refresh token",
       };
     }
+
+    const isTokenInBlackListAlready = user?.blackListToken?.some(token => token === token)
+    if (isTokenInBlackListAlready) {
+      return {
+        status: ResultCode.Unauthorised,
+        errorMessage: `Token ${refreshToken} in black list already`,
+      };
+    }
+
     const userBlackListUpdated = await UserRepository.addTokenToBlackListById(
       refreshToken,
       userId
