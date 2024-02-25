@@ -104,10 +104,7 @@ authRoute.post(
       res.sendStatus(401);
       return;
     }
-    const result = await UserServices.logout(
-      oldRefreshToken
-      // user.id
-    );
+    const result = await UserServices.logout(oldRefreshToken);
     if (result.status === ResultCode.Success) {
       res.clearCookie("refreshToken").sendStatus(204);
       return;

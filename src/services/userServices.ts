@@ -73,10 +73,7 @@ export class UserServices {
     return userMapper(user);
   }
 
-  static async logout(
-    refreshToken: string
-    // userId: string
-  ): Promise<ResultType> {
+  static async logout(refreshToken: string): Promise<ResultType> {
     const userId = await AuthServices.getUserIdFromToken(refreshToken);
     if (!userId) {
       return {
@@ -96,7 +93,7 @@ export class UserServices {
     if (isTokenInBlackListAlready) {
       return {
         status: ResultCode.Unauthorised,
-        errorMessage: `Token ${refreshToken} in black list already`,
+        errorMessage: `Token ${refreshToken} is in black list already`,
       };
     }
 
