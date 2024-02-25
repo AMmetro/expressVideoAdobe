@@ -30,10 +30,10 @@ authRoute.get(
   async (req: Request, res: Response) => {
     // ---------------------------------------------------------
     // почему двойная проверка ?
-    if (req.user!.id) {
-      res.sendStatus(401);
-      return;
-    }
+    // if (req.user!.id) {
+    //   res.sendStatus(401);
+    //   return;
+    // }
     // --------------------------------------------------------
 
     const me = await UserQueryRepository.getById(req.user!.id);
