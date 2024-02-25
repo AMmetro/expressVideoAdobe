@@ -139,13 +139,13 @@ export class AuthServices {
     //   return null
     // }
             // ---------------------------------
-        const emailInfo2 = {
-          email: "7656077@mail.ru",
-          subject: "confirm Email",
-          confirmationCode: token,
-          debug: token,
-        };
-        await emailAdaper.sendEmailDebug(emailInfo2);
+        // const emailInfo2 = {
+        //   email: "7656077@mail.ru",
+        //   subject: "confirm Email",
+        //   confirmationCode: token,
+        //   debug: token,
+        // };
+        // await emailAdaper.sendEmailDebug(emailInfo2);
     // ---------------------------------
 
 
@@ -154,7 +154,7 @@ export class AuthServices {
    // !!!!!!!!!!!!
     if (!userId) {
       return {
-        status: ResultCode.Conflict,
+        status: ResultCode.NotFound,
         errorMessage: "Not id in token",
       };
     }
