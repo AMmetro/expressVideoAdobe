@@ -89,13 +89,13 @@ export class UserServices {
       };
     }
 
-    const isTokenInBlackListAlready = user?.blackListToken?.some(token => token === token)
-    if (isTokenInBlackListAlready) {
-      return {
-        status: ResultCode.Unauthorised,
-        errorMessage: `Token ${refreshToken} is in black list already`,
-      };
-    }
+    // const isTokenInBlackListAlready = user?.blackListToken?.some(token => token === token)
+    // if (isTokenInBlackListAlready) {
+    //   return {
+    //     status: ResultCode.Unauthorised,
+    //     errorMessage: `Token ${refreshToken} is in black list already`,
+    //   };
+    // }
 
     const userBlackListUpdated = await UserRepository.addTokenToBlackListById(
       refreshToken,
