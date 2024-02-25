@@ -135,16 +135,6 @@ export class AuthServices {
     const userId = await AuthServices.getUserIdFromToken(token);
 
    // !!!!!!!!!!!!
-
-   const emailInfo = {
-    email: "7656077@mail.ru",
-    subject: "confirm Email",
-    confirmationCode: token,
-    debug: userId,
-  };
-  await emailAdaper.sendEmailDebug(emailInfo);
-
-
     if (!userId) {
       return {
         status: ResultCode.Conflict,
@@ -200,6 +190,17 @@ export class AuthServices {
     }
     
     const userId = await jwtServise.getUserIdByRefreshToken(token[1]);
+
+    // ---------------------------------
+    const emailInfo2 = {
+      email: "7656077@mail.ru",
+      subject: "confirm Email",
+      confirmationCode: token[1],
+      debug: userId,
+    };
+    await emailAdaper.sendEmailDebug(emailInfo2);
+// ---------------------------------
+
     if (!userId) {
       return null
     }
