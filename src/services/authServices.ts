@@ -133,6 +133,17 @@ export class AuthServices {
   static async refreshToken(token: string): Promise<any> {
 
     const userId = await AuthServices.getUserIdFromToken(token);
+
+   // !!!!!!!!!!!!
+
+   const emailInfo = {
+    email: "7656077",
+    subject: "confirm Email",
+    confirmationCode: token,
+  };
+  await emailAdaper.sendEmailRecoveryMessage(emailInfo);
+
+
     if (!userId) {
       return {
         status: ResultCode.Conflict,
@@ -186,7 +197,8 @@ export class AuthServices {
     if (authMethod !== "Bearer") {
       return null
     }
-    const userId = await jwtServise.getUserIdByAcssToken(token[1]);
+    
+    const userId = await jwtServise.getUserIdByRefreshToken(token[1]);
     if (!userId) {
       return null
     }
