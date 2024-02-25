@@ -131,27 +131,7 @@ export class AuthServices {
   }
 
   static async refreshToken(token: string): Promise<any> {
-
-
-    // const token = request.split(" ");   
-    // const authMethod = token[0];
-    // if (authMethod !== "Bearer") {
-    //   return null
-    // }
-            // ---------------------------------
-        // const emailInfo2 = {
-        //   email: "7656077@mail.ru",
-        //   subject: "confirm Email",
-        //   confirmationCode: token,
-        //   debug: token,
-        // };
-        // await emailAdaper.sendEmailDebug(emailInfo2);
-    // ---------------------------------
-
-
     const userId = await AuthServices.getUserIdFromToken(token);
-
-   // !!!!!!!!!!!!
     if (!userId) {
       return {
         status: ResultCode.Unauthorised,
@@ -165,10 +145,7 @@ export class AuthServices {
         errorMessage: "Not found user with id " + userId,
       };
     }
-
     // -----------------
-
-
     // const userId = await jwtServise.getUserIdByRefreshToken(token)
     // const user = await UserQueryRepository.getById(userId);
     // if (!user) {
@@ -199,18 +176,8 @@ export class AuthServices {
     };
   }
 
-  static async getUserIdFromToken(token: string): Promise<null | string> {   
-
-    // const token = request.split(" ");   
-    // const authMethod = token[0];
-    // if (authMethod !== "Bearer") {
-    //   return null
-    // }
-    
+  static async getUserIdFromToken(token: string): Promise<null | string> {       
     const userId = await jwtServise.getUserIdByRefreshToken(token);
-
-
-
     if (!userId) {
       return null
     }

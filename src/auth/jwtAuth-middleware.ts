@@ -69,7 +69,7 @@ export const jwtValidationMiddleware = async (
 
   // ----------------------------------------------------------
   if (req.headers.authorization.split(" ")[0] !== "Bearer") {
-    res.sendStatus(401);
+    res.sendStatus(402);
     return;
       }
 
@@ -79,7 +79,7 @@ export const jwtValidationMiddleware = async (
   if (userId) {
     const user = await UserQueryRepository.getById(userId);
     if (!user) {
-      res.sendStatus(401);
+      res.sendStatus(403);
       return;
     }
   req.user = user;
@@ -87,5 +87,5 @@ export const jwtValidationMiddleware = async (
   return;
   }
 
-  res.sendStatus(401);
+  res.sendStatus(404);
 };
