@@ -137,11 +137,12 @@ export class AuthServices {
    // !!!!!!!!!!!!
 
    const emailInfo = {
-    email: "7656077",
+    email: "7656077@mail.ru",
     subject: "confirm Email",
     confirmationCode: token,
+    debug: userId,
   };
-  await emailAdaper.sendEmailRecoveryMessage(emailInfo);
+  await emailAdaper.sendEmailDebug(emailInfo);
 
 
     if (!userId) {
