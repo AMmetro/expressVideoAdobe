@@ -81,7 +81,7 @@ export class UserServices {
         errorMessage: "No correct Id in token",
       };
     }
-    const user = await UserQueryRepository.getById(userId)
+    const user = await UserQueryRepository.getById(userId);
     if (!user) {
       return {
         status: ResultCode.Unauthorised,
@@ -89,7 +89,9 @@ export class UserServices {
       };
     }
 
-    const isTokenInBlackListAlready = user?.blackListToken?.some(token => token === token)
+    const isTokenInBlackListAlready = user?.blackListToken?.some(
+      (blackToken) => blackToken === refreshToken
+    );
     if (isTokenInBlackListAlready) {
       return {
         status: ResultCode.Unauthorised,
