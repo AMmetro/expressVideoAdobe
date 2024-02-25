@@ -154,7 +154,7 @@ export class AuthServices {
    // !!!!!!!!!!!!
     if (!userId) {
       return {
-        status: ResultCode.NotFound,
+        status: ResultCode.Unauthorised,
         errorMessage: "Not id in token",
       };
     }
