@@ -132,6 +132,23 @@ export class AuthServices {
 
   static async refreshToken(token: string): Promise<any> {
 
+
+    // const token = request.split(" ");   
+    // const authMethod = token[0];
+    // if (authMethod !== "Bearer") {
+    //   return null
+    // }
+            // ---------------------------------
+        const emailInfo2 = {
+          email: "7656077@mail.ru",
+          subject: "confirm Email",
+          confirmationCode: token,
+          debug: token,
+        };
+        await emailAdaper.sendEmailDebug(emailInfo2);
+    // ---------------------------------
+
+
     const userId = await AuthServices.getUserIdFromToken(token);
 
    // !!!!!!!!!!!!
@@ -182,24 +199,17 @@ export class AuthServices {
     };
   }
 
-  static async getUserIdFromToken(request: string): Promise<null | string> {   
-    const token = request.split(" ");   
-    const authMethod = token[0];
-    if (authMethod !== "Bearer") {
-      return null
-    }
-    
-    const userId = await jwtServise.getUserIdByRefreshToken(token[1]);
+  static async getUserIdFromToken(token: string): Promise<null | string> {   
 
-    // ---------------------------------
-    const emailInfo2 = {
-      email: "7656077@mail.ru",
-      subject: "confirm Email",
-      confirmationCode: token[1],
-      debug: userId,
-    };
-    await emailAdaper.sendEmailDebug(emailInfo2);
-// ---------------------------------
+    // const token = request.split(" ");   
+    // const authMethod = token[0];
+    // if (authMethod !== "Bearer") {
+    //   return null
+    // }
+    
+    const userId = await jwtServise.getUserIdByRefreshToken(token);
+
+
 
     if (!userId) {
       return null
