@@ -13,14 +13,6 @@ export const jwtValidationMiddleware = async (
   next: NextFunction
 ) => {
   if (!req.headers.authorization) {
-    // -----------------------------------------------------------
-    // const emailInfo1 = {
-    //   email: "7656077@mail.ru",
-    //   confirmationCode: JSON.stringify(req.headers.authorization),
-    //   subject: "authorization",
-    // };
-    //  emailAdaper.sendEmailRecoveryMessage(emailInfo1);
-    // -----------------------------------------------------------
 
     res.sendStatus(401);
     return;
@@ -64,7 +56,7 @@ export const jwtValidationMiddleware = async (
     req.user = result.data;
     return next();
   } else {
-    sendCustomError(res, result);
+   return sendCustomError(res, result);
   }
 
   // ----------------------------------------------------------
@@ -87,5 +79,5 @@ export const jwtValidationMiddleware = async (
   // return;
   // }
 
-  res.sendStatus(401);
+  return res.sendStatus(401);
 };
