@@ -6,6 +6,7 @@ import { emailAdaper } from "../utils/emailAdaper";
 import { UserServices } from "../services/userServices";
 import { ResultCode } from "../validators/error-validators";
 import { sendCustomError } from "../utils/sendResponse";
+import { AuthServices } from "../services/authServices";
 
 export const jwtValidationMiddleware = async (
   req: Request,
@@ -20,38 +21,38 @@ export const jwtValidationMiddleware = async (
 
   // ----------------------------------------------------------
   // вынесено в отдельную функцию для возможности тестирвоания
-  const checkAcssesToken = async (authRequest: string) => {
-    const token = authRequest.split(" ");
+  // const checkAcssesToken = async (authRequest: string) => {
+  //   const token = authRequest.split(" ");
     
-    const authMethod = token[0];
-    if (authMethod !== "Bearer") {
-      return {
-        status: ResultCode.Unauthorised,
-        errorMessage: "auth method is not Bearer",
-      };
-    }
+  //   const authMethod = token[0];
+  //   if (authMethod !== "Bearer") {
+  //     return {
+  //       status: ResultCode.Unauthorised,
+  //       errorMessage: "auth method is not Bearer",
+  //     };
+  //   }
 
-    const userId = await jwtServise.getUserIdByAcssToken(token[1]);
-    if (userId) {
-      const user = await UserQueryRepository.getById(userId);
-      if (!user) {
-        return {
-          status: ResultCode.Unauthorised,
-          errorMessage: "Not found user with id " + userId,
-        };
-      }
-      return {
-        status: ResultCode.Success,
-        data: user,
-      };
-    }
-    return {
-      status: ResultCode.Unauthorised,
-      errorMessage: "JWT is broken",
-    };
-  };
+  //   const userId = await jwtServise.getUserIdByAcssToken(token[1]);
+  //   if (userId) {
+  //     const user = await UserQueryRepository.getById(userId);
+  //     if (!user) {
+  //       return {
+  //         status: ResultCode.Unauthorised,
+  //         errorMessage: "Not found user with id " + userId,
+  //       };
+  //     }
+  //     return {
+  //       status: ResultCode.Success,
+  //       data: user,
+  //     };
+  //   }
+  //   return {
+  //     status: ResultCode.Unauthorised,
+  //     errorMessage: "JWT is broken",
+  //   };
+  // };
 
-  const result = await checkAcssesToken(req.headers.authorization);
+  const result = await AuthServices.checkAcssesToken(req.headers.authorization);
   if (result.status === ResultCode.Success && result.data) {
     req.user = result.data;
     return next();

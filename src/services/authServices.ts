@@ -8,6 +8,38 @@ import { UserRepository } from "../repositories/user-repository";
 import { emailAdaper } from "../utils/emailAdaper";
 
 export class AuthServices {
+
+  static async checkAcssesToken(authRequest: string): Promise<any> {       
+      const token = authRequest.split(" ");
+      
+      const authMethod = token[0];
+      if (authMethod !== "Bearer") {
+        return {
+          status: ResultCode.Unauthorised,
+          errorMessage: "auth method is not Bearer",
+        };
+      }
+  
+      const userId = await jwtServise.getUserIdByAcssToken(token[1]);
+      if (userId) {
+        const user = await UserQueryRepository.getById(userId);
+        if (!user) {
+          return {
+            status: ResultCode.Unauthorised,
+            errorMessage: "Not found user with id " + userId,
+          };
+        }
+        return {
+          status: ResultCode.Success,
+          data: user,
+        };
+      }
+      return {
+        status: ResultCode.Unauthorised,
+        errorMessage: "JWT is broken",
+      };
+    };
+
   static async registrationUserWithConfirmation(
     registrationData: RequestInputUserType
   ): Promise<any | null> {
@@ -55,6 +87,8 @@ export class AuthServices {
       data: true,
     };
   }
+
+
   static async confirmEmail(code: string): Promise<any> {
     const userForConfirmation = await UserQueryRepository.getByConfirmationCode(code);
     if (!userForConfirmation) {
@@ -91,6 +125,7 @@ export class AuthServices {
       data: isConfirmed,
     };
   }
+
 
   static async emailResending(email: string): Promise<any> {
     const userSearchData = { email: email, login: " " }; // search by login " " false for all login
@@ -129,6 +164,7 @@ export class AuthServices {
       data: true,
     };
   }
+
 
   static async refreshToken(token: string): Promise<any> {
     const userId = await AuthServices.getUserIdFromToken(token);
@@ -175,6 +211,7 @@ export class AuthServices {
       data: {newAccessToken, newRefreshToken },
     };
   }
+
 
   static async getUserIdFromToken(token: string): Promise<null | string> {       
     const userId = await jwtServise.getUserIdByRefreshToken(token);
