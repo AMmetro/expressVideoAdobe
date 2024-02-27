@@ -1,4 +1,4 @@
-import { Router, Response } from "express";
+import { Router, Request } from "express";
 import { ObjectId } from "mongodb";
 import {
   Params,
@@ -13,6 +13,8 @@ import { ResultCode } from '../validators/error-validators';
 import { sendCustomError } from '../utils/sendResponse';
 import { commentValidation } from '../validators/comment-validators';
 import { UserQueryRepository } from "../repositories/user.query-repository";
+import { DevicesServices } from "../services/devicesServices";
+
 
 export const devicesRoute = Router({});
 
@@ -26,15 +28,15 @@ devicesRoute.get(
       return;
     }
  
-    const user = await UserQueryRepository.getById(userId);
+    const result = await DevicesServices.getUsersDevices(userId);
 
 
 
-    // if (!comment) {
+    // if (!result) {
     //   res.sendStatus(404);
     //   return;
     // }
-    // res.status(200).send(comment);
+    // res.status(200).send(result);
   }
 );
 
