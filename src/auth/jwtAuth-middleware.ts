@@ -14,43 +14,9 @@ export const jwtValidationMiddleware = async (
   next: NextFunction
 ) => {
   if (!req.headers.authorization) {
-
     res.sendStatus(401);
     return;
   }
-
-  // ----------------------------------------------------------
-  // вынесено в отдельную функцию для возможности тестирвоания
-  // const checkAcssesToken = async (authRequest: string) => {
-  //   const token = authRequest.split(" ");
-    
-  //   const authMethod = token[0];
-  //   if (authMethod !== "Bearer") {
-  //     return {
-  //       status: ResultCode.Unauthorised,
-  //       errorMessage: "auth method is not Bearer",
-  //     };
-  //   }
-
-  //   const userId = await jwtServise.getUserIdByAcssToken(token[1]);
-  //   if (userId) {
-  //     const user = await UserQueryRepository.getById(userId);
-  //     if (!user) {
-  //       return {
-  //         status: ResultCode.Unauthorised,
-  //         errorMessage: "Not found user with id " + userId,
-  //       };
-  //     }
-  //     return {
-  //       status: ResultCode.Success,
-  //       data: user,
-  //     };
-  //   }
-  //   return {
-  //     status: ResultCode.Unauthorised,
-  //     errorMessage: "JWT is broken",
-  //   };
-  // };
 
   const result = await AuthServices.checkAcssesToken(req.headers.authorization);
   if (result.status === ResultCode.Success && result.data) {
@@ -60,25 +26,5 @@ export const jwtValidationMiddleware = async (
    return sendCustomError(res, result);
   }
 
-  // ----------------------------------------------------------
-  // if (req.headers.authorization.split(" ")[0] !== "Bearer") {
-  //   res.sendStatus(401);
-  //   return;
-  //     }
-
-  // const token = req.headers.authorization.split(" ")[1];
-  // const userId = await jwtServise.getUserIdByAcssToken(token);
-
-  // if (userId) {
-  //   const user = await UserQueryRepository.getById(userId);
-  //   if (!user) {
-  //     res.sendStatus(401);
-  //     return;
-  //   }
-  // req.user = user;
-  // next();
-  // return;
-  // }
-
-  return res.sendStatus(401);
+  // return res.sendStatus(401);
 };

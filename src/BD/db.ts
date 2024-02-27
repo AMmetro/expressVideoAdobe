@@ -5,6 +5,7 @@ import { PostDB } from '../models/post/db/post-db';
 import { UserDB } from '../models/user/db/user-db';
 import { CommentDB } from '../models/comments/db/comment-db';
 import { appConfig } from '../appConfig';
+import { SecurityDevicesDB } from '../models/devices/db/devices-db';
 
 // dotenv.config()
 // const mongoURI = process.env.MONGO_URL || "mongodb://0.0.0.0:27017"; 
@@ -18,6 +19,7 @@ export const client = new MongoClient(mongoURI);
 
 const database = client.db("BlogDB")
 export const usersCollection = database.collection<UserDB>("users")
+export const securityDevicesCollection = database.collection<SecurityDevicesDB>("users")
 export const blogsCollection = database.collection<BlogDB>("blogs")
 export const postsCollection = database.collection<PostDB>("posts")
 export const commentsCollection = database.collection<CommentDB>("comments")

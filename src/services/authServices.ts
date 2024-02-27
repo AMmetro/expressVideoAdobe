@@ -11,7 +11,6 @@ export class AuthServices {
 
   static async checkAcssesToken(authRequest: string): Promise<any> {       
       const token = authRequest.split(" ");
-      
       const authMethod = token[0];
       if (authMethod !== "Bearer") {
         return {
@@ -19,7 +18,6 @@ export class AuthServices {
           errorMessage: "auth method is not Bearer",
         };
       }
-  
       const userId = await jwtServise.getUserIdByAcssToken(token[1]);
       if (userId) {
         const user = await UserQueryRepository.getById(userId);

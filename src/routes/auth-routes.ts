@@ -21,7 +21,6 @@ import { inputValidationMiddleware } from "../inputValidation/input-validation-m
 import { AuthServices } from "../services/authServices";
 import { ResultCode } from "../validators/error-validators";
 import { sendCustomError } from "../utils/sendResponse";
-import { emailAdaper } from "../utils/emailAdaper";
 export const authRoute = Router({});
 
 authRoute.get(
