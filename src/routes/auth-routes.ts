@@ -21,12 +21,18 @@ import { inputValidationMiddleware } from "../inputValidation/input-validation-m
 import { AuthServices } from "../services/authServices";
 import { ResultCode } from "../validators/error-validators";
 import { sendCustomError } from "../utils/sendResponse";
+import { DevicesServices } from "../services/devicesServices";
 export const authRoute = Router({});
 
 authRoute.get(
   "/me",
   jwtValidationMiddleware,
   async (req: Request, res: Response) => {
+
+    // --------------------------------------------
+    const userRequest = await AuthServices.getUserIdFromToken(req.cookies.refreshToken);
+    res.status(200).send(userRequest);
+    // --------------------------------------------
     const me = await UserQueryRepository.getById(req.user!.id);
     if (!me) {
       res.sendStatus(401);
@@ -72,20 +78,30 @@ authRoute.post(
       return;
     }
     const authData = { loginOrEmail: loginOrEmail, password: password };
-    const authUsers = await UserServices.checkCredentials(authData);
-    if (!authUsers) {
-      res.sendStatus(401);
-      return;
-    }
-    const accessToken = await jwtServise.createAccessTokenJWT(authUsers);
-    const refreshToken = await jwtServise.createRefreshTokenJWT(authUsers);
-    return res
+    const result = await AuthServices.loginUser(authData)
+    const accessToken = result.data.newAccessToken;
+    const refreshToken = result.data.newRefreshToken;
+
+    if (result.status === ResultCode.Success) {
+      return res
       .cookie("refreshToken", refreshToken, {
         httpOnly: true,
         secure: true,
       })
       .status(200)
       .send({ accessToken });
+    } else {
+      sendCustomError(res, result);
+      return
+    }
+
+  //   return res
+  //     .cookie("refreshToken", refreshToken, {
+  //       httpOnly: true,
+  //       secure: true,
+  //     })
+  //     .status(200)
+  //     .send({ accessToken });
   }
 );
 

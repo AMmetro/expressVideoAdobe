@@ -25,7 +25,7 @@ devicesRoute.get(
     const userId = req.user!.id
     if (!ObjectId.isValid(userId)) {
       res.sendStatus(404);
-      return;
+      return; 
     }
      const result = await DevicesServices.getUsersDevices(userId);
      if (result.status === ResultCode.Success){
@@ -33,6 +33,7 @@ devicesRoute.get(
     } else {sendCustomError(res, result)}
   }
 );
+
 
 
 

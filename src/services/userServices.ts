@@ -5,7 +5,6 @@ import { UserDB } from "../models/user/db/user-db";
 import { UserRepository } from "../repositories/user-repository";
 import { UserQueryRepository } from "../repositories/user.query-repository";
 import { AuthUserInputModel } from "../models/user/input/authUser-input-model";
-import bcrypt from "bcrypt";
 import { userMapper } from "../models/user/mapper/user-mapper";
 import { hashServise } from "../utils/JWTservise";
 import { randomUUID } from "crypto";
@@ -18,7 +17,7 @@ export class UserServices {
     createUserModel: RequestInputUserType
   ): Promise<OutputUserType | null> {
     const { login, password, email } = createUserModel;
-    const passwordSalt = await bcrypt.genSalt(10);
+    const passwordSalt = await hashServise.generateSalt();
     const passwordHash = await hashServise.generateHash(password, passwordSalt);
     const newUserModal: UserDB = {
       login: login,
@@ -43,10 +42,10 @@ export class UserServices {
     if (!createdUser) {
       return null;
     }
-    const createdDeviceId = await DevicesServices.createdDevice(newUserId);
-    if (!createdDeviceId) {
-      return null;
-    }
+    // const createdDeviceId = await DevicesServices.createdDevice(newUserId);
+    // if (!createdDeviceId) {
+    //   return null;
+    // }
     return createdUser;
 
   }

@@ -7,7 +7,6 @@ import { securityDevicesCollection } from "../BD/db";
 export class DevicesServices {
 
   static async getUsersDevices(userId: string): Promise<Result<OutputDevicesType[]>> {
-
     const userDevices = await DevicesQueryRepository.getByUserId(userId);   
     if (!userDevices) {
       return {

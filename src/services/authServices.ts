@@ -7,6 +7,8 @@ import { add } from "date-fns/add";
 import { UserRepository } from "../repositories/user-repository";
 import { emailAdaper } from "../utils/emailAdaper";
 import { DevicesServices } from "./devicesServices";
+import { UserServices } from "./userServices";
+import { AuthUserInputModel } from "../models/user/input/authUser-input-model";
 
 export class AuthServices {
 
@@ -119,14 +121,14 @@ export class AuthServices {
           `Confirmation code ${code}`,
       };
     }
-    const createdDeviceId = await DevicesServices.createdDevice(userForConfirmation.id);
-    if (!createdDeviceId) {
-      return {
-        status: ResultCode.Conflict,
-        errorMessage:
-          `Can't create device for user id: ${userForConfirmation.id}`,
-      };
-    }
+    // const createdDeviceId = await DevicesServices.createdDevice(userForConfirmation.id);
+    // if (!createdDeviceId) {
+    //   return {
+    //     status: ResultCode.Conflict,
+    //     errorMessage:
+    //       `Can't create device for user id: ${userForConfirmation.id}`,
+    //   };
+    // }
     return {
       status: ResultCode.Success,
       data: isConfirmed,
@@ -174,6 +176,14 @@ export class AuthServices {
 
 
   static async refreshToken(token: string): Promise<any> {
+    const userRequest = await jwtServise.getUserFromRefreshToken(token);
+    if (!userRequest.deviceId) {
+      return {
+        status: ResultCode.Unauthorised,
+        errorMessage: "Not user device info in token",
+      };
+    }
+
     const userId = await AuthServices.getUserIdFromToken(token);
     if (!userId) {
       return {
@@ -188,15 +198,6 @@ export class AuthServices {
         errorMessage: "Not found user with id " + userId,
       };
     }
-    // -----------------
-    // const userId = await jwtServise.getUserIdByRefreshToken(token)
-    // const user = await UserQueryRepository.getById(userId);
-    // if (!user) {
-    //   return {
-    //     status: ResultCode.Unauthorised,
-    //     errorMessage: "Not found user with id " + userId,
-    //   };
-    // }
     const isTokenInBlackListAlready = user?.blackListToken?.some(token => token === token)
     if (isTokenInBlackListAlready) {
       return {
@@ -211,8 +212,8 @@ export class AuthServices {
         errorMessage: `Can't write token to user black list in database`,
       };
     }
-    const newAccessToken = await jwtServise.createAccessTokenJWT(user)
-    const newRefreshToken = await jwtServise.createRefreshTokenJWT(user)
+    const newAccessToken = await jwtServise.createAccessTokenJWT(user, userRequest.deviceId);
+    const newRefreshToken = await jwtServise.createRefreshTokenJWT(user, userRequest.deviceId)
     return {
       status: ResultCode.Success,
       data: {newAccessToken, newRefreshToken },
@@ -220,13 +221,43 @@ export class AuthServices {
   }
 
 
+  static async loginUser(authData: AuthUserInputModel): Promise<any> { 
+    const authUsers = await UserServices.checkCredentials(authData);
+    if (!authUsers){
+    return {
+      status: ResultCode.NotFound,
+      errorMessage: `Can't login user`,
+    };
+  }
+  const createdDeviceId = await DevicesServices.createdDevice(authUsers.id);
+  if (!createdDeviceId){
+    return {
+      status: ResultCode.Conflict,
+      errorMessage: `Can't create devices for user`,
+    };
+  }
+  const accessToken = await jwtServise.createAccessTokenJWT(authUsers, createdDeviceId );
+  const refreshToken = await jwtServise.createRefreshTokenJWT(authUsers, createdDeviceId);
+  return {
+    status: ResultCode.Success,
+    data: {newAccessToken: accessToken, newRefreshToken: refreshToken },
+  };
+  }
+
   static async getUserIdFromToken(token: string): Promise<null | string> {       
-    const userId = await jwtServise.getUserIdByRefreshToken(token);
-    if (!userId) {
+    // const userId = await jwtServise.getUserIdByRefreshToken(token);
+    const user = await jwtServise.getUserFromRefreshToken(token);
+    if (!user.userId) {
       return null
     }
-    return userId
+    return user.userId
   }
+
+  // static async getUserFromToken(token: string): Promise<{userId: string, deviceId: string}> {       
+  //   const user = await jwtServise.getUserFromRefreshToken(token);
+  //   const outUser = {userId: user.userId, deviceId: user.deviceId}
+  //   return outUser
+  // }
 
 
 }
