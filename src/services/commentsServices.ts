@@ -1,18 +1,16 @@
 
 import { PostQueryRepository } from "../repositories/post.query-repository";
 import { UserQueryRepository } from "../repositories/user.query-repository";
-import bcrypt from "bcrypt";
 import { CommentRepository } from '../repositories/comment-repository';
 import { CommentsQueryRepository } from '../repositories/comments.query-repository';
-import { OutputCommentType, ResultCommentType } from '../models/comments/output/comment.output';
+import { ResultCommentType } from '../models/comments/output/comment.output';
 import { ResultCode } from '../validators/error-validators';
-import { commentMapper } from '../models/comments/mapper/comment-mapper';
+
 
 export class CommentsServices {
 
   static async create(
     commentedPostId:string, userCommentatorId:string, content:string
-    // newCommentModal: CommentDB
   ): Promise<ResultCommentType> {
     const commentedPost = await PostQueryRepository.getById(commentedPostId);
     if (commentedPost === null) {

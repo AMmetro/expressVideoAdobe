@@ -27,16 +27,10 @@ devicesRoute.get(
       res.sendStatus(404);
       return;
     }
- 
-    const result = await DevicesServices.getUsersDevices(userId);
-
-
-
-    // if (!result) {
-    //   res.sendStatus(404);
-    //   return;
-    // }
-    // res.status(200).send(result);
+     const result = await DevicesServices.getUsersDevices(userId);
+     if (result.status === ResultCode.Success){
+      res.status(200).send(result.data);
+    } else {sendCustomError(res, result)}
   }
 );
 

@@ -11,6 +11,7 @@ import { hashServise } from "../utils/JWTservise";
 import { randomUUID } from "crypto";
 import { ResultCode } from "../validators/error-validators";
 import { AuthServices } from "./authServices";
+import { DevicesServices } from "./devicesServices";
 
 export class UserServices {
   static async create(
@@ -42,7 +43,12 @@ export class UserServices {
     if (!createdUser) {
       return null;
     }
+    const createdDeviceId = await DevicesServices.createdDevice(newUserId);
+    if (!createdDeviceId) {
+      return null;
+    }
     return createdUser;
+
   }
 
   static async delete(id: string): Promise<Boolean | null> {

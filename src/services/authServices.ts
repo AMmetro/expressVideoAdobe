@@ -6,6 +6,7 @@ import { randomUUID } from "crypto";
 import { add } from "date-fns/add";
 import { UserRepository } from "../repositories/user-repository";
 import { emailAdaper } from "../utils/emailAdaper";
+import { DevicesServices } from "./devicesServices";
 
 export class AuthServices {
 
@@ -111,11 +112,19 @@ export class AuthServices {
       };
     }
     const isConfirmed = await UserRepository.confirmRegistration(userForConfirmation.id);
-    if (!isConfirmed) {
+     if (!isConfirmed) {
       return {
         status: ResultCode.Conflict,
         errorMessage:
           `Confirmation code ${code}`,
+      };
+    }
+    const createdDeviceId = await DevicesServices.createdDevice(userForConfirmation.id);
+    if (!createdDeviceId) {
+      return {
+        status: ResultCode.Conflict,
+        errorMessage:
+          `Can't create device for user id: ${userForConfirmation.id}`,
       };
     }
     return {
