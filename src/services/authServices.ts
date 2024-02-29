@@ -252,7 +252,7 @@ export class AuthServices {
     };
   }
 
-  static async loginUser(authData: AuthUserInputModel): Promise<Result< {newAT: string, newRT: string}>> {
+  static async loginUser(authData: AuthUserInputModel, userAgent: string): Promise<Result< {newAT: string, newRT: string}>> {
     const authUsers = await UserServices.checkCredentials(authData);
     if (!authUsers) {
       return {
@@ -261,7 +261,7 @@ export class AuthServices {
       };
     }
     const twoTokensWithDeviceId = await DevicesServices.createdDevice(
-      authUsers
+      authUsers, userAgent
     );
     if (!twoTokensWithDeviceId) {
       return {

@@ -3,7 +3,8 @@ export type OutputDevicesType = {
   userId: string,
   ip: string,
   title: string,
-  lastActiveDate: string,
+  lastActiveDate: number,
+  tokenCreatedAt: number,
   };
 
 

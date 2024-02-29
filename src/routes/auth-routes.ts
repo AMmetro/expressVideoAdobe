@@ -30,6 +30,7 @@ authRoute.get(
   async (req: Request, res: Response) => { 
 
     // --------------------------------------------
+    // res.locals.ua = req.get('User-Agent');
     // const userRequest = await jwtServise.getUserFromRefreshToken(req.cookies.refreshToken);
     // res.status(200).send(userRequest);
     // return
@@ -74,12 +75,13 @@ authRoute.post(
   "/login",
   async (req: RequestWithBody<AuthUserInputModel>, res: Response) => {
     const { password, loginOrEmail } = req.body;
+    const userAgent = res.locals.ua = req.get('User-Agent') || "unknown";
     if (!password || !loginOrEmail) {
       res.sendStatus(400);
       return;
     }
     const authData = { loginOrEmail: loginOrEmail, password: password };
-    const result = await AuthServices.loginUser(authData)
+    const result = await AuthServices.loginUser(authData, userAgent)
     if (result.data && result.status === ResultCode.Success) {
       const accessToken = result.data.newAT;
       const refreshToken = result.data.newRT;

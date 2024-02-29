@@ -4,11 +4,12 @@ import { OutputDevicesType } from '../output/devices.output'
 
 export const devicesMapper = (device:WithId<SecurityDevicesDB>):OutputDevicesType => {
     return {
-        deviceId: device.deviceId,
         userId: device.userId,
         ip: device.ip,
         title: device.title,
         lastActiveDate: device.lastActiveDate,
+        deviceId: device.deviceId,
+        tokenCreatedAt: device.tokenCreatedAt,
     }
 }
 
