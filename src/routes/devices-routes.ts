@@ -35,6 +35,44 @@ devicesRoute.get(
 );
 
 
+devicesRoute.delete(
+  "/devices/:deviceId",
+  jwtValidationMiddleware,
+  async (req: Request, res: any ) => {
+    const deviceId = req.params.deviceId
+    if (!deviceId) {
+      res.sendStatus(401);
+      return; 
+    }
+    const userId = req.user!.id
+    if (!ObjectId.isValid(userId)) {
+      res.sendStatus(401);
+      return; 
+    }
+    const result = await DevicesServices.deleteDevicesById(userId, deviceId);
+     if (result.status === ResultCode.Success){
+      res.status(204).send(result.data);
+    } else {sendCustomError(res, result)}
+  }
+);
+
+devicesRoute.delete(
+  "/devices",
+  jwtValidationMiddleware,
+  async (req: Request, res: any ) => {
+    const userId = req.user!.id
+    if (!ObjectId.isValid(userId)) {
+      res.sendStatus(404);
+      return; 
+    }
+     const result = await DevicesServices.deleteAllOtherDevices(userId);
+     if (result.status === ResultCode.Success){
+      res.status(200).send(result.data);
+    } else {sendCustomError(res, result)}
+  }
+);
+
+
 
 
 

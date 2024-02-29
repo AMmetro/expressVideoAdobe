@@ -4,80 +4,111 @@ import { client } from "../src/BD/db";
 import { OutputPostType } from "../src/models/post/output/post.output";
 
 // --------------------------------------------------------------------
-const userCount = 1
-const users:any = []
-export const createUsers = async (app:any, i:number)=> {
+const userCount = 4;
+const users: any = [];
+export const createUsers = async (app: any, i: number) => {
   const response = await request(app)
-  .post("/users/")
-  .auth("admin", "qwerty")
-  .set('User-Agent', "agent"+i)
-  .send({
-    login: "login" + i,
-    password: "password",
-    email: i + "email56010@gg.com",
-  })
-  .expect(201);
-  return response.body 
-}
+    .post("/users/")
+    .auth("admin", "qwerty")
+    .set("User-Agent", "agent" + i)
+    .send({
+      login: "login" + i,
+      password: "password",
+      email: i + "email56010@gg.com",
+    })
+    .expect(201);
+  return response.body;
+};
 
-export const loginUsers = async (app:any, i:number)=> {
+export const loginUsers = async (app: any, i: number) => {
   const response = await request(app)
-  .post("/auth/login")
-  .auth("admin", "qwerty")
-  .send({
-    loginOrEmail: users[i].login,
-    password: "password",
-  })
-  .expect(200);
-  return response.body 
-}
+    .post("/auth/login")
+    .auth("admin", "qwerty")
+    .send({
+      loginOrEmail: users[i].login,
+      password: "password",
+    })
+    .expect(200);
+  return response.body;
+};
 // -----------------------------------------------------------
 
-
-
 describe("should return API data", () => {
-
   beforeAll(async () => {
     await request(app).delete("/testing/all-data").expect(204);
   });
 
   it("- POST create 4 USER", async function () {
-    for (let i=0; i<userCount; i++){
-    const responseNewUser = await createUsers(app,i)
-    users.push(responseNewUser)
+    for (let i = 0; i < userCount; i++) {
+      const responseNewUser = await createUsers(app, i);
+      users.push(responseNewUser);
     }
   });
 
   it("- Login 4 users", async () => {
-    for (let i=0; i<userCount; i++){
-    const responseNewUser = await loginUsers(app,i)
-    const token = await responseNewUser.accessToken
-    users[i].token = token;
+    for (let i = 0; i < userCount; i++) {
+      const responseNewUser = await loginUsers(app, i);
+      const token = await responseNewUser.accessToken;
+      users[i].token = token;
     }
   });
 
-    it("- GET created devices", async () => {
-    const authUsers = await request(app)
-    .get("/security/devices/")
-    .set('Authorization', `Bearer ${users[0].token}`)
-     expect(authUsers.body).toEqual(expect.any(Array));
+  it("- GET created devices", async () => {
+    for (let i = 0; i < userCount; i++) {
+      const authUsers = await request(app)
+        .get("/security/devices/")
+        .set("Authorization", `Bearer ${users[i].token}`);
+      users[i].deviceId = authUsers.body[0].deviceId;
+      expect(authUsers.body).toEqual(expect.any(Array));
+    }
+  });
+
+  it("- DELETE  device", async () => {
+    const del = await request(app)
+      .delete("/security/devices/" + users[0].deviceId)
+      .set("Authorization", `Bearer ${users[0].token}`);
+    expect(del.status).toBe(204);
   });
 
 
-  it("- GET created devices with 401", async () => {
-    const authUsers = await request(app)
-    .get("/security/devices/")
-    .set('Authorization', `Bearer ${users[0].token}401`)
-     expect(authUsers.status).toBe(401);
+  it("- DELETE  device with ERROR 401", async () => {
+    const del = await request(app)
+      .delete("/security/devices/" + users[1].deviceId)
+      .set("Authorization", `Bearer 1234567890`);
+    expect(del.status).toBe(401);
+  });
 
-    // }
-    // console.log("users")
-    // console.log(users)
+
+  it("- DELETE  device with ERROR 403", async () => {
+    const del = await request(app)
+      .delete("/security/devices/" + users[1].deviceId)
+      .set("Authorization", `Bearer ${users[2].token}`);
+    expect(del.status).toBe(403);
+  });
+
+
+  it("- DELETE  device with ERROR 404", async () => {
+    const del = await request(app)
+      .delete("/security/devices/" + users[0].deviceId)
+      .set("Authorization", `Bearer ${users[0].token}`);
+    expect(del.status).toBe(404);
   });
 
 
 
 
+
+
+  // it("- GET created devices with 401", async () => {
+  //   const authUsers = await request(app)
+  //   .get("/security/devices/")
+  //   .set('Authorization', `Bearer ${users[0].token}401`)
+  //    expect(authUsers.status).toBe(401);
+
+  //   // }
+  //   // console.log("users")
+  //   // console.log(users)
+  // });
 
   // it("- GET created user token", async () => {
   //   const {memorisedNewUserLogin} = expect.getState()
@@ -91,7 +122,7 @@ describe("should return API data", () => {
 
   //    expect.setState({ memorisedUserToken: responseUsers.body.accessToken })
   //    expect(responseUsers.body.accessToken).toEqual(expect.any(String));
-  // }); 
+  // });
 
   //   it("- POST create new BLOG for created User", async function () {
   //   const response = await request(app)
@@ -104,7 +135,7 @@ describe("should return API data", () => {
   //       websiteUrl: "https://www.someadess.com",
   //     })
   //     .expect(201)
-      
+
   //     expect(response.body).toEqual({
   //       id: expect.any(String),
   //       isMembership: false,

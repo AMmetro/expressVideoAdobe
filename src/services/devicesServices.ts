@@ -5,11 +5,13 @@ import { Result, ResultCode } from '../validators/error-validators';
 import { securityDevicesCollection } from "../BD/db";
 import { jwtServise } from "../utils/JWTservise";
 import { OutputUserType } from "../models/user/output/user.output";
+import { DevicesRepository } from "../repositories/devices-repository";
 
 export class DevicesServices {
 
   static async getUsersDevices(userId: string): Promise<Result<OutputDevicesType[]>> {
-    const userDevices = await DevicesQueryRepository.getByUserId(userId);   
+    const userDevices = await DevicesQueryRepository.getByUserId(userId);
+
     if (!userDevices) {
       return {
         status: ResultCode.NotFound,
@@ -43,11 +45,35 @@ export class DevicesServices {
     return {newAT: accessToken, newRT: refreshToken} 
   }
  
+  static async deleteDevicesById(userId: string, deviceId:string): Promise<any | string> {
+    const device = await DevicesQueryRepository.getByDeviceId(deviceId);
+    if (!device) {
+      return {
+        status: ResultCode.NotFound,
+          errorMessage: "Cant find devices with id:" + deviceId,
+          }
+    }
+    if (device.userId !== userId) {
+      return {
+        status: ResultCode.Forbidden,
+          errorMessage: "Try to delete the deviceId of other user",
+          }
+    }
+    const isDelete = await DevicesRepository.deleteDeviceById(deviceId);
+    if (!isDelete) {
+      return {
+        status: ResultCode.Conflict,
+          errorMessage: "Delete data base error",
+          }
+    }
+    return {
+      status: ResultCode.Success,
+      data: true,
+    };
+  }
 
-  // static async delete(id: string): Promise<Boolean | null> {
-  //   const isPostdeleted = await PostRepository.delete(id);
-  //   return isPostdeleted;
-  // }
-  
+  static async deleteAllOtherDevices(id: string): Promise<any | string> {
+    // const result = await DevicesRepository.delete(id);
+  } 
 
 }

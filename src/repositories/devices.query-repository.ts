@@ -12,17 +12,23 @@ import { SecurityDevicesDB } from "../models/devices/db/devices-db";
 //   pageSize: number,
 // }
 
-
 export class DevicesQueryRepository {
-
   static async getByUserId(id: string): Promise<OutputDevicesType[] | null> {
-    const devices:WithId<SecurityDevicesDB>[] = await securityDevicesCollection.find({ userId: id}).toArray()  
+    const devices: WithId<SecurityDevicesDB>[] = await securityDevicesCollection
+      .find({ userId: id })
+      .toArray();
     if (!devices) {
       return null;
     }
-    return devices.map(devicesMapper)
+    return devices.map(devicesMapper);
   }
-  
 
-
+  static async getByDeviceId(id: string): Promise<OutputDevicesType | null> {
+    const device: WithId<SecurityDevicesDB> | null = await securityDevicesCollection
+      .findOne({ deviceId: id })
+    if (!device) {
+      return null;
+    }
+    return devicesMapper(device);
+  }
 }
