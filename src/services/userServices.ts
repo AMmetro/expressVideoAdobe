@@ -6,7 +6,7 @@ import { UserRepository } from "../repositories/user-repository";
 import { UserQueryRepository } from "../repositories/user.query-repository";
 import { AuthUserInputModel } from "../models/user/input/authUser-input-model";
 import { userMapper } from "../models/user/mapper/user-mapper";
-import { hashServise } from "../utils/JWTservise";
+import { hashServise, jwtServise } from "../utils/JWTservise";
 import { randomUUID } from "crypto";
 import { ResultCode } from "../validators/error-validators";
 import { AuthServices } from "./authServices";
@@ -79,13 +79,15 @@ export class UserServices {
   }
 
   static async logout(refreshToken: string): Promise<ResultType> {
-    const userId = await AuthServices.getUserIdFromToken(refreshToken);
-    if (!userId) {
+    const claimantInfo = await jwtServise.getUserFromRefreshToken(refreshToken);
+    // const claimantInfo = await AuthServices.getUserFromToken(refreshToken);
+    if (!claimantInfo?.userId) {
       return {
         status: ResultCode.Unauthorised,
         errorMessage: "No correct Id in token",
       };
     }
+    const userId = claimantInfo.userId
     const user = await UserQueryRepository.getById(userId);
     if (!user) {
       return {

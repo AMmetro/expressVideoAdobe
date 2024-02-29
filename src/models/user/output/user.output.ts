@@ -13,15 +13,12 @@ type emailConfirmationType = {
   isConfirmed: boolean;
 };
 
-// export type OutputType = {
-//   id: string;
-//   content: string;
-//   commentatorInfo: {
-//     userId: string;
-//     userLogin: string;
-//   };
-//   createdAt: string;
-// };
+export type JWTDecodedType = {
+  userId: string;
+  deviceId: string;
+  iat: number,
+  exp: number
+};
 
 export type ResultType = {
   status: string;

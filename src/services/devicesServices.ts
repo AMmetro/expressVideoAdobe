@@ -3,6 +3,8 @@ import { DevicesQueryRepository } from '../repositories/devices.query-repository
 import { OutputDevicesType } from '../models/devices/output/devices.output';
 import { Result, ResultCode } from '../validators/error-validators';
 import { securityDevicesCollection } from "../BD/db";
+import { jwtServise } from "../utils/JWTservise";
+import { OutputUserType } from "../models/user/output/user.output";
 
 export class DevicesServices {
 
@@ -20,17 +22,25 @@ export class DevicesServices {
     };
   }
 
-  static async createdDevice(newUserId: string): Promise<string> {
-    const deviceId = randomUUID();
+  static async createdDevice(newUser: OutputUserType): Promise<{newAT: string, newRT: string} | null> {
+    const newDeviceId = randomUUID();
+    const accessToken = await jwtServise.createAccessTokenJWT(newUser, newDeviceId );
+    const refreshToken = await jwtServise.createRefreshTokenJWT(newUser, newDeviceId);
+    const decodedRefreshToken = await jwtServise.getUserFromRefreshToken(refreshToken)
     const newDevices = {
-      userId: newUserId,
-      deviceId: deviceId,
+      userId: newUser.id,
+      deviceId: newDeviceId,
       ip: "NOT ",
       title: "NOT",
-      lastActiveDate: "string",
+      lastActiveDate: decodedRefreshToken!.exp,
+      tokenCreatedAt: decodedRefreshToken!.iat, 
     }
-    const newDevicesId = await securityDevicesCollection.insertOne(newDevices);
-    return newDevicesId.insertedId.toString();   
+    const createdDeviceId = await securityDevicesCollection.insertOne(newDevices);
+    if (!createdDeviceId){
+      return null
+    }
+    // return createdDeviceId.insertedId.toString();   
+    return {newAT: accessToken, newRT: refreshToken} 
   }
  
 

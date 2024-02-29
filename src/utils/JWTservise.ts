@@ -1,7 +1,7 @@
 import { ObjectId, SortDirection, WithId } from "mongodb";
 import { UserDB } from "../models/user/db/user-db";
 import jwt from "jsonwebtoken";
-import { OutputUserType } from "../models/user/output/user.output";
+import { JWTDecodedType, OutputUserType } from "../models/user/output/user.output";
 import { appConfig } from "../appConfig";
 import bcrypt from "bcrypt";
 
@@ -63,7 +63,7 @@ export const jwtServise = {
   // },
 
 
-  async getUserFromRefreshToken(token: string):Promise<any> {
+  async getUserFromRefreshToken(token: string):Promise<JWTDecodedType | null> {
     try {
       const result:any = jwt.verify(
         token,
@@ -82,7 +82,8 @@ export const jwtServise = {
           }
         }
       );
-      const outUser = {userId: result.userId, deviceId: result.deviceId}
+      // const outUser = {userId: result.userId, deviceId: result.deviceId}
+      const outUser = result
       return outUser;
     } catch (e) {
       return null;

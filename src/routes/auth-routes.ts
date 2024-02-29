@@ -27,11 +27,12 @@ export const authRoute = Router({});
 authRoute.get(
   "/me",
   jwtValidationMiddleware,
-  async (req: Request, res: Response) => {
+  async (req: Request, res: Response) => { 
 
     // --------------------------------------------
-    const userRequest = await AuthServices.getUserIdFromToken(req.cookies.refreshToken);
-    res.status(200).send(userRequest);
+    // const userRequest = await jwtServise.getUserFromRefreshToken(req.cookies.refreshToken);
+    // res.status(200).send(userRequest);
+    // return
     // --------------------------------------------
     const me = await UserQueryRepository.getById(req.user!.id);
     if (!me) {
@@ -79,12 +80,10 @@ authRoute.post(
     }
     const authData = { loginOrEmail: loginOrEmail, password: password };
     const result = await AuthServices.loginUser(authData)
-    const accessToken = result.data.newAccessToken;
-    const refreshToken = result.data.newRefreshToken;
-
-    if (result.status === ResultCode.Success) {
-      return res
-      .cookie("refreshToken", refreshToken, {
+    if (result.data && result.status === ResultCode.Success) {
+      const accessToken = result.data.newAT;
+      const refreshToken = result.data.newRT;
+      return res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
         secure: true,
       })

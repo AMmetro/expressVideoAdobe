@@ -1,6 +1,6 @@
 import { RequestInputUserType } from "../models/user/input/updateUser-input-model";
 import { UserQueryRepository } from "../repositories/user.query-repository";
-import { ResultCode } from "../validators/error-validators";
+import { Result, ResultCode } from "../validators/error-validators";
 import { hashServise, jwtServise } from "../utils/JWTservise";
 import { randomUUID } from "crypto";
 import { add } from "date-fns/add";
@@ -9,37 +9,37 @@ import { emailAdaper } from "../utils/emailAdaper";
 import { DevicesServices } from "./devicesServices";
 import { UserServices } from "./userServices";
 import { AuthUserInputModel } from "../models/user/input/authUser-input-model";
+import { JWTDecodedType, ResultType } from "../models/user/output/user.output";
 
 export class AuthServices {
-
-  static async checkAcssesToken(authRequest: string): Promise<any> {       
-      const token = authRequest.split(" ");
-      const authMethod = token[0];
-      if (authMethod !== "Bearer") {
+  static async checkAcssesToken(authRequest: string): Promise<any> {
+    const token = authRequest.split(" ");
+    const authMethod = token[0];
+    if (authMethod !== "Bearer") {
+      return {
+        status: ResultCode.Unauthorised,
+        errorMessage: "auth method is not Bearer",
+      };
+    }
+    const userId = await jwtServise.getUserIdByAcssToken(token[1]);
+    if (userId) {
+      const user = await UserQueryRepository.getById(userId);
+      if (!user) {
         return {
           status: ResultCode.Unauthorised,
-          errorMessage: "auth method is not Bearer",
-        };
-      }
-      const userId = await jwtServise.getUserIdByAcssToken(token[1]);
-      if (userId) {
-        const user = await UserQueryRepository.getById(userId);
-        if (!user) {
-          return {
-            status: ResultCode.Unauthorised,
-            errorMessage: "Not found user with id " + userId,
-          };
-        }
-        return {
-          status: ResultCode.Success,
-          data: user,
+          errorMessage: "Not found user with id " + userId,
         };
       }
       return {
-        status: ResultCode.Unauthorised,
-        errorMessage: "JWT is broken",
+        status: ResultCode.Success,
+        data: user,
       };
+    }
+    return {
+      status: ResultCode.Unauthorised,
+      errorMessage: "JWT is broken",
     };
+  }
 
   static async registrationUserWithConfirmation(
     registrationData: RequestInputUserType
@@ -76,8 +76,8 @@ export class AuthServices {
         status: ResultCode.ClientError,
         errorMessage: "Some error",
       };
-    }  
-       const emailInfo = {
+    }
+    const emailInfo = {
       email: newUser.email,
       subject: "confirm Email",
       confirmationCode: newUser.emailConfirmation.confirmationCode,
@@ -89,36 +89,53 @@ export class AuthServices {
     };
   }
 
-
   static async confirmEmail(code: string): Promise<any> {
-    const userForConfirmation = await UserQueryRepository.getByConfirmationCode(code);
+    const userForConfirmation = await UserQueryRepository.getByConfirmationCode(
+      code
+    );
     if (!userForConfirmation) {
       return {
         status: ResultCode.ClientError,
-        errorMessage:
-          JSON.stringify({ errorsMessages: [{ message: `Not found user with confirmation code ${code}`, field: "code" }] })
+        errorMessage: JSON.stringify({
+          errorsMessages: [
+            {
+              message: `Not found user with confirmation code ${code}`,
+              field: "code",
+            },
+          ],
+        }),
       };
     }
     if (userForConfirmation.emailConfirmation.isConfirmed) {
       return {
         status: ResultCode.ClientError,
-        errorMessage:
-          JSON.stringify({ errorsMessages: [{ message: `This confirmation code ${code} already been applied`, field: "code" }] })
+        errorMessage: JSON.stringify({
+          errorsMessages: [
+            {
+              message: `This confirmation code ${code} already been applied`,
+              field: "code",
+            },
+          ],
+        }),
       };
     }
     if (userForConfirmation.emailConfirmation.expirationDate < new Date()) {
       return {
         status: ResultCode.ClientError,
-        errorMessage:
-          JSON.stringify({ errorsMessages: [{ message: `Confirmation code ${code} expired`, field: "code" }] })
+        errorMessage: JSON.stringify({
+          errorsMessages: [
+            { message: `Confirmation code ${code} expired`, field: "code" },
+          ],
+        }),
       };
     }
-    const isConfirmed = await UserRepository.confirmRegistration(userForConfirmation.id);
-     if (!isConfirmed) {
+    const isConfirmed = await UserRepository.confirmRegistration(
+      userForConfirmation.id
+    );
+    if (!isConfirmed) {
       return {
         status: ResultCode.Conflict,
-        errorMessage:
-          `Confirmation code ${code}`,
+        errorMessage: `Confirmation code ${code}`,
       };
     }
     // const createdDeviceId = await DevicesServices.createdDevice(userForConfirmation.id);
@@ -135,7 +152,6 @@ export class AuthServices {
     };
   }
 
-
   static async emailResending(email: string): Promise<any> {
     const userSearchData = { email: email, login: " " }; // search by login " " false for all login
     const userForEmailResending =
@@ -143,7 +159,11 @@ export class AuthServices {
     if (!userForEmailResending) {
       return {
         status: ResultCode.ClientError,
-        errorMessage: JSON.stringify({ errorsMessages: [{ message: `Not found user with ${email}`, field: "email" }] }),
+        errorMessage: JSON.stringify({
+          errorsMessages: [
+            { message: `Not found user with ${email}`, field: "email" },
+          ],
+        }),
       };
     }
     const emailIsConfirmed =
@@ -155,7 +175,10 @@ export class AuthServices {
       };
     }
     const newConfirmationCode = randomUUID();
-    const codeUpd  = await UserRepository.updateConfirmationCode(userForEmailResending._id, newConfirmationCode)
+    const codeUpd = await UserRepository.updateConfirmationCode(
+      userForEmailResending._id,
+      newConfirmationCode
+    );
     if (!codeUpd) {
       return {
         status: ResultCode.ServerError,
@@ -167,97 +190,107 @@ export class AuthServices {
       confirmationCode: newConfirmationCode,
       subject: "resending confirmation code",
     };
-     emailAdaper.sendEmailRecoveryMessage(emailInfo);
+    emailAdaper.sendEmailRecoveryMessage(emailInfo);
     return {
       status: ResultCode.Success,
       data: true,
     };
   }
 
-
   static async refreshToken(token: string): Promise<any> {
-    const userRequest = await jwtServise.getUserFromRefreshToken(token);
-    if (!userRequest.deviceId) {
+    const claimantInfo = await jwtServise.getUserFromRefreshToken(token);
+    if (!claimantInfo?.deviceId) {
       return {
         status: ResultCode.Unauthorised,
         errorMessage: "Not user device info in token",
       };
     }
-
-    const userId = await AuthServices.getUserIdFromToken(token);
-    if (!userId) {
+    if (!claimantInfo?.userId) {
       return {
         status: ResultCode.Unauthorised,
-        errorMessage: "Not id in token",
+        errorMessage: "Not correct id in token",
       };
     }
-    const user = await UserQueryRepository.getById(userId)
+    const userId = claimantInfo.userId;
+    const user = await UserQueryRepository.getById(userId);
     if (!user) {
       return {
         status: ResultCode.Unauthorised,
         errorMessage: "Not found user with id " + userId,
       };
     }
-    const isTokenInBlackListAlready = user?.blackListToken?.some(token => token === token)
+    const isTokenInBlackListAlready = user?.blackListToken?.some(
+      (token) => token === token
+    );
     if (isTokenInBlackListAlready) {
       return {
         status: ResultCode.Unauthorised,
         errorMessage: `Token ${token} in black list already`,
       };
     }
-    const tokenAddedToBlackList = await UserRepository.addTokenToBlackListById(token, userId);
+    const tokenAddedToBlackList = await UserRepository.addTokenToBlackListById(
+      token,
+      userId
+    );
     if (!tokenAddedToBlackList) {
       return {
         status: ResultCode.ServerError,
         errorMessage: `Can't write token to user black list in database`,
       };
     }
-    const newAccessToken = await jwtServise.createAccessTokenJWT(user, userRequest.deviceId);
-    const newRefreshToken = await jwtServise.createRefreshTokenJWT(user, userRequest.deviceId)
+    const newAccessToken = await jwtServise.createAccessTokenJWT(
+      user,
+      claimantInfo.deviceId
+    );
+    const newRefreshToken = await jwtServise.createRefreshTokenJWT(
+      user,
+      claimantInfo.deviceId
+    );
     return {
       status: ResultCode.Success,
-      data: {newAccessToken, newRefreshToken },
+      data: { newAccessToken, newRefreshToken },
     };
   }
 
-
-  static async loginUser(authData: AuthUserInputModel): Promise<any> { 
+  static async loginUser(authData: AuthUserInputModel): Promise<Result< {newAT: string, newRT: string}>> {
     const authUsers = await UserServices.checkCredentials(authData);
-    if (!authUsers){
-    return {
-      status: ResultCode.NotFound,
-      errorMessage: `Can't login user`,
-    };
-  }
-  const createdDeviceId = await DevicesServices.createdDevice(authUsers.id);
-  if (!createdDeviceId){
-    return {
-      status: ResultCode.Conflict,
-      errorMessage: `Can't create devices for user`,
-    };
-  }
-  const accessToken = await jwtServise.createAccessTokenJWT(authUsers, createdDeviceId );
-  const refreshToken = await jwtServise.createRefreshTokenJWT(authUsers, createdDeviceId);
-  return {
-    status: ResultCode.Success,
-    data: {newAccessToken: accessToken, newRefreshToken: refreshToken },
-  };
-  }
-
-  static async getUserIdFromToken(token: string): Promise<null | string> {       
-    // const userId = await jwtServise.getUserIdByRefreshToken(token);
-    const user = await jwtServise.getUserFromRefreshToken(token);
-    if (!user.userId) {
-      return null
+    if (!authUsers) {
+      return {
+        status: ResultCode.NotFound,
+        errorMessage: `Can't login user`,
+      };
     }
-    return user.userId
+    const twoTokensWithDeviceId = await DevicesServices.createdDevice(
+      authUsers
+    );
+    if (!twoTokensWithDeviceId) {
+      return {
+        status: ResultCode.Conflict,
+        errorMessage: `Can't create new session (with devices) for user`,
+      };
+    }
+    // const accessToken = await jwtServise.createAccessTokenJWT(authUsers, createdDeviceId );
+    // const refreshToken = await jwtServise.createRefreshTokenJWT(authUsers, createdDeviceId);
+    return {
+      status: ResultCode.Success,
+      data: {
+        newAT: twoTokensWithDeviceId.newAT,
+        newRT: twoTokensWithDeviceId.newRT,
+      },
+    };
   }
 
-  // static async getUserFromToken(token: string): Promise<{userId: string, deviceId: string}> {       
+  // static async getUserFromToken(token: string): Promise<null | JWTDecodedType> {
+  //   const user = await jwtServise.getUserFromRefreshToken(token);
+  //   if (!user.userId) {
+  //     return null
+  //   }
+  //   return user
+  // }
+
+  // static async getUserFromToken(token: string): Promise<{userId: string, deviceId: string}> {
   //   const user = await jwtServise.getUserFromRefreshToken(token);
   //   const outUser = {userId: user.userId, deviceId: user.deviceId}
   //   return outUser
   // }
-
-
 }
