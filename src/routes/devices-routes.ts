@@ -24,7 +24,7 @@ devicesRoute.get(
   // refresh должен быть
   async (req: Request, res: any ) => {
 
-    // res.sendStatus(444);
+    res.sendStatus(433);
 
 
     const userId = req.user!.id
