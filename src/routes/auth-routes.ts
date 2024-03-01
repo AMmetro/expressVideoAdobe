@@ -138,10 +138,6 @@ authRoute.post(
   emailExistValidator,
   inputValidationMiddleware,
   async (req: RequestWithBody<RegistrationUserInputModel>, res: Response) => {
-
-                                                            res.sendStatus(408);
-                                                            return;
-
     const { password, login, email } = req.body;
     if (!password || !login || !email) {
       res.sendStatus(401);
