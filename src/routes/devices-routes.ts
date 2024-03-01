@@ -23,7 +23,6 @@ devicesRoute.get(
   async (req: Request, res: any) => {
     const userId = req.user!.id;
     const result = await DevicesServices.getUsersDevices(userId);
-
     if (result.status === ResultCode.Success) {
       res.status(200).send(result.data);
     } else {

@@ -7,4 +7,12 @@ export type OutputDevicesType = {
   tokenCreatedAt: number,
   };
 
+export type CuttedOutputDevicesType = {
+  deviceId: string,
+  ip: string,
+  title: string,
+  lastActiveDate: number,
+  };
+
+
 
