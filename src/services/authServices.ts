@@ -65,7 +65,7 @@ export class AuthServices {
       const user = await UserQueryRepository.getById(jwtUserData.userId);
       if (!user) {
         return {
-          status: ResultCode.Unauthorised,
+          status: ResultCode.NotFound,
           errorMessage: "Not found user with id " + jwtUserData.userId,
         };
       }

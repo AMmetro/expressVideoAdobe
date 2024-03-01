@@ -34,10 +34,10 @@ devicesRoute.delete(
   async (req: Request, res: any) => {
     const deviceId = req.params.deviceId;
     const userId = req.user!.id;
-    if (!ObjectId.isValid(userId)) {
-      res.sendStatus(401);
-      return;
-    }
+    // if (!ObjectId.isValid(userId)) {
+    //   res.sendStatus(401);
+    //   return;
+    // }
     const result = await DevicesServices.deleteDevicesById(userId, deviceId);
     if (result.status === ResultCode.Success) {
       res.status(204);
