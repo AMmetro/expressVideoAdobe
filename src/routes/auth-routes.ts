@@ -94,14 +94,6 @@ authRoute.post(
       // sendCustomError(res, result);
       return
     }
-
-  //   return res
-  //     .cookie("refreshToken", refreshToken, {
-  //       httpOnly: true,
-  //       secure: true,
-  //     })
-  //     .status(200)
-  //     .send({ accessToken });
   }
 );
 
