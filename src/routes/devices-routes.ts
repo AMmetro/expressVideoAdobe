@@ -47,7 +47,7 @@ devicesRoute.delete(
     }
     const result = await DevicesServices.deleteDevicesById(userId, deviceId);
      if (result.status === ResultCode.Success){
-      res.status(204).send(result.data);
+      res.status(204);
     } else {sendCustomError(res, result)}
   }
 );
@@ -62,7 +62,7 @@ devicesRoute.delete(
     // console.log(req.user)
      const result = await DevicesServices.deleteAllOtherDevices(userId, deviceId);
      if (result.status === ResultCode.Success){
-      res.status(200).send(result.data);
+      res.status(204);
     } else {sendCustomError(res, result)}
   }
 );
