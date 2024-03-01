@@ -6,11 +6,19 @@ import { securityDevicesCollection } from "../BD/db";
 import { jwtServise } from "../utils/JWTservise";
 import { OutputUserType } from "../models/user/output/user.output";
 import { DevicesRepository } from "../repositories/devices-repository";
+import { AuthServices } from "./authServices";
 
 export class DevicesServices {
 
-  static async getUsersDevices(userId: string): Promise<Result<OutputDevicesType[]>> {
-    const userDevices = await DevicesQueryRepository.getByUserId(userId);
+  static async getUsersDevices(refreshToken: string): Promise<Result<OutputDevicesType[]>> {
+    const claimantInfo = await AuthServices.checkRefreshToken(refreshToken)
+    if (!claimantInfo?.userId) {
+      return {
+        status: ResultCode.Unauthorised,
+        errorMessage: "Not correct id in token",
+      };
+    }
+    const userDevices = await DevicesQueryRepository.getByUserId(claimantInfo.userId);
     if (!userDevices) {
       return {
         status: ResultCode.NotFound,

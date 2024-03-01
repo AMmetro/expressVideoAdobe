@@ -14,6 +14,7 @@ import { sendCustomError } from '../utils/sendResponse';
 import { commentValidation } from '../validators/comment-validators';
 import { UserQueryRepository } from "../repositories/user.query-repository";
 import { DevicesServices } from "../services/devicesServices";
+import { AuthServices } from "../services/authServices";
 
 
 export const devicesRoute = Router({});
@@ -25,14 +26,16 @@ devicesRoute.get(
   async (req: Request, res: any ) => {
 
     res.sendStatus(433);
+    return
 
 
-    const userId = req.user!.id
-    if (!ObjectId.isValid(userId)) {
-      res.sendStatus(404);
-      return; 
+    const refreshToken = req.cookies.refreshToken;
+    if (!refreshToken) {
+      res.sendStatus(401);
+      return;
     }
-     const result = await DevicesServices.getUsersDevices(userId);
+     const result = await DevicesServices.getUsersDevices(refreshToken);
+     
      if (result.status === ResultCode.Success){
       res.status(200).send(result.data);
     } else {sendCustomError(res, result)}

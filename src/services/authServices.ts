@@ -23,6 +23,7 @@ deviceId: string;
 }
 
 export class AuthServices {
+
   static async checkAcssesToken(authRequest: string): Promise<Result<OutputType>> {
     const token = authRequest.split(" ");
     const authMethod = token[0];
@@ -61,6 +62,46 @@ export class AuthServices {
       errorMessage: "JWT is broken",
     };
   }
+
+  static async checkRefreshToken(authRequest: string): Promise<Result<OutputType>> {
+    const token = authRequest.split(" ");
+    const authMethod = token[0];
+    if (authMethod !== "Bearer") {
+      return {
+        status: ResultCode.Unauthorised,
+        errorMessage: "auth method is not Bearer",
+      };
+    }
+    // const userId = await jwtServise.getUserIdByAcssToken(token[1]);
+    // const jwtUserData = await jwtServise.getUserFromAcssesToken(token[1]);
+    const jwtUserData = await jwtServise.getUserFromRefreshToken(token[1]);
+
+    if (jwtUserData && jwtUserData.userId) {
+      const user = await UserQueryRepository.getById(jwtUserData.userId);
+      if (!user) {
+        return {
+          status: ResultCode.Unauthorised,
+          errorMessage: "Not found user with id " + jwtUserData.userId,
+        };
+      }
+      if (!jwtUserData.deviceId) {
+        return {
+          status: ResultCode.Unauthorised,
+          errorMessage: "Not found deviceId" + jwtUserData.deviceId,
+        };
+      }
+
+      return {
+        status: ResultCode.Success,
+        data: {...user, deviceId: jwtUserData.deviceId},
+      };
+    }
+    return {
+      status: ResultCode.Unauthorised,
+      errorMessage: "JWT is broken",
+    };
+  }
+
 
   static async registrationUserWithConfirmation(
     registrationData: RequestInputUserType
