@@ -63,6 +63,32 @@ export const jwtServise = {
   // },
 
 
+  async getUserFromAcssesToken(token: string):Promise<JWTDecodedType | null> {
+    try {
+      const jwtUserData:any = jwt.verify(
+        token,
+        appConfig.JWT_ACSS_SECRET,
+        (err, decoded) => {
+          if (err) {
+            if (err.name === "TokenExpiredError") {
+              console.log("Access Token expired");
+              return "Access Token expired";
+            } else {
+              console.log("Access Token is broken");
+              return "Access Token is broken";
+            }
+          } else {
+            return decoded;
+          }
+        }
+      );
+      return jwtUserData;
+    } catch (e) {
+      return null;
+    }
+  },
+
+
   async getUserFromRefreshToken(token: string):Promise<JWTDecodedType | null> {
     try {
       const result:any = jwt.verify(
@@ -83,8 +109,7 @@ export const jwtServise = {
         }
       );
       // const outUser = {userId: result.userId, deviceId: result.deviceId}
-      const outUser = result
-      return outUser;
+      return result;
     } catch (e) {
       return null;
     }

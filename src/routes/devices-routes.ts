@@ -39,11 +39,7 @@ devicesRoute.delete(
   "/devices/:deviceId",
   jwtValidationMiddleware,
   async (req: Request, res: any ) => {
-    const deviceId = req.params.deviceId
-    if (!deviceId) {
-      res.sendStatus(401);
-      return; 
-    }
+  const deviceId = req.params.deviceId
     const userId = req.user!.id
     if (!ObjectId.isValid(userId)) {
       res.sendStatus(401);
@@ -61,11 +57,10 @@ devicesRoute.delete(
   jwtValidationMiddleware,
   async (req: Request, res: any ) => {
     const userId = req.user!.id
-    if (!ObjectId.isValid(userId)) {
-      res.sendStatus(404);
-      return; 
-    }
-     const result = await DevicesServices.deleteAllOtherDevices(userId);
+    const deviceId = req.user!.deviceId
+    // console.log("--------------req.user-------------")
+    // console.log(req.user)
+     const result = await DevicesServices.deleteAllOtherDevices(userId, deviceId);
      if (result.status === ResultCode.Success){
       res.status(200).send(result.data);
     } else {sendCustomError(res, result)}

@@ -10,6 +10,7 @@ import { DevicesServices } from "./devicesServices";
 import { UserServices } from "./userServices";
 import { AuthUserInputModel } from "../models/user/input/authUser-input-model";
 import { JWTDecodedType, ResultType } from "../models/user/output/user.output";
+import { DevicesQueryRepository } from "../repositories/devices.query-repository";
 
 export class AuthServices {
   static async checkAcssesToken(authRequest: string): Promise<any> {
@@ -21,18 +22,26 @@ export class AuthServices {
         errorMessage: "auth method is not Bearer",
       };
     }
-    const userId = await jwtServise.getUserIdByAcssToken(token[1]);
-    if (userId) {
-      const user = await UserQueryRepository.getById(userId);
+    // const userId = await jwtServise.getUserIdByAcssToken(token[1]);
+    const jwtUserData = await jwtServise.getUserFromAcssesToken(token[1]);
+    if (jwtUserData && jwtUserData.userId) {
+      const user = await UserQueryRepository.getById(jwtUserData.userId);
       if (!user) {
         return {
           status: ResultCode.Unauthorised,
-          errorMessage: "Not found user with id " + userId,
+          errorMessage: "Not found user with id " + jwtUserData.userId,
         };
       }
+      if (!jwtUserData.deviceId) {
+        return {
+          status: ResultCode.Unauthorised,
+          errorMessage: "Not found deviceId" + jwtUserData.deviceId,
+        };
+      }
+
       return {
         status: ResultCode.Success,
-        data: user,
+        data: {...user, deviceId: jwtUserData.deviceId},
       };
     }
     return {

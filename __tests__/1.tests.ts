@@ -71,6 +71,13 @@ describe("should return API data", () => {
   });
 
 
+  // it("- DELETE  device with ERROR 401", async () => {
+  //   const del = await request(app)
+  //     .delete("/security/devices/" + 1234567890)
+  //     .set("Authorization", `Bearer ${users[1].token}`);
+  //   expect(del.status).toBe(401);
+  // });
+
   it("- DELETE  device with ERROR 401", async () => {
     const del = await request(app)
       .delete("/security/devices/" + users[1].deviceId)

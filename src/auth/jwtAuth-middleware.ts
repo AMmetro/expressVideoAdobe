@@ -17,7 +17,6 @@ export const jwtValidationMiddleware = async (
     res.sendStatus(401);
     return;
   }
-
   const result = await AuthServices.checkAcssesToken(req.headers.authorization);
   if (result.status === ResultCode.Success && result.data) {
     req.user = result.data;

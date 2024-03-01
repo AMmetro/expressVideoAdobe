@@ -72,8 +72,34 @@ export class DevicesServices {
     };
   }
 
-  static async deleteAllOtherDevices(id: string): Promise<any | string> {
-    // const result = await DevicesRepository.delete(id);
+  static async deleteAllOtherDevices(userId: string, deviceId: string): Promise<any | string> {
+    const deleteDevices = await DevicesRepository.deleteDevicesExeptCurrent(deviceId, userId);
+    if (!deleteDevices) {
+      return {
+        status: ResultCode.NotFound,
+          errorMessage: "Cant find devices for delete"
+          }
+    }
+    return {
+      status: ResultCode.Success,
+      data: true,
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   } 
 
 }
