@@ -7,13 +7,10 @@ import {
   jwtValidationAcssTokenMiddleware,
   jwtValidationRefreshTokenMiddleware,
 } from "../auth/jwtAuth-middleware";
-import { CommentsServices } from "../services/commentsServices";
 import { ResultCode } from "../validators/error-validators";
 import { sendCustomError } from "../utils/sendResponse";
-import { commentValidation } from "../validators/comment-validators";
-import { UserQueryRepository } from "../repositories/user.query-repository";
 import { DevicesServices } from "../services/devicesServices";
-import { AuthServices } from "../services/authServices";
+
 
 export const devicesRoute = Router({});
 
@@ -33,7 +30,7 @@ devicesRoute.get(
 
 devicesRoute.delete(
   "/devices/:deviceId",
-  jwtValidationAcssTokenMiddleware,
+  jwtValidationRefreshTokenMiddleware,
   async (req: Request, res: any) => {
     const deviceId = req.params.deviceId;
     const userId = req.user!.id;
