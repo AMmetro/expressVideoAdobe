@@ -90,7 +90,8 @@ authRoute.post(
       .status(200)
       .send({ accessToken });
     } else {
-      sendCustomError(res, result);
+      res.sendStatus(444);
+      // sendCustomError(res, result);
       return
     }
 

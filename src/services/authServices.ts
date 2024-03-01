@@ -28,7 +28,7 @@ export class AuthServices {
     const authMethod = token[0];
     if (authMethod !== "Bearer") {
       return {
-        status: ResultCode.Forbidden,
+        status: ResultCode.Unauthorised,
         errorMessage: "auth method is not Bearer",
       };
     }
@@ -40,14 +40,13 @@ export class AuthServices {
       const user = await UserQueryRepository.getById(jwtUserData.userId);
       if (!user) {
         return {
-          // status: ResultCode.Unauthorised,
-          status: ResultCode.Forbidden,
+          status: ResultCode.Unauthorised,
           errorMessage: "Not found user with id " + jwtUserData.userId,
         };
       }
       if (!jwtUserData.deviceId) {
         return {
-          status: ResultCode.Conflict,
+          status: ResultCode.Unauthorised,
           errorMessage: "Not found deviceId" + jwtUserData.deviceId,
         };
       }
@@ -58,7 +57,7 @@ export class AuthServices {
       };
     }
     return {
-      status: ResultCode.ServerError,
+      status: ResultCode.Unauthorised,
       errorMessage: "JWT is broken",
     };
   }
