@@ -1,9 +1,4 @@
 import { NextFunction, Request, Response } from "express";
-
-import { jwtServise } from "../utils/JWTservise";
-import { UserQueryRepository } from "../repositories/user.query-repository";
-import { emailAdaper } from "../utils/emailAdaper";
-import { UserServices } from "../services/userServices";
 import { ResultCode } from "../validators/error-validators";
 import { sendCustomError } from "../utils/sendResponse";
 import { AuthServices } from "../services/authServices";

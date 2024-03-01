@@ -33,10 +33,7 @@ export class AuthServices {
         errorMessage: "auth method is not Bearer",
       };
     }
-    // const userId = await jwtServise.getUserIdByAcssToken(token[1]);
     const jwtUserData = await jwtServise.getUserFromAcssesToken(token[1]);
-    // const jwtUserData = await jwtServise.getUserFromRefreshToken(token[1]);
-
     if (jwtUserData && jwtUserData.userId) {
       const user = await UserQueryRepository.getById(jwtUserData.userId);
       if (!user) {
@@ -51,7 +48,6 @@ export class AuthServices {
           errorMessage: "Not found deviceId" + jwtUserData.deviceId,
         };
       }
-
       return {
         status: ResultCode.Success,
         data: {...user, deviceId: jwtUserData.deviceId},
