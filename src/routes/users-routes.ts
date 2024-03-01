@@ -37,9 +37,6 @@ usersRoute.post(
   authMiddleware,
   userValidation(),
   async (req: RequestWithBody<RequestInputUserType>, res: Response) => {
-
-    res.sendStatus(408);
-
     const { login, password, email } = req.body;
     const InputUserModel = {
       login: login,

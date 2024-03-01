@@ -10,5 +10,5 @@ testingRoute.delete('/all-data', async(req: Request, res: ResponseType<{}>) => {
    await postsCollection.deleteMany({});  
    await usersCollection.deleteMany({});  
 //    await drop.darabase() - если есть права админа (в докере по умолчанию в атласе назначить)
-    res.sendStatus(204);
+    res.sendStatus(401);
 })
