@@ -20,7 +20,7 @@ export const devicesRoute = Router({});
 
 devicesRoute.get(
   "/devices",
-  // jwtValidationMiddleware,
+  jwtValidationMiddleware,
   // refresh должен быть
   async (req: Request, res: any ) => {
     const userId = req.user!.id

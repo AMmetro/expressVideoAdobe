@@ -40,13 +40,14 @@ export class AuthServices {
       const user = await UserQueryRepository.getById(jwtUserData.userId);
       if (!user) {
         return {
-          status: ResultCode.Unauthorised,
+          // status: ResultCode.Unauthorised,
+          status: ResultCode.Forbidden,
           errorMessage: "Not found user with id " + jwtUserData.userId,
         };
       }
       if (!jwtUserData.deviceId) {
         return {
-          status: ResultCode.Unauthorised,
+          status: ResultCode.Conflict,
           errorMessage: "Not found deviceId" + jwtUserData.deviceId,
         };
       }
@@ -57,7 +58,7 @@ export class AuthServices {
       };
     }
     return {
-      status: ResultCode.Unauthorised,
+      status: ResultCode.ServerError,
       errorMessage: "JWT is broken",
     };
   }
