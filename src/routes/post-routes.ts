@@ -23,7 +23,7 @@ import { QueryPostInputModel } from "../models/blog/input/queryBlog-input-model"
 import { basicSortQuery } from "../utils/sortQeryUtils";
 import { CommentsQueryRepository } from "../repositories/comments.query-repository";
 import { CommentsServices } from "../services/commentsServices";
-import { jwtValidationMiddleware } from "../auth/jwtAuth-middleware";
+import { jwtValidationAcssTokenMiddleware } from "../auth/jwtAuth-middleware";
 import { commentValidation } from "../validators/comment-validators";
 import { ResultCode } from "../validators/error-validators";
 import { sendCustomError } from "../utils/sendResponse";
@@ -110,7 +110,7 @@ postRoute.post(
 
 postRoute.post(
   "/:postId/comments",
-  jwtValidationMiddleware,
+  jwtValidationAcssTokenMiddleware,
   commentValidation(),
   async (req: RequestWithParams<CommentParams>, res: Response) => {
     const commentedPostId = req.params.postId;

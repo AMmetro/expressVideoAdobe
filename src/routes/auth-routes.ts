@@ -7,7 +7,7 @@ import {
 import { UserServices } from "../services/userServices";
 import { UserQueryRepository } from "../repositories/user.query-repository";
 import { jwtServise } from "../utils/JWTservise";
-import { jwtValidationMiddleware } from "../auth/jwtAuth-middleware";
+import { jwtValidationAcssTokenMiddleware } from "../auth/jwtAuth-middleware";
 import {
   codeExistValidator,
   emailExistValidator,
@@ -26,7 +26,7 @@ export const authRoute = Router({});
 
 authRoute.get(
   "/me",
-  jwtValidationMiddleware,
+  jwtValidationAcssTokenMiddleware,
   async (req: Request, res: Response) => { 
 
     // --------------------------------------------
@@ -90,8 +90,8 @@ authRoute.post(
       .status(200)
       .send({ accessToken });
     } else {
-                                                res.sendStatus(422);
-      // sendCustomError(res, result);
+                                                // res.sendStatus(422);
+      sendCustomError(res, result);
       return
     }
   }
@@ -99,7 +99,7 @@ authRoute.post(
 
 authRoute.post(
   "/logout",
-  // jwtValidationMiddleware,
+  // jwtValidationAcssTokenMiddleware,
   async (req: Request, res: Response) => {
     // const user = await UserQueryRepository.getById(req.user!.id);
     // if (!user) {

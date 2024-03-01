@@ -10,19 +10,12 @@ import { AuthServices } from "./authServices";
 
 export class DevicesServices {
 
-  static async getUsersDevices(refreshToken: string): Promise<Result<OutputDevicesType[]>> {
-    const claimantInfo = await AuthServices.checkRefreshToken(refreshToken)
-    if (!claimantInfo?.userId) {
-      return {
-        status: ResultCode.Unauthorised,
-        errorMessage: "Not correct id in token",
-      };
-    }
-    const userDevices = await DevicesQueryRepository.getByUserId(claimantInfo.userId);
+  static async getUsersDevices(userId: string): Promise<Result<OutputDevicesType[]>> {
+    const userDevices = await DevicesQueryRepository.getByUserId(userId);
     if (!userDevices) {
       return {
         status: ResultCode.NotFound,
-          errorMessage: "Not found devices for user with id: userId" ,
+          errorMessage: "Not found devices for user with id: " + userId,
           }
     }
     return {

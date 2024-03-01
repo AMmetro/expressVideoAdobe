@@ -63,19 +63,8 @@ export class AuthServices {
     };
   }
 
-  static async checkRefreshToken(authRequest: string): Promise<Result<OutputType>> {
-    const token = authRequest.split(" ");
-    const authMethod = token[0];
-    if (authMethod !== "Bearer") {
-      return {
-        status: ResultCode.Unauthorised,
-        errorMessage: "auth method is not Bearer",
-      };
-    }
-    // const userId = await jwtServise.getUserIdByAcssToken(token[1]);
-    // const jwtUserData = await jwtServise.getUserFromAcssesToken(token[1]);
-    const jwtUserData = await jwtServise.getUserFromRefreshToken(token[1]);
-
+  static async checkRefreshToken(refreshToken: string): Promise<Result<OutputType>> {
+    const jwtUserData = await jwtServise.getUserFromRefreshToken(refreshToken);
     if (jwtUserData && jwtUserData.userId) {
       const user = await UserQueryRepository.getById(jwtUserData.userId);
       if (!user) {
@@ -90,7 +79,6 @@ export class AuthServices {
           errorMessage: "Not found deviceId" + jwtUserData.deviceId,
         };
       }
-
       return {
         status: ResultCode.Success,
         data: {...user, deviceId: jwtUserData.deviceId},

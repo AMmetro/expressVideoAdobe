@@ -7,7 +7,7 @@ import {
 } from "../models/common";
 import { CommentsQueryRepository } from '../repositories/comments.query-repository';
 import { OutputCommentType } from '../models/comments/output/comment.output';
-import { jwtValidationMiddleware } from '../auth/jwtAuth-middleware';
+import { jwtValidationAcssTokenMiddleware, jwtValidationRefreshTokenMiddleware } from '../auth/jwtAuth-middleware';
 import { CommentsServices } from '../services/commentsServices';
 import { ResultCode } from '../validators/error-validators';
 import { sendCustomError } from '../utils/sendResponse';
@@ -21,20 +21,16 @@ export const devicesRoute = Router({});
 
 devicesRoute.get(
   "/devices",
-  // jwtValidationMiddleware,
-  // refresh должен быть
+  jwtValidationRefreshTokenMiddleware,
   async (req: Request, res: any ) => {
 
-    res.sendStatus(433);
+    res.sendStatus(455);
     return
 
+    const userId = req.user!.id
+    // const deviceId = req.user!.deviceId
 
-    const refreshToken = req.cookies.refreshToken;
-    if (!refreshToken) {
-      res.sendStatus(401);
-      return;
-    }
-     const result = await DevicesServices.getUsersDevices(refreshToken);
+   const result = await DevicesServices.getUsersDevices(userId);
      
      if (result.status === ResultCode.Success){
       res.status(200).send(result.data);
@@ -45,7 +41,7 @@ devicesRoute.get(
 
 devicesRoute.delete(
   "/devices/:deviceId",
-  jwtValidationMiddleware,
+  jwtValidationAcssTokenMiddleware,
   async (req: Request, res: any ) => {
   const deviceId = req.params.deviceId
     const userId = req.user!.id
@@ -62,7 +58,7 @@ devicesRoute.delete(
 
 devicesRoute.delete(
   "/devices",
-  jwtValidationMiddleware,
+  jwtValidationAcssTokenMiddleware,
   async (req: Request, res: any ) => {
     const userId = req.user!.id
     const deviceId = req.user!.deviceId

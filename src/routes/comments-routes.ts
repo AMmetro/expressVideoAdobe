@@ -7,7 +7,7 @@ import {
 } from "../models/common";
 import { CommentsQueryRepository } from '../repositories/comments.query-repository';
 import { OutputCommentType } from '../models/comments/output/comment.output';
-import { jwtValidationMiddleware } from '../auth/jwtAuth-middleware';
+import { jwtValidationAcssTokenMiddleware } from '../auth/jwtAuth-middleware';
 import { CommentsServices } from '../services/commentsServices';
 import { ResultCode } from '../validators/error-validators';
 import { sendCustomError } from '../utils/sendResponse';
@@ -37,7 +37,7 @@ commentsRoute.get(
 
 commentsRoute.put(
   "/:commentId",
-  jwtValidationMiddleware,
+  jwtValidationAcssTokenMiddleware,
   commentValidation(),
   async (
     req: RequestWithParams<{commentId:string}>,
@@ -60,7 +60,7 @@ commentsRoute.put(
 
 commentsRoute.delete(
   "/:id",
-  jwtValidationMiddleware,
+  jwtValidationAcssTokenMiddleware,
   async (
     req: RequestWithParams<Params>,
     res: Response
