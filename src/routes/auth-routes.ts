@@ -47,7 +47,6 @@ authRoute.get(
 
 authRoute.post(
   "/refresh-token",
-  // jwtValidationMiddleware,
   async (req: Request, res: Response) => {
     const oldRefreshToken = req.cookies.refreshToken;
     if (!oldRefreshToken) {
@@ -55,7 +54,6 @@ authRoute.post(
       return;
     }
     const result = await AuthServices.refreshToken(oldRefreshToken);
-    // const result = await UserServices.addTokenBlackList(oldRefreshToken, userId)
     if (result.status === ResultCode.Success) {
       res
         .cookie("refreshToken", result.data.newRefreshToken, {

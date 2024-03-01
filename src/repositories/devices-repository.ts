@@ -22,4 +22,15 @@ export class DevicesRepository {
     });
     return !!deleteDevice.deletedCount;
   }
+
+  static async refreshDevicesLastActiveDate(
+    deviceId: string,
+    deviceLastActiveDate: number
+  ): Promise<Boolean> {
+    const updateDevice = await securityDevicesCollection.updateOne(
+      { deviceId: deviceId },
+      { $set: { lastActiveDate: deviceLastActiveDate } }
+    );
+    return !!updateDevice.modifiedCount;
+  }
 }

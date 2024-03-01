@@ -11,7 +11,6 @@ export class DevicesServices {
 
   static async getUsersDevices(userId: string): Promise<Result<OutputDevicesType[]>> {
     const userDevices = await DevicesQueryRepository.getByUserId(userId);
-
     if (!userDevices) {
       return {
         status: ResultCode.NotFound,
@@ -84,22 +83,25 @@ export class DevicesServices {
       status: ResultCode.Success,
       data: true,
     };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   } 
+
+
+  static async updateDevicesLastActiveDate(deviceId: string, deviceLastActiveDate: number): Promise<any | string> {
+    const updateDevices = await DevicesRepository.refreshDevicesLastActiveDate(deviceId, deviceLastActiveDate);
+    if (!updateDevices) {
+      return {
+        status: ResultCode.NotFound,
+          errorMessage: "Cant update devices lastActiveDate field"
+          }
+    }
+    return {
+      status: ResultCode.Success,
+      data: true,
+    };
+  } 
+
+
+
+
 
 }

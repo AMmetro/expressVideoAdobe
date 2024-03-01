@@ -12,8 +12,18 @@ import { AuthUserInputModel } from "../models/user/input/authUser-input-model";
 import { JWTDecodedType, ResultType } from "../models/user/output/user.output";
 import { DevicesQueryRepository } from "../repositories/devices.query-repository";
 
+type OutputType = {
+id: string;
+login: string;
+email: string;
+createdAt: string;
+blackListToken: string[];
+emailConfirmation: any;
+deviceId: string;
+}
+
 export class AuthServices {
-  static async checkAcssesToken(authRequest: string): Promise<any> {
+  static async checkAcssesToken(authRequest: string): Promise<Result<OutputType>> {
     const token = authRequest.split(" ");
     const authMethod = token[0];
     if (authMethod !== "Bearer") {
@@ -228,25 +238,26 @@ export class AuthServices {
         errorMessage: "Not found user with id " + userId,
       };
     }
-    const isTokenInBlackListAlready = user?.blackListToken?.some(
-      (token) => token === token
-    );
-    if (isTokenInBlackListAlready) {
-      return {
-        status: ResultCode.Unauthorised,
-        errorMessage: `Token ${token} in black list already`,
-      };
-    }
-    const tokenAddedToBlackList = await UserRepository.addTokenToBlackListById(
-      token,
-      userId
-    );
-    if (!tokenAddedToBlackList) {
-      return {
-        status: ResultCode.ServerError,
-        errorMessage: `Can't write token to user black list in database`,
-      };
-    }
+
+    // const isTokenInBlackListAlready = user?.blackListToken?.some(
+    //   (token) => token === token
+    // );
+    // if (isTokenInBlackListAlready) {
+    //   return {
+    //     status: ResultCode.Unauthorised,
+    //     errorMessage: `Token ${token} in black list already`,
+    //   };
+    // }
+    // const tokenAddedToBlackList = await UserRepository.addTokenToBlackListById(
+    //   token,
+    //   userId
+    // );
+    // if (!tokenAddedToBlackList) {
+    //   return {
+    //     status: ResultCode.ServerError,
+    //     errorMessage: `Can't write token to user black list in database`,
+    //   };
+    // }
     const newAccessToken = await jwtServise.createAccessTokenJWT(
       user,
       claimantInfo.deviceId
@@ -255,6 +266,18 @@ export class AuthServices {
       user,
       claimantInfo.deviceId
     );
+    // rewrite device last active date by issue date of new refresh token
+    // go to devise list and find device with user id and device id
+    // should be overwroden 
+    const decodedRefreshToken = await jwtServise.getUserFromRefreshToken(newRefreshToken)
+    const deviceLastActiveDate = decodedRefreshToken!.exp
+    const deviceUpdate =await DevicesServices.updateDevicesLastActiveDate(claimantInfo.deviceId, deviceLastActiveDate)
+        if (deviceUpdate.status.ResultCode !== ResultCode.Success) {
+      return {
+        status: ResultCode.ServerError,
+        errorMessage: `Can't update devices lastActiveDate field`,
+      };
+    }
     return {
       status: ResultCode.Success,
       data: { newAccessToken, newRefreshToken },
