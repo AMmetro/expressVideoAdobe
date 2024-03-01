@@ -33,7 +33,9 @@ export class AuthServices {
       };
     }
     // const userId = await jwtServise.getUserIdByAcssToken(token[1]);
-    const jwtUserData = await jwtServise.getUserFromAcssesToken(token[1]);
+    // const jwtUserData = await jwtServise.getUserFromAcssesToken(token[1]);
+    const jwtUserData = await jwtServise.getUserFromRefreshToken(token[1]);
+
     if (jwtUserData && jwtUserData.userId) {
       const user = await UserQueryRepository.getById(jwtUserData.userId);
       if (!user) {
