@@ -28,7 +28,7 @@ export class AuthServices {
     const authMethod = token[0];
     if (authMethod !== "Bearer") {
       return {
-        status: ResultCode.Unauthorised,
+        status: ResultCode.Forbidden,
         errorMessage: "auth method is not Bearer",
       };
     }
