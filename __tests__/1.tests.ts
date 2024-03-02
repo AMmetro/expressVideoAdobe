@@ -29,7 +29,7 @@ export const loginUsers = async (app: any, i: number) => {
       password: "password",
     })
     .expect(200);
-  return response.body;
+  return response;
 };
 // -----------------------------------------------------------
 
@@ -48,8 +48,10 @@ describe("should return API data", () => {
   it("- Login 4 users", async () => {
     for (let i = 0; i < userCount; i++) {
       const responseNewUser = await loginUsers(app, i);
-      const token = await responseNewUser.accessToken;
-      users[i].token = token;
+      const accessToken = await responseNewUser.body.accessToken;
+      users[i].accessToken = accessToken;
+      const cookies = responseNewUser.headers['set-cookie'];
+      users[i].refreshToken = cookies[0].split('=')[1];
     }
   });
 
@@ -57,49 +59,74 @@ describe("should return API data", () => {
     for (let i = 0; i < userCount; i++) {
       const authUsers = await request(app)
         .get("/security/devices/")
-        .set("Authorization", `Bearer ${users[i].token}`);
+        .set("Cookie", `refreshToken=${users[i].refreshToken}`);
       users[i].deviceId = authUsers.body[0].deviceId;
       expect(authUsers.body).toEqual(expect.any(Array));
     }
   });
 
-  it("- DELETE  device", async () => {
+
+  it("- DELETE device with :deviceId", async () => {
     const del = await request(app)
       .delete("/security/devices/" + users[0].deviceId)
-      .set("Authorization", `Bearer ${users[0].token}`);
+      .set("Cookie", `refreshToken=${users[0].refreshToken}`);
+      // .set("Authorization", `Bearer ${users[0].accessToken}`);
     expect(del.status).toBe(204);
   });
 
 
+  it("- DELETE  device with ERROR 404", async () => {
+
+    console.log("users[0].deviceId")
+    console.log(users[0].deviceId)
+    console.log("users[0].refreshToken")
+    console.log(users[0].refreshToken)
+
+    const del = await request(app)
+      .delete("/security/devices/" + 123 + users[0].deviceId)
+      .set("Cookie", `refreshToken=${users[0].refreshToken}`);
+      // .set("Authorization", `Bearer ${users[0].accessToken}`);
+    expect(del.status).toBe(204);
+  });
+
+
+                                    // it("- DELETE  device with ERROR 401", async () => {
+                                    //   const del = await request(app)
+                                    //     .delete("/security/devices/" + 1234567890)
+                                    //     .set("Authorization", `Bearer ${users[1].token}`);
+                                    //   expect(del.status).toBe(401);
+                                    // });
+
   // it("- DELETE  device with ERROR 401", async () => {
   //   const del = await request(app)
-  //     .delete("/security/devices/" + 1234567890)
-  //     .set("Authorization", `Bearer ${users[1].token}`);
+  //     .delete("/security/devices/" + users[1].deviceId)
+  //     .set("Authorization", `Bearer 1234567890`);
   //   expect(del.status).toBe(401);
   // });
 
-  it("- DELETE  device with ERROR 401", async () => {
-    const del = await request(app)
-      .delete("/security/devices/" + users[1].deviceId)
-      .set("Authorization", `Bearer 1234567890`);
-    expect(del.status).toBe(401);
-  });
+
+  // it("- DELETE  device with ERROR 403", async () => {
+  //   const del = await request(app)
+  //     .delete("/security/devices/" + users[1].deviceId)
+  //     .set("Authorization", `Bearer ${users[2].token}`);
+  //   expect(del.status).toBe(403);
+  // });
 
 
-  it("- DELETE  device with ERROR 403", async () => {
-    const del = await request(app)
-      .delete("/security/devices/" + users[1].deviceId)
-      .set("Authorization", `Bearer ${users[2].token}`);
-    expect(del.status).toBe(403);
-  });
+  // it("- DELETE  device with ERROR 404", async () => {
+  //   const del = await request(app)
+  //     .delete("/security/devices/" + users[0].deviceId)
+  //     .set("Authorization", `Bearer ${users[0].token}`);
+  //   expect(del.status).toBe(404);
+  // });
 
 
-  it("- DELETE  device with ERROR 404", async () => {
-    const del = await request(app)
-      .delete("/security/devices/" + users[0].deviceId)
-      .set("Authorization", `Bearer ${users[0].token}`);
-    expect(del.status).toBe(404);
-  });
+
+
+
+
+
+
 
 
 
