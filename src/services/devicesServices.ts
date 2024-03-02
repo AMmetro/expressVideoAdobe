@@ -73,10 +73,10 @@ export class DevicesServices {
     deviceId: string
   ): Promise<any | string> {
     const device = await DevicesQueryRepository.getByDeviceId(deviceId);
-    if (!device) {
+    if (!device?.deviceId) {
       return {
         status: ResultCode.NotFound,
-        errorMessage: "Cant find devices with id:" + deviceId,
+        errorMessage: "Can`t find devices with id:" + deviceId,
       };
     }
     if (device.userId !== userId) {
