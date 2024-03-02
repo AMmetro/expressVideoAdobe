@@ -46,7 +46,7 @@ devicesRoute.delete(
 
 devicesRoute.delete(
   "/devices",
-  jwtValidationAcssTokenMiddleware,
+  jwtValidationRefreshTokenMiddleware,
   async (req: Request, res: any) => {
     const userId = req.user!.id;
     const deviceId = req.user!.deviceId;
