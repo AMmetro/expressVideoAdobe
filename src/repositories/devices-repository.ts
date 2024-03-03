@@ -9,11 +9,13 @@ export class DevicesRepository {
     deviceId: string,
     userId: string
   ): Promise<Boolean> {
-    const deleteDevice = await securityDevicesCollection.deleteMany({
+
+    const deleteDevices = await securityDevicesCollection.deleteMany({
       deviceId: { $ne: deviceId },
       userId: userId,
     });
-    return !!deleteDevice.deletedCount;
+
+    return !!deleteDevices.deletedCount;
   }
 
   static async deleteDeviceById(deviceId: string): Promise<Boolean> {

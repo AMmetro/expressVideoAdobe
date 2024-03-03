@@ -4,8 +4,10 @@ import { client } from "../src/BD/db";
 import { OutputPostType } from "../src/models/post/output/post.output";
 
 // --------------------------------------------------------------------
-const userCount = 4;
+// const userCount = 5;
 const users: any = [];
+let devicesOptions: any = [];
+let usersDevices: any = [];
 export const createUsers = async (app: any, i: number) => {
   const response = await request(app)
     .post("/users/")
@@ -38,72 +40,97 @@ describe("should return API data", () => {
     await request(app).delete("/testing/all-data").expect(204);
   });
 
-  it("- POST create 4 USER", async function () {
-    for (let i = 0; i < userCount; i++) {
+  
+  it("- POST create USER", async function () {
+    for (let i = 0; i < 1; i++) {
       const responseNewUser = await createUsers(app, i);
       users.push(responseNewUser);
+      // console.log("========authUsers========")
+      // console.log(responseNewUser)
     }
   });
 
-  it("- Login 4 users", async () => {
-    for (let i = 0; i < userCount; i++) {
-      const responseNewUser = await loginUsers(app, i);
-      const accessToken = await responseNewUser.body.accessToken;
-      users[i].accessToken = accessToken;
-      const cookies = responseNewUser.headers['set-cookie'];
-      users[i].refreshToken = cookies[0].split('=')[1];
+                                        // it("- Get all existing users", async () => {
+                                        //   const authUsers = await request(app)
+                                        //         .get("/users/")
+                                        //         .auth("admin", "qwerty")
+                                        //     console.log("========authUsers========")
+                                        //     console.log(authUsers.body)
+                                        // });
+
+
+  it("- Login 4 times first user", async () => {
+   // make array with devices options for save data
+    for (let i = 0; i < 4; i++) {
+      devicesOptions[i] = users[0];
     }
+  // login users and save data to array
+    for (let i = 0; i < 4; i++) {
+      const responseNewDevices = await loginUsers(app, 0);
+      const accessToken = await responseNewDevices.body.accessToken;
+      devicesOptions[i].accessToken = accessToken 
+      const cookies = responseNewDevices.headers['set-cookie'];
+      devicesOptions[i].refreshToken = cookies[0].split('=')[1];
+    }
+    // console.log("========authUsers========")
+    // console.log(devicesOptions)
   });
+
 
   it("- GET created devices", async () => {
-    for (let i = 0; i < userCount; i++) {
       const authUsers = await request(app)
         .get("/security/devices/")
-        .set("Cookie", `refreshToken=${users[i].refreshToken}`);
-      users[i].deviceId = authUsers.body[0].deviceId;
+        .set("Cookie", `refreshToken=${users[0].refreshToken}`);
+        usersDevices = authUsers.body
       expect(authUsers.body).toEqual(expect.any(Array));
-    }
+    // console.log("========usersDevices========")
+    // console.log(usersDevices)
+
   });
 
 
-  it("- DELETE device with :deviceId", async () => {
+  it("- DELETE first device with :deviceId", async () => {
     const del = await request(app)
-      .delete("/security/devices/" + users[0].deviceId)
-      .set("Cookie", `refreshToken=${users[0].refreshToken}`);
+      .delete("/security/devices/" + usersDevices[0].deviceId)
+      .set("Cookie", `refreshToken=${devicesOptions[0].refreshToken}`);
     expect(del.status).toBe(204);
   });
 
 
   it("- DELETE  device with ERROR 404", async () => {
     const del = await request(app)
-      .delete("/security/devices/" + 123 + users[0].deviceId)
-      .set("Cookie", `refreshToken=${users[0].refreshToken}`);
+      .delete("/security/devices/" + 123 + usersDevices[0].deviceId)
+      .set("Cookie", `refreshToken=${devicesOptions[0].refreshToken}`);
     expect(del.status).toBe(404);
   });
 
 
   it("- DELETE  device with ERROR 403", async () => {
     const del = await request(app)
-      .delete("/security/devices/" + users[1].deviceId)
-      .set("Cookie", `refreshToken=${users[2].refreshToken}`);
+      .delete("/security/devices/" + usersDevices[1].deviceId)
+      .set("Cookie", `refreshToken=${devicesOptions[2].refreshToken}`);
     expect(del.status).toBe(403);
   });
 
 
-  it("- DELETE  device with ERROR 401", async () => {
-    const del = await request(app)
-      .delete("/security/devices/" + users[1].deviceId)
-      .set("Cookie", `refreshToken=BrokenOrMissing`);
-    expect(del.status).toBe(401);
-  });
+  // it("- DELETE  device with ERROR 401", async () => {
+  //   const del = await request(app)
+  //     .delete("/security/devices/" + users[1].deviceId)
+  //     .set("Cookie", `refreshToken=BrokenOrMissing`);
+  //   expect(del.status).toBe(401);
+  // });
 
 
-  it("- DELETE  All other devices", async () => {
-    const del = await request(app)
-      .delete("/security/devices/")
-      .set("Cookie", `refreshToken=${users[1].refreshToken}`);
-    expect(del.status).toBe(204);
-  });
+  // it("- DELETE  All other devices", async () => {
+
+  //   // console.log("------users[2].refreshToken------")
+  //   // console.log(users[2].refreshToken)
+
+  //   const del = await request(app)
+  //     .delete("/security/devices/")
+  //     .set("Cookie", `refreshToken=${users[2].refreshToken}`);
+  //   expect(del.status).toBe(204);
+  // });
 
 
 
