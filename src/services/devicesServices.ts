@@ -1,6 +1,9 @@
 import { randomUUID } from "crypto";
 import { DevicesQueryRepository } from "../repositories/devices.query-repository";
-import { CuttedOutputDevicesType, OutputDevicesType } from "../models/devices/output/devices.output";
+import {
+  CuttedOutputDevicesType,
+  OutputDevicesType,
+} from "../models/devices/output/devices.output";
 import { Result, ResultCode } from "../validators/error-validators";
 import { securityDevicesCollection } from "../BD/db";
 import { jwtServise } from "../utils/JWTservise";
@@ -19,7 +22,6 @@ export class DevicesServices {
         errorMessage: "Not found devices for user with id: " + userId,
       };
     }
-
     const cuttedUserDevices = userDevices.map((device) => {
       return {
         deviceId: device.deviceId,
@@ -29,9 +31,11 @@ export class DevicesServices {
         userId: device.userId,
       };
     });
+
     return {
       status: ResultCode.Success,
       data: cuttedUserDevices,
+      // data: userDevices,
     };
   }
 
@@ -51,7 +55,6 @@ export class DevicesServices {
     const decodedRefreshToken = await jwtServise.getUserFromRefreshToken(
       refreshToken
     );
-
     const newDevices = {
       userId: loginUser.id,
       deviceId: newDeviceId,
@@ -73,7 +76,7 @@ export class DevicesServices {
   static async deleteDevicesById(
     userId: string,
     deviceId: string,
-    RefreshTokenIat: string,
+    RefreshTokenIat: string
   ): Promise<any | string> {
     const device = await DevicesQueryRepository.getByDeviceId(deviceId);
     if (!device?.deviceId) {
@@ -82,24 +85,24 @@ export class DevicesServices {
         errorMessage: "Can`t find devices with id:" + deviceId,
       };
     }
-    // if (device.userId !== userId) {
-    //   return {
-    //     status: ResultCode.Forbidden,
-    //     errorMessage: "Try to delete the deviceId of other user",
-    //   };
-    // }
-
-    console.log("device.tokenCreatedAt")
-    console.log(device.tokenCreatedAt)
-    console.log("RefreshTokenIat")
-    console.log(RefreshTokenIat)
-
-    if (device.tokenCreatedAt !== RefreshTokenIat) {
+    if (device.userId !== userId) {
       return {
         status: ResultCode.Forbidden,
         errorMessage: "Try to delete the deviceId of other user",
       };
     }
+
+    // console.log("device.tokenCreatedAt")
+    // console.log(device.tokenCreatedAt)
+    // console.log("RefreshTokenIat")
+    // console.log(RefreshTokenIat)
+
+    // if (device.tokenCreatedAt !== RefreshTokenIat) {
+    //   return {
+    //     status: ResultCode.Forbidden,
+    //     errorMessage: "Try to delete the deviceId of other user",
+    //   };
+    // }
     // Проверить что токен от девайса
 
     const isDelete = await DevicesRepository.deleteDeviceById(deviceId);
@@ -127,6 +130,29 @@ export class DevicesServices {
       return {
         status: ResultCode.NotFound,
         errorMessage: "Cant find devices for delete",
+      };
+    }
+    return {
+      status: ResultCode.Success,
+      data: true,
+    };
+  }
+
+  static async isTokenIatEqualDeviceIat(
+    deviceId: string,
+    RefreshTokenIat: string,
+  ): Promise<Result<boolean>> {
+    const device = await DevicesQueryRepository.getByDeviceId(deviceId);
+    if (!device) {
+      return {
+        status: ResultCode.NotFound,
+        errorMessage: "Token device IAT is not exist",
+      };
+    }
+    if (device.tokenCreatedAt !== RefreshTokenIat) {
+      return {
+        status: ResultCode.Forbidden,
+        errorMessage: "Token device IAT is belong to another device",
       };
     }
     return {

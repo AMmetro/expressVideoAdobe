@@ -4,9 +4,9 @@ import { client } from "../src/BD/db";
 import { OutputPostType } from "../src/models/post/output/post.output";
 
 // --------------------------------------------------------------------
-// const userCount = 5;
+const userCount = 4;
 const users: any = [];
-let devicesOptions: any = [];
+let devicesInfo: any = [];
 let usersDevices: any = [];
 export const createUsers = async (app: any, i: number) => {
   const response = await request(app)
@@ -41,7 +41,7 @@ describe("should return API data", () => {
   });
 
   
-  it("- POST create one USER", async function () {
+  it("- POST create USER", async function () {
     for (let i = 0; i < 1; i++) {
       const responseNewUser = await createUsers(app, i);
       users.push(responseNewUser);
@@ -61,62 +61,84 @@ describe("should return API data", () => {
 
   it("- Login 4 times first user", async () => {
    // make array with devices options for save data
-    for (let i = 0; i < 4; i++) {
-      devicesOptions[i] = users[0];
+    for (let i = 0; i < userCount; i++) {
+      // devicesInfo[i] = users[0];
+      devicesInfo[i] = {};
+      devicesInfo[i].userId = users[0].id;
+
     }
   // login users and save data to array
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < userCount; i++) {
       const responseNewDevices = await loginUsers(app, 0);
       const accessToken = await responseNewDevices.body.accessToken;
-      devicesOptions[i].accessToken = accessToken 
+
+      devicesInfo[i] = await responseNewDevices.body // временно !!!!
+
+      devicesInfo[i].accessToken = accessToken 
       const cookies = responseNewDevices.headers['set-cookie'];
-      devicesOptions[i].refreshToken = cookies[0].split('=')[1];
+      devicesInfo[i].refreshToken = cookies[0].split('=')[1];
     }
     // console.log("========authUsers========")
-    // console.log(devicesOptions)
+    // console.log(devicesInfo)
   });
 
 
   it("- GET created devices", async () => {
       const authUsers = await request(app)
         .get("/security/devices/")
-        .set("Cookie", `refreshToken=${users[0].refreshToken}`);
+        .set("Cookie", `refreshToken=${devicesInfo[0].refreshToken}`);
         usersDevices = authUsers.body
       expect(authUsers.body).toEqual(expect.any(Array));
     // console.log("========usersDevices========")
     // console.log(usersDevices)
-
   });
 
 
   it("- DELETE first device with :deviceId", async () => {
-    
-    //     console.log("========usersDevices========")
-    // console.log(usersDevices)
-    //     console.log("========devicesOptions========")
-    // console.log(devicesOptions)
-
     const del = await request(app)
       .delete("/security/devices/" + usersDevices[0].deviceId)
-      .set("Cookie", `refreshToken=${devicesOptions[0].refreshToken}`);
+      .set("Cookie", `refreshToken=${devicesInfo[0].refreshToken}`);
     expect(del.status).toBe(204);
+  });
+
+
+  it("- DELETE device that is not exist", async () => {
+    const del = await request(app)
+      .delete("/security/devices/" + usersDevices[0].deviceId)
+      .set("Cookie", `refreshToken=${devicesInfo[0].refreshToken}`);
+    expect(del.status).toBe(404);
   });
 
 
   // it("- DELETE  device with ERROR 404", async () => {
   //   const del = await request(app)
   //     .delete("/security/devices/" + 123 + usersDevices[0].deviceId)
-  //     .set("Cookie", `refreshToken=${devicesOptions[0].refreshToken}`);
+  //     .set("Cookie", `refreshToken=${devicesInfo[0].refreshToken}`);
   //   expect(del.status).toBe(404);
   // });
 
 
-  // it("- DELETE  device with ERROR 403", async () => {
-  //   const del = await request(app)
-  //     .delete("/security/devices/" + usersDevices[1].deviceId)
-  //     .set("Cookie", `refreshToken=${devicesOptions[2].refreshToken}`);
-  //   expect(del.status).toBe(403);
-  // });
+  it("- DELETE  device with ERROR 403", async () => {
+    const del = await request(app)
+      .delete("/security/devices/" + usersDevices[1].deviceId)
+      .set("Cookie", `refreshToken=${devicesInfo[userCount-1].refreshToken}`);
+    expect(del.status).toBe(403);
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   // it("- DELETE  device with ERROR 401", async () => {

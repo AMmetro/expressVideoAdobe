@@ -10,6 +10,7 @@ import {
 import { ResultCode } from "../validators/error-validators";
 import { sendCustomError } from "../utils/sendResponse";
 import { DevicesServices } from "../services/devicesServices";
+import { AuthServices } from "../services/authServices";
 
 
 export const devicesRoute = Router({});
@@ -35,6 +36,13 @@ devicesRoute.delete(
     const deviceId = req.params.deviceId;
     const userId = req.user!.id;
     const RefreshTokenIat = req.user!.iat;
+
+    const isTokenIatEqualDeviceIat = await DevicesServices.isTokenIatEqualDeviceIat(deviceId, RefreshTokenIat)
+       if (isTokenIatEqualDeviceIat.status !== ResultCode.Success){
+        sendCustomError(res, isTokenIatEqualDeviceIat);
+        return
+    }
+
     const result = await DevicesServices.deleteDevicesById(userId, deviceId, RefreshTokenIat);
     if (result.status === ResultCode.Success) {
       res.sendStatus(204);
