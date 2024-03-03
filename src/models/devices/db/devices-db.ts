@@ -2,8 +2,8 @@ export type SecurityDevicesDB = {
   userId: string;
   ip: string;
   title: string;
-  lastActiveDate: number;
-  tokenCreatedAt: number;
+  lastActiveDate: string;
+  tokenCreatedAt: string;
   deviceId: string;
 };
 

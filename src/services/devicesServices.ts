@@ -51,6 +51,7 @@ export class DevicesServices {
     const decodedRefreshToken = await jwtServise.getUserFromRefreshToken(
       refreshToken
     );
+
     const newDevices = {
       userId: loginUser.id,
       deviceId: newDeviceId,
@@ -71,7 +72,8 @@ export class DevicesServices {
 
   static async deleteDevicesById(
     userId: string,
-    deviceId: string
+    deviceId: string,
+    RefreshTokenIat: string,
   ): Promise<any | string> {
     const device = await DevicesQueryRepository.getByDeviceId(deviceId);
     if (!device?.deviceId) {
@@ -80,12 +82,26 @@ export class DevicesServices {
         errorMessage: "Can`t find devices with id:" + deviceId,
       };
     }
-    if (device.userId !== userId) {
+    // if (device.userId !== userId) {
+    //   return {
+    //     status: ResultCode.Forbidden,
+    //     errorMessage: "Try to delete the deviceId of other user",
+    //   };
+    // }
+
+    console.log("device.tokenCreatedAt")
+    console.log(device.tokenCreatedAt)
+    console.log("RefreshTokenIat")
+    console.log(RefreshTokenIat)
+
+    if (device.tokenCreatedAt !== RefreshTokenIat) {
       return {
         status: ResultCode.Forbidden,
         errorMessage: "Try to delete the deviceId of other user",
       };
     }
+    // Проверить что токен от девайса
+
     const isDelete = await DevicesRepository.deleteDeviceById(deviceId);
     if (!isDelete) {
       return {
@@ -121,7 +137,7 @@ export class DevicesServices {
 
   static async updateDevicesLastActiveDate(
     deviceId: string,
-    deviceLastActiveDate: number
+    deviceLastActiveDate: string
   ): Promise<any | string> {
     const updateDevices = await DevicesRepository.refreshDevicesLastActiveDate(
       deviceId,

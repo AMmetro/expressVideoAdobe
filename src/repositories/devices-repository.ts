@@ -27,7 +27,7 @@ export class DevicesRepository {
 
   static async refreshDevicesLastActiveDate(
     deviceId: string,
-    deviceLastActiveDate: number
+    deviceLastActiveDate: string
   ): Promise<Boolean> {
     const updateDevice = await securityDevicesCollection.updateOne(
       { deviceId: deviceId },

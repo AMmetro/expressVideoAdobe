@@ -20,6 +20,7 @@ createdAt: string;
 blackListToken: string[];
 emailConfirmation: any;
 deviceId: string;
+iat: string;
 }
 
 export class AuthServices {
@@ -50,7 +51,7 @@ export class AuthServices {
       }
       return {
         status: ResultCode.Success,
-        data: {...user, deviceId: jwtUserData.deviceId},
+        data: {...user, deviceId: jwtUserData.deviceId, iat: jwtUserData.iat},
       };
     }
     return {
@@ -63,10 +64,6 @@ export class AuthServices {
     const jwtUserData = await jwtServise.getUserFromRefreshToken(refreshToken);
     if (jwtUserData && jwtUserData.userId) {
       const user = await UserQueryRepository.getById(jwtUserData.userId);
-
-      // console.log("------user------")
-      // console.log(user)
-
       if (!user) {
         return {
           status: ResultCode.Unauthorised,
@@ -79,16 +76,9 @@ export class AuthServices {
           errorMessage: "Not found deviceId" + jwtUserData.deviceId,
         };
       }
-
-      // const test = await DevicesQueryRepository.getByUserId(user.id);
-      // console.log("------!!!!!!!!!!!!!!!!!!!------")
-      // console.log({...user, deviceId: jwtUserData.deviceId, })
-      // console.log("===============test===============")
-      // console.log(test)
-
       return {
         status: ResultCode.Success,
-        data: {...user, deviceId: jwtUserData.deviceId},
+        data: {...user, deviceId: jwtUserData.deviceId, iat: jwtUserData.iat},
       };
     }
     return {

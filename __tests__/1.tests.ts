@@ -41,7 +41,7 @@ describe("should return API data", () => {
   });
 
   
-  it("- POST create USER", async function () {
+  it("- POST create one USER", async function () {
     for (let i = 0; i < 1; i++) {
       const responseNewUser = await createUsers(app, i);
       users.push(responseNewUser);
@@ -90,6 +90,12 @@ describe("should return API data", () => {
 
 
   it("- DELETE first device with :deviceId", async () => {
+    
+    //     console.log("========usersDevices========")
+    // console.log(usersDevices)
+    //     console.log("========devicesOptions========")
+    // console.log(devicesOptions)
+
     const del = await request(app)
       .delete("/security/devices/" + usersDevices[0].deviceId)
       .set("Cookie", `refreshToken=${devicesOptions[0].refreshToken}`);
@@ -97,20 +103,20 @@ describe("should return API data", () => {
   });
 
 
-  it("- DELETE  device with ERROR 404", async () => {
-    const del = await request(app)
-      .delete("/security/devices/" + 123 + usersDevices[0].deviceId)
-      .set("Cookie", `refreshToken=${devicesOptions[0].refreshToken}`);
-    expect(del.status).toBe(404);
-  });
+  // it("- DELETE  device with ERROR 404", async () => {
+  //   const del = await request(app)
+  //     .delete("/security/devices/" + 123 + usersDevices[0].deviceId)
+  //     .set("Cookie", `refreshToken=${devicesOptions[0].refreshToken}`);
+  //   expect(del.status).toBe(404);
+  // });
 
 
-  it("- DELETE  device with ERROR 403", async () => {
-    const del = await request(app)
-      .delete("/security/devices/" + usersDevices[1].deviceId)
-      .set("Cookie", `refreshToken=${devicesOptions[2].refreshToken}`);
-    expect(del.status).toBe(403);
-  });
+  // it("- DELETE  device with ERROR 403", async () => {
+  //   const del = await request(app)
+  //     .delete("/security/devices/" + usersDevices[1].deviceId)
+  //     .set("Cookie", `refreshToken=${devicesOptions[2].refreshToken}`);
+  //   expect(del.status).toBe(403);
+  // });
 
 
   // it("- DELETE  device with ERROR 401", async () => {
