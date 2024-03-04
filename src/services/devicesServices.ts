@@ -26,14 +26,15 @@ export class DevicesServices {
       return {
         deviceId: device.deviceId,
         ip: device.ip,
-        lastActiveDate: device.lastActiveDate,
+        lastActiveDate: device.lastActiveDate.toISOString(),
         title: device.title,
-        userId: device.userId,
+        // userId: device.userId,
       };
     });
 
     return {
       status: ResultCode.Success,
+      // @ts-ignore
       data: cuttedUserDevices,
       // data: userDevices,
     };

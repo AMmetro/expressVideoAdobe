@@ -1,6 +1,6 @@
 export type OutputDevicesType = {
   deviceId: string,
-  userId: string,
+  // userId: string,
   ip: string,
   title: string,
   lastActiveDate: Date,
