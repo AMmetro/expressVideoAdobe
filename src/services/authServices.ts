@@ -83,7 +83,7 @@ export class AuthServices {
       const device = await DevicesQueryRepository.getByDeviceId(jwtUserData.deviceId);
       if (!device) {
         return {
-          status: ResultCode.NotFound,
+          status: ResultCode.Unauthorised,
           errorMessage: "Token device IAT is not exist",
         };
       }
