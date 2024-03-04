@@ -20,7 +20,7 @@ type OutputType = {
   blackListToken: string[];
   emailConfirmation: any;
   deviceId: string;
-  iat: string;
+  iat: number;
 };
 
 export class AuthServices {
@@ -82,8 +82,6 @@ export class AuthServices {
 
 // -------------------------------------------------------------
       const device = await DevicesQueryRepository.getByDeviceId(jwtUserData.deviceId);
-      //  console.log("*********device************")
-      // console.log(device)
       if (!device) {
         return {
           status: ResultCode.NotFound,
@@ -93,8 +91,11 @@ export class AuthServices {
       // console.log("device.tokenCreatedAt")
       // console.log(device.tokenCreatedAt)
       // console.log("jwtUserData.iat")
-      // console.log(jwtUserData.iat)
-      if (device.tokenCreatedAt !== jwtUserData.iat) {
+      // console.log(new Date(jwtUserData.iat * 1000))
+      // console.log("========================")
+      // console.log(`${device.tokenCreatedAt} ??? ${new Date(jwtUserData.iat * 1000)}`)
+      if (device.tokenCreatedAt.toISOString() !== new Date(jwtUserData.iat * 1000).toISOString()) {
+        // console.log("!!!!!!!!!!!!!!!!!!")
         return {
           status: ResultCode.Unauthorised,
           errorMessage: "Token device IAT is belong to another device",
@@ -325,8 +326,8 @@ export class AuthServices {
     const decodedRefreshToken = await jwtServise.getUserFromRefreshToken(
       newRefreshToken
     );
-    const deviceLastActiveDate = decodedRefreshToken!.exp;
-    const tokenCreatedAt = decodedRefreshToken!.iat;
+    const deviceLastActiveDate = new Date(decodedRefreshToken!.exp * 1000);
+    const tokenCreatedAt = new Date (decodedRefreshToken!.iat * 1000);
 
     const deviceUpdate = await DevicesServices.updateDevicesLastActiveDate(
       claimantInfo.deviceId,
@@ -366,8 +367,6 @@ export class AuthServices {
         errorMessage: `Can't create new session (with devices) for user`,
       };
     }
-    // const accessToken = await jwtServise.createAccessTokenJWT(authUsers, createdDeviceId );
-    // const refreshToken = await jwtServise.createRefreshTokenJWT(authUsers, createdDeviceId);
     return {
       status: ResultCode.Success,
       data: {
@@ -376,18 +375,4 @@ export class AuthServices {
       },
     };
   }
-
-  // static async getUserFromToken(token: string): Promise<null | JWTDecodedType> {
-  //   const user = await jwtServise.getUserFromRefreshToken(token);
-  //   if (!user.userId) {
-  //     return null
-  //   }
-  //   return user
-  // }
-
-  // static async getUserFromToken(token: string): Promise<{userId: string, deviceId: string}> {
-  //   const user = await jwtServise.getUserFromRefreshToken(token);
-  //   const outUser = {userId: user.userId, deviceId: user.deviceId}
-  //   return outUser
-  // }
 }

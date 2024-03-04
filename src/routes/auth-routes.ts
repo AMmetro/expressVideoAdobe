@@ -28,13 +28,6 @@ authRoute.get(
   "/me",
   jwtValidationAcssTokenMiddleware,
   async (req: Request, res: Response) => { 
-
-    // --------------------------------------------
-    // res.locals.ua = req.get('User-Agent');
-    // const userRequest = await jwtServise.getUserFromRefreshToken(req.cookies.refreshToken);
-    // res.status(200).send(userRequest);
-    // return
-    // --------------------------------------------
     const me = await UserQueryRepository.getById(req.user!.id);
     if (!me) {
       res.sendStatus(401);
@@ -47,15 +40,8 @@ authRoute.get(
 
 authRoute.post(
   "/refresh-token",
-  jwtValidationRefreshTokenMiddleware, // добавил нужен ли ????
+  jwtValidationRefreshTokenMiddleware,
   async (req: Request, res: Response) => {
-
-// --------------------------------------------------------
-    // const deviceId = req.params.deviceId;
-    // const userId = req.user!.id;
-    // const RefreshTokenIat = req.user!.iat;
-// -------------------------------------------------------
-
     const oldRefreshToken = req.cookies.refreshToken;
     if (!oldRefreshToken) {
       res.sendStatus(401);

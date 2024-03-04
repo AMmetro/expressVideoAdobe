@@ -53,13 +53,13 @@ describe("should return API data", () => {
     }
   });
 
-  // it("- Get all existing users", async () => {
-  //   const authUsers = await request(app)
-  //         .get("/users/")
-  //         .auth("admin", "qwerty")
-  //     console.log("========authUsers========")
-  //     console.log(authUsers.body)
-  // });
+  it("- Get all existing users", async () => {
+    const authUsers = await request(app)
+          .get("/users/")
+          .auth("admin", "qwerty")
+      // console.log("========authUsers========")
+      // console.log(authUsers.body)
+  });
 
   it("- Login 4 times first user", async () => {
     // make array with devices options for save data

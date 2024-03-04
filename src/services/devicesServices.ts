@@ -60,8 +60,8 @@ export class DevicesServices {
       deviceId: newDeviceId,
       ip: "123.456.789.000",
       title: userAgent,
-      lastActiveDate: decodedRefreshToken!.exp,
-      tokenCreatedAt: decodedRefreshToken!.iat,
+      lastActiveDate: new Date(decodedRefreshToken!.exp * 1000),
+      tokenCreatedAt: new Date(decodedRefreshToken!.iat * 1000),
     };
     const createdDeviceId = await securityDevicesCollection.insertOne(
       newDevices
@@ -126,7 +126,7 @@ export class DevicesServices {
 
   static async isTokenIatEqualDeviceIat(
     deviceId: string,
-    RefreshTokenIat: string,
+    RefreshTokenIat: number,
   ): Promise<Result<boolean>> {
     const device = await DevicesQueryRepository.getByDeviceId(deviceId);
     if (!device) {
@@ -135,7 +135,7 @@ export class DevicesServices {
         errorMessage: "Token device IAT is not exist",
       };
     }
-    if (device.tokenCreatedAt !== RefreshTokenIat) {
+    if (device.tokenCreatedAt !== new Date(RefreshTokenIat)) {
       return {
         status: ResultCode.Forbidden,
         errorMessage: "Token device IAT is belong to another device",
@@ -149,8 +149,8 @@ export class DevicesServices {
 
   static async updateDevicesLastActiveDate(
     deviceId: string,
-    deviceLastActiveDate: string,
-    tokenCreatedAt: string
+    deviceLastActiveDate: Date,
+    tokenCreatedAt: Date
   ): Promise<any | string> {
     const updateDevices = await DevicesRepository.refreshDeviceTokens(
       deviceId,

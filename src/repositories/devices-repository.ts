@@ -27,8 +27,8 @@ export class DevicesRepository {
 
   static async refreshDeviceTokens(
     deviceId: string,
-    deviceLastActiveDate: string,
-    tokenCreatedAt: string
+    deviceLastActiveDate: Date,
+    tokenCreatedAt: Date
   ): Promise<Boolean> {
     const updateDevice = await securityDevicesCollection.updateOne(
       { deviceId: deviceId },

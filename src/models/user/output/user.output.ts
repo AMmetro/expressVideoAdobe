@@ -16,8 +16,8 @@ type emailConfirmationType = {
 export type JWTDecodedType = {
   userId: string;
   deviceId: string;
-  iat: string,
-  exp: string
+  iat: number,
+  exp: number
 };
 
 export type ResultType = {

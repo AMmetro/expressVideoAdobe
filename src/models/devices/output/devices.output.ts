@@ -3,15 +3,15 @@ export type OutputDevicesType = {
   userId: string,
   ip: string,
   title: string,
-  lastActiveDate: string,
-  tokenCreatedAt: string,
+  lastActiveDate: Date,
+  tokenCreatedAt: Date,
   };
 
 export type CuttedOutputDevicesType = {
   deviceId: string,
   ip: string,
   title: string,
-  lastActiveDate: string,
+  lastActiveDate: Date,
   };
 
 
