@@ -19,7 +19,7 @@ export const client = new MongoClient(mongoURI);
 
 const database = client.db("BlogDB")
 export const usersCollection = database.collection<UserDB>("users")
-export const securityDevicesCollection = database.collection<SecurityDevicesDB>("users")
+export const securityDevicesCollection = database.collection<SecurityDevicesDB>("devices")
 export const blogsCollection = database.collection<BlogDB>("blogs")
 export const postsCollection = database.collection<PostDB>("posts")
 export const commentsCollection = database.collection<CommentDB>("comments")

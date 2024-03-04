@@ -168,22 +168,43 @@ describe("should return API data", () => {
     expect(del.status).toBe(403);
   });
 
-    it("- DELETE  All other devices", async () => {
-      const del = await request(app)
-        .delete("/security/devices/")
-        .set("Cookie", `refreshToken=${devicesInfo[devicesCount-1].refreshToken}`);
-      expect(del.status).toBe(204);
-      // expect(del.body).toEqual(expect.any(Array));
-    });
+  it("- DELETE  All other devices", async () => {
+    const del = await request(app)
+      .delete("/security/devices/")
+      .set("Cookie", `refreshToken=${devicesInfo[0].refreshToken}`);
+    expect(del.status).toBe(204);
+    // expect(del.body).toEqual(expect.any(Array));
+  });
 
-
-      it("- GET created devices", async () => {
+  it("- GET created devices", async () => {
     const authUsers = await request(app)
       .get("/security/devices/")
       .set("Cookie", `refreshToken=${devicesInfo[0].refreshToken}`);
     usersDevices = authUsers.body;
-    expect(authUsers.body).toEqual(expect.any(String));
-    // expect(authUsers.body.length).toEqual(8);
+    // expect(authUsers.body).toEqual(expect.any(String));
+    expect(authUsers.body.length).toEqual(1);
+    // console.log("========usersDevices========")
+    // console.log(usersDevices)
+  });
+
+  it("- LOGOUT one other devices", async () => {
+    const del = await request(app)
+      .post("/auth/logout/")
+      .set(
+        "Cookie",
+        `refreshToken=${devicesInfo[0].refreshToken}`
+      );
+    expect(del.status).toBe(204);
+    // expect(del.body).toEqual(expect.any(Array));
+  });
+
+  it("- GET created devices", async () => {
+    const authUsers = await request(app)
+      .get("/security/devices/")
+      .set("Cookie", `refreshToken=${devicesInfo[0].refreshToken}`);
+    usersDevices = authUsers.body;
+    expect(authUsers.body).toEqual(expect.any(Object));
+    // expect(authUsers.body.length).toEqual(1);
     // console.log("========usersDevices========")
     // console.log(usersDevices)
   });
@@ -201,20 +222,16 @@ describe("should return API data", () => {
 
 
 
-  // it("- LOGOUT one other devices", async () => {
-  //   const del = await request(app)
-  //     .delete("/security/devices/")
-  //     .set("Cookie", `refreshToken=${devicesInfo[devicesCount-1].refreshToken}`);
-  //   expect(del.status).toBe(204);
-  //   // expect(del.body).toEqual(expect.any(Array));
-  // });
 
 
 
 
 
 
-    
+
+
+
+
   // it("- GET created devices", async () => {
   //   const authUsers = await request(app)
   //     .get("/security/devices/")
