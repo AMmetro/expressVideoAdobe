@@ -36,7 +36,6 @@ devicesRoute.delete(
     const deviceId = req.params.deviceId;
     const userId = req.user!.id;
     const RefreshTokenIat = req.user!.iat;
-
     // const isTokenIatEqualDeviceIat = await DevicesServices.isTokenIatEqualDeviceIat(deviceId, RefreshTokenIat)
     //    if (isTokenIatEqualDeviceIat.status !== ResultCode.Success){
     //     sendCustomError(res, isTokenIatEqualDeviceIat);

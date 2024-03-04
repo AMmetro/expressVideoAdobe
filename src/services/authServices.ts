@@ -82,6 +82,8 @@ export class AuthServices {
 
 // -------------------------------------------------------------
       const device = await DevicesQueryRepository.getByDeviceId(jwtUserData.deviceId);
+      //  console.log("*********device************")
+      // console.log(device)
       if (!device) {
         return {
           status: ResultCode.NotFound,
@@ -94,7 +96,7 @@ export class AuthServices {
       // console.log(jwtUserData.iat)
       if (device.tokenCreatedAt !== jwtUserData.iat) {
         return {
-          status: ResultCode.Forbidden,
+          status: ResultCode.Unauthorised,
           errorMessage: "Token device IAT is belong to another device",
         };
       }
@@ -325,6 +327,8 @@ export class AuthServices {
     );
     const deviceLastActiveDate = decodedRefreshToken!.exp;
     const tokenCreatedAt = decodedRefreshToken!.iat;
+    console.log("------------tokenCreatedAt---------------")
+    console.log(tokenCreatedAt)
     const deviceUpdate = await DevicesServices.updateDevicesLastActiveDate(
       claimantInfo.deviceId,
       deviceLastActiveDate,

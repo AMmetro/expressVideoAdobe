@@ -28,11 +28,11 @@ export class DevicesRepository {
   static async refreshDeviceTokens(
     deviceId: string,
     deviceLastActiveDate: string,
-    refreshDevicesLastActiveDate: string
+    tokenCreatedAt: string
   ): Promise<Boolean> {
     const updateDevice = await securityDevicesCollection.updateOne(
       { deviceId: deviceId },
-      { $set: { lastActiveDate: deviceLastActiveDate, refreshDevicesLastActiveDate: refreshDevicesLastActiveDate} }
+      { $set: { lastActiveDate: deviceLastActiveDate, tokenCreatedAt: tokenCreatedAt} }
     );
     return !!updateDevice.modifiedCount;
   }
