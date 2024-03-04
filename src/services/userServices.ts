@@ -11,6 +11,8 @@ import { randomUUID } from "crypto";
 import { ResultCode } from "../validators/error-validators";
 import { AuthServices } from "./authServices";
 import { DevicesServices } from "./devicesServices";
+import { DevicesQueryRepository } from "../repositories/devices.query-repository";
+import { DevicesRepository } from "../repositories/devices-repository";
 
 export class UserServices {
   static async create(
@@ -87,38 +89,57 @@ export class UserServices {
         errorMessage: "No correct Id in token",
       };
     }
-    const userId = claimantInfo.userId
-    const user = await UserQueryRepository.getById(userId);
-    if (!user) {
+    if (!claimantInfo?.deviceId) {
       return {
         status: ResultCode.Unauthorised,
-        errorMessage: "Not found user by id in refresh token",
+        errorMessage: "Not user device info in token",
       };
     }
-
-    const isTokenInBlackListAlready = user?.blackListToken?.some(
-      (blackToken) => blackToken === refreshToken
-    );
-    if (isTokenInBlackListAlready) {
+    const device = await DevicesQueryRepository.getByDeviceId(claimantInfo.deviceId);
+    if (!device?.deviceId) {
       return {
-        status: ResultCode.Unauthorised,
-        errorMessage: `Token ${refreshToken} is in black list already`,
+        status: ResultCode.NotFound,
+        errorMessage: "Can`t find devices with id:",
       };
     }
-
-    const userBlackListUpdated = await UserRepository.addTokenToBlackListById(
-      refreshToken,
-      userId
-    );
-    if (!userBlackListUpdated) {
+    if (device.userId !== claimantInfo.userId) {
       return {
-        status: ResultCode.ServerError,
-        errorMessage: "Can't write user refresh token to black list",
+        status: ResultCode.Forbidden,
+        errorMessage: "Try to delete the deviceId of other user",
       };
     }
+    const isDelete = await DevicesRepository.deleteDeviceById(claimantInfo.deviceId);
+  if (!isDelete) {
     return {
-      status: ResultCode.Success,
-      data: true,
+      status: ResultCode.Conflict,
+      errorMessage: "Delete data base error",
     };
+  }
+  return {
+    status: ResultCode.Success,
+    data: true,
+  };
+// -----------------black list----------------------------------------------------------------
+    // const isTokenInBlackListAlready = user?.blackListToken?.some(
+    //   (blackToken) => blackToken === refreshToken
+    // );
+    // if (isTokenInBlackListAlready) {
+    //   return {
+    //     status: ResultCode.Unauthorised,
+    //     errorMessage: `Token ${refreshToken} is in black list already`,
+    //   };
+    // }
+
+    // const userBlackListUpdated = await UserRepository.addTokenToBlackListById(
+    //   refreshToken,
+    //   userId
+    // );
+    // if (!userBlackListUpdated) {
+    //   return {
+    //     status: ResultCode.ServerError,
+    //     errorMessage: "Can't write user refresh token to black list",
+    //   };
+    // }
+  // ------------------------------------------------------------------
   }
 }

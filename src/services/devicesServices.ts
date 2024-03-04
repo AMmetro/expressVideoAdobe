@@ -76,7 +76,6 @@ export class DevicesServices {
   static async deleteDevicesById(
     userId: string,
     deviceId: string,
-    RefreshTokenIat: string
   ): Promise<any | string> {
     const device = await DevicesQueryRepository.getByDeviceId(deviceId);
     if (!device?.deviceId) {
@@ -91,20 +90,6 @@ export class DevicesServices {
         errorMessage: "Try to delete the deviceId of other user",
       };
     }
-
-    // console.log("device.tokenCreatedAt")
-    // console.log(device.tokenCreatedAt)
-    // console.log("RefreshTokenIat")
-    // console.log(RefreshTokenIat)
-
-    // if (device.tokenCreatedAt !== RefreshTokenIat) {
-    //   return {
-    //     status: ResultCode.Forbidden,
-    //     errorMessage: "Try to delete the deviceId of other user",
-    //   };
-    // }
-    // Проверить что токен от девайса
-
     const isDelete = await DevicesRepository.deleteDeviceById(deviceId);
     if (!isDelete) {
       return {

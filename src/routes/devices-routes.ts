@@ -33,6 +33,10 @@ devicesRoute.delete(
   "/devices/:deviceId",
   jwtValidationRefreshTokenMiddleware,
   async (req: Request, res: any) => {
+
+    // res.sendStatus(300);
+    // return;
+
     const deviceId = req.params.deviceId;
     const userId = req.user!.id;
     const RefreshTokenIat = req.user!.iat;
@@ -42,7 +46,7 @@ devicesRoute.delete(
     //     return
     // }
 
-    const result = await DevicesServices.deleteDevicesById(userId, deviceId, RefreshTokenIat);
+    const result = await DevicesServices.deleteDevicesById(userId, deviceId);
     if (result.status === ResultCode.Success) {
       res.sendStatus(204);
       return;
@@ -59,12 +63,6 @@ devicesRoute.delete(
     const userId = req.user!.id;
     const deviceId = req.user!.deviceId;
     const RefreshTokenIat = req.user!.iat;
-    console.log("--------------userId-------------")
-    console.log(userId)
-    console.log("--------------deviceId-------------")
-    console.log(deviceId)
-    console.log("--------------RefreshTokenIat-------------")
-    console.log(RefreshTokenIat)
 
 //     const isTokenIatEqualDeviceIat = await DevicesServices.isTokenIatEqualDeviceIat(deviceId, RefreshTokenIat)
 //     console.log("--------------isTokenIatEqualDeviceIat-------------")

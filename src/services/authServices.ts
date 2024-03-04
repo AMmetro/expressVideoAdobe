@@ -327,8 +327,7 @@ export class AuthServices {
     );
     const deviceLastActiveDate = decodedRefreshToken!.exp;
     const tokenCreatedAt = decodedRefreshToken!.iat;
-    console.log("------------tokenCreatedAt---------------")
-    console.log(tokenCreatedAt)
+
     const deviceUpdate = await DevicesServices.updateDevicesLastActiveDate(
       claimantInfo.deviceId,
       deviceLastActiveDate,

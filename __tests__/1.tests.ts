@@ -5,7 +5,7 @@ import { OutputPostType } from "../src/models/post/output/post.output";
 
 // --------------------------------------------------------------------
 const devicesCount = 7;
-const usersCount = 1;
+const usersCount = 2;
 const users: any = [];
 let devicesInfo: any = [];
 let usersDevices: any = [];
@@ -24,9 +24,8 @@ export const createUsers = async (app: any, i: number) => {
 };
 
 export const loginUsers = async (app: any, i: number) => {
-
-  const test = setTimeout (()=>{}, 10)
-  await test
+  const test = setTimeout(() => {}, 10);
+  await test;
 
   const response = await request(app)
     .post("/auth/login")
@@ -45,7 +44,6 @@ describe("should return API data", () => {
     await request(app).delete("/testing/all-data").expect(204);
   });
 
-  
   it("- POST create USER", async function () {
     for (let i = 0; i < usersCount; i++) {
       const responseNewUser = await createUsers(app, i);
@@ -55,67 +53,75 @@ describe("should return API data", () => {
     }
   });
 
-                                        // it("- Get all existing users", async () => {
-                                        //   const authUsers = await request(app)
-                                        //         .get("/users/")
-                                        //         .auth("admin", "qwerty")
-                                        //     console.log("========authUsers========")
-                                        //     console.log(authUsers.body)
-                                        // });
-
+  // it("- Get all existing users", async () => {
+  //   const authUsers = await request(app)
+  //         .get("/users/")
+  //         .auth("admin", "qwerty")
+  //     console.log("========authUsers========")
+  //     console.log(authUsers.body)
+  // });
 
   it("- Login 4 times first user", async () => {
-   // make array with devices options for save data
+    // make array with devices options for save data
     for (let i = 0; i < devicesCount; i++) {
       // devicesInfo[i] = users[0];
       devicesInfo[i] = {};
       devicesInfo[i].userId = users[0].id;
     }
-  // login users and save data to array
+    // login users and save data to array
     for (let i = 0; i < devicesCount; i++) {
       const responseNewDevices = await loginUsers(app, 0);
       const accessToken = await responseNewDevices.body.accessToken;
 
-      devicesInfo[i] = await responseNewDevices.body // временно !!!!
+      devicesInfo[i] = await responseNewDevices.body; // временно !!!!
 
-      devicesInfo[i].accessToken = accessToken 
-      const cookies = responseNewDevices.headers['set-cookie'];
-      devicesInfo[i].refreshToken = cookies[0].split('=')[1];
+      devicesInfo[i].accessToken = accessToken;
+      const cookies = responseNewDevices.headers["set-cookie"];
+      devicesInfo[i].refreshToken = cookies[0].split("=")[1];
     }
     // console.log("========authUsers========")
     // console.log(devicesInfo)
   });
 
-
   it("- GET created devices", async () => {
-      const authUsers = await request(app)
-        .get("/security/devices/")
-        .set("Cookie", `refreshToken=${devicesInfo[0].refreshToken}`);
-        usersDevices = authUsers.body
-      expect(authUsers.body).toEqual(expect.any(Array));
+    const authUsers = await request(app)
+      .get("/security/devices/")
+      .set("Cookie", `refreshToken=${devicesInfo[0].refreshToken}`);
+    usersDevices = authUsers.body;
+    expect(authUsers.body).toEqual(expect.any(String));
+    // expect(authUsers.body.length).toEqual(8);
     // console.log("========usersDevices========")
     // console.log(usersDevices)
   });
 
   it("- POST REFRESF-TOKEN devices", async () => {
-      const authUsers = await request(app)
-        .post("/auth/refresh-token/")
-        .set("Cookie", `refreshToken=${devicesInfo[0].refreshToken}`)
+    const authUsers = await request(app)
+      .post("/auth/refresh-token/")
+      .set("Cookie", `refreshToken=${devicesInfo[0].refreshToken}`);
 
-            // console.log("========1111111111111111111========")
-            // console.log(devicesInfo[0].refreshToken)
+    // console.log("========1111111111111111111========")
+    // console.log(devicesInfo[0].refreshToken)
 
-        // usersDevices = authUsers.body
-      expect(authUsers.status).toBe(200);
-      const cookies = authUsers.headers['set-cookie'];
-      devicesInfo[0].refreshToken = cookies[0].split('=')[1];
-      expect(authUsers.body).toEqual(expect.any(Object));
+    // usersDevices = authUsers.body
+    expect(authUsers.status).toBe(200);
+    const cookies = authUsers.headers["set-cookie"];
+    devicesInfo[0].refreshToken = cookies[0].split("=")[1];
+    expect(authUsers.body).toEqual(expect.any(Object));
 
-      // console.log("========22222222222222========")
-      // console.log(devicesInfo[0].refreshToken)
-  
+    // console.log("========22222222222222========")
+    // console.log(devicesInfo[0].refreshToken)
   });
 
+  it("- GET created devices", async () => {
+    const authUsers = await request(app)
+      .get("/security/devices/")
+      .set("Cookie", `refreshToken=${devicesInfo[0].refreshToken}`);
+    usersDevices = authUsers.body;
+    expect(authUsers.body).toEqual(expect.any(String));
+    // expect(authUsers.body.length).toEqual(8);
+    // console.log("========usersDevices========")
+    // console.log(usersDevices)
+  });
 
   it("- DELETE one device with :deviceId", async () => {
     const del = await request(app)
@@ -124,14 +130,12 @@ describe("should return API data", () => {
     expect(del.status).toBe(204);
   });
 
-
   it("- DELETE device that is not exist", async () => {
     const del = await request(app)
       .delete("/security/devices/" + usersDevices[1].deviceId)
       .set("Cookie", `refreshToken=${devicesInfo[1].refreshToken}`);
     expect(del.status).toBe(404);
   });
-
 
   it("- DELETE  device with ERROR 404", async () => {
     const del = await request(app)
@@ -140,64 +144,64 @@ describe("should return API data", () => {
     expect(del.status).toBe(404);
   });
 
-  it("- DELETE  device with ERROR 403", async () => {
+  it("- POST REFRESF-TOKEN devices", async () => {
+    const authUsers = await request(app)
+      .post("/auth/refresh-token/")
+      .set("Cookie", `refreshToken=${devicesInfo[2].refreshToken}`);
+
+    // console.log("========1111111111111111111========")
+    // console.log(devicesInfo[0].refreshToken)
+
+    // usersDevices = authUsers.body
+    expect(authUsers.status).toBe(200);
+    const cookies = authUsers.headers["set-cookie"];
+    devicesInfo[2].refreshToken = cookies[0].split("=")[1];
+    expect(authUsers.body).toEqual(expect.any(Object));
+
+    // console.log("========22222222222222========")
+    // console.log(devicesInfo[0].refreshToken)
+  });
+
+  it("- Login 1 times second user and delete foreign devices", async () => {
+    const response = await request(app)
+      .post("/auth/login")
+      .auth("admin", "qwerty")
+      .send({
+        loginOrEmail: "login1",
+        password: "password",
+      })
+      .expect(200);
+    const cookies = response.headers["set-cookie"];
+    const refreshToken = cookies[0].split("=")[1];
     const del = await request(app)
-      .delete("/security/devices/" + usersDevices[1].deviceId)
-      .set("Cookie", `refreshToken=${devicesInfo[devicesCount-1].refreshToken}`);
+      .delete("/security/devices/" + usersDevices[0].deviceId)
+      .set("Cookie", `refreshToken=${refreshToken}`);
     expect(del.status).toBe(403);
   });
 
-//   it("- DELETE  All other devices", async () => {
-//     const del = await request(app)
-//       .delete("/security/devices/")
-//       .set("Cookie", `refreshToken=${devicesInfo[devicesCount-1].refreshToken}`);
-//     expect(del.status).toBe(204);
-//     // expect(del.body).toEqual(expect.any(Array));
-//   });
-
-
-
-
-// it("- GET created devices", async () => {
-//   const authUsers = await request(app)
-//     .get("/security/devices/")
-//     .set("Cookie", `refreshToken=${devicesInfo[devicesCount-1].refreshToken}`);
-//     usersDevices = authUsers.body
-//   expect(authUsers.body).toEqual(expect.any(Array));
-// // console.log("========usersDevices========")
-// // console.log(usersDevices)
-// });
+    it("- DELETE  All other devices", async () => {
+      const del = await request(app)
+        .delete("/security/devices/")
+        .set("Cookie", `refreshToken=${devicesInfo[devicesCount-1].refreshToken}`);
+      expect(del.status).toBe(204);
+      // expect(del.body).toEqual(expect.any(Array));
+    });
 
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
+  // it("- GET created devices", async () => {
+  //   const authUsers = await request(app)
+  //     .get("/security/devices/")
+  //     .set("Cookie", `refreshToken=${devicesInfo[devicesCount-1].refreshToken}`);
+  //     usersDevices = authUsers.body
+  //   expect(authUsers.body).toEqual(expect.any(Array));
+  // // console.log("========usersDevices========")
+  // // console.log(usersDevices)
+  // });
 
   // it("- GET created user token", async () => {
   //   const {memorisedNewUserLogin} = expect.getState()
