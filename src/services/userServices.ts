@@ -108,6 +108,10 @@ export class UserServices {
         errorMessage: "Try to delete the deviceId of other user",
       };
     }
+    
+
+
+
     const isDelete = await DevicesRepository.deleteDeviceById(claimantInfo.deviceId);
   if (!isDelete) {
     return {

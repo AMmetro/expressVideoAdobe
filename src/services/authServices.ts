@@ -80,7 +80,6 @@ export class AuthServices {
         };
       }
 
-// -------------------------------------------------------------
       const device = await DevicesQueryRepository.getByDeviceId(jwtUserData.deviceId);
       if (!device) {
         return {

@@ -1,6 +1,6 @@
 export type OutputDevicesType = {
   deviceId: string,
-  // userId: string,
+  userId: string,
   ip: string,
   title: string,
   lastActiveDate: Date,
@@ -11,7 +11,7 @@ export type CuttedOutputDevicesType = {
   deviceId: string,
   ip: string,
   title: string,
-  lastActiveDate: Date,
+  lastActiveDate: string,
   };
 
 

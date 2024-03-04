@@ -203,7 +203,7 @@ describe("should return API data", () => {
       .get("/security/devices/")
       .set("Cookie", `refreshToken=${devicesInfo[0].refreshToken}`);
     usersDevices = authUsers.body;
-    expect(authUsers.body).toEqual(expect.any(Object));
+    expect(authUsers.body).toEqual(expect.any(String));
     // expect(authUsers.body.length).toEqual(1);
     // console.log("========usersDevices========")
     // console.log(usersDevices)
