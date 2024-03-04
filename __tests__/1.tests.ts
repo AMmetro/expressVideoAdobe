@@ -88,7 +88,7 @@ describe("should return API data", () => {
       .get("/security/devices/")
       .set("Cookie", `refreshToken=${devicesInfo[0].refreshToken}`);
     usersDevices = authUsers.body;
-    expect(authUsers.body).toEqual(expect.any(String));
+    expect(authUsers.body).toEqual(expect.any(Array));
     // expect(authUsers.body.length).toEqual(8);
     // console.log("========usersDevices========")
     // console.log(usersDevices)
@@ -110,17 +110,6 @@ describe("should return API data", () => {
 
     // console.log("========22222222222222========")
     // console.log(devicesInfo[0].refreshToken)
-  });
-
-  it("- GET created devices", async () => {
-    const authUsers = await request(app)
-      .get("/security/devices/")
-      .set("Cookie", `refreshToken=${devicesInfo[0].refreshToken}`);
-    usersDevices = authUsers.body;
-    expect(authUsers.body).toEqual(expect.any(String));
-    // expect(authUsers.body.length).toEqual(8);
-    // console.log("========usersDevices========")
-    // console.log(usersDevices)
   });
 
   it("- DELETE one device with :deviceId", async () => {
@@ -186,6 +175,39 @@ describe("should return API data", () => {
       expect(del.status).toBe(204);
       // expect(del.body).toEqual(expect.any(Array));
     });
+
+
+      it("- GET created devices", async () => {
+    const authUsers = await request(app)
+      .get("/security/devices/")
+      .set("Cookie", `refreshToken=${devicesInfo[0].refreshToken}`);
+    usersDevices = authUsers.body;
+    expect(authUsers.body).toEqual(expect.any(String));
+    // expect(authUsers.body.length).toEqual(8);
+    // console.log("========usersDevices========")
+    // console.log(usersDevices)
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // it("- LOGOUT one other devices", async () => {
+  //   const del = await request(app)
+  //     .delete("/security/devices/")
+  //     .set("Cookie", `refreshToken=${devicesInfo[devicesCount-1].refreshToken}`);
+  //   expect(del.status).toBe(204);
+  //   // expect(del.body).toEqual(expect.any(Array));
+  // });
 
 
 
