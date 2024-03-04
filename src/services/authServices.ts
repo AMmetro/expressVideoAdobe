@@ -13,19 +13,20 @@ import { JWTDecodedType, ResultType } from "../models/user/output/user.output";
 import { DevicesQueryRepository } from "../repositories/devices.query-repository";
 
 type OutputType = {
-id: string;
-login: string;
-email: string;
-createdAt: string;
-blackListToken: string[];
-emailConfirmation: any;
-deviceId: string;
-iat: string;
-}
+  id: string;
+  login: string;
+  email: string;
+  createdAt: string;
+  blackListToken: string[];
+  emailConfirmation: any;
+  deviceId: string;
+  iat: string;
+};
 
 export class AuthServices {
-
-  static async checkAcssesToken(authRequest: string): Promise<Result<OutputType>> {
+  static async checkAcssesToken(
+    authRequest: string
+  ): Promise<Result<OutputType>> {
     const token = authRequest.split(" ");
     const authMethod = token[0];
     if (authMethod !== "Bearer") {
@@ -51,7 +52,7 @@ export class AuthServices {
       }
       return {
         status: ResultCode.Success,
-        data: {...user, deviceId: jwtUserData.deviceId, iat: jwtUserData.iat},
+        data: { ...user, deviceId: jwtUserData.deviceId, iat: jwtUserData.iat },
       };
     }
     return {
@@ -60,7 +61,9 @@ export class AuthServices {
     };
   }
 
-  static async checkRefreshToken(refreshToken: string): Promise<Result<OutputType>> {
+  static async checkRefreshToken(
+    refreshToken: string
+  ): Promise<Result<OutputType>> {
     const jwtUserData = await jwtServise.getUserFromRefreshToken(refreshToken);
     if (jwtUserData && jwtUserData.userId) {
       const user = await UserQueryRepository.getById(jwtUserData.userId);
@@ -76,9 +79,30 @@ export class AuthServices {
           errorMessage: "Not found deviceId" + jwtUserData.deviceId,
         };
       }
+
+// -------------------------------------------------------------
+      const device = await DevicesQueryRepository.getByDeviceId(jwtUserData.deviceId);
+      if (!device) {
+        return {
+          status: ResultCode.NotFound,
+          errorMessage: "Token device IAT is not exist",
+        };
+      }
+      // console.log("device.tokenCreatedAt")
+      // console.log(device.tokenCreatedAt)
+      // console.log("jwtUserData.iat")
+      // console.log(jwtUserData.iat)
+      if (device.tokenCreatedAt !== jwtUserData.iat) {
+        return {
+          status: ResultCode.Forbidden,
+          errorMessage: "Token device IAT is belong to another device",
+        };
+      }
+// ----------------------------------------------------------
+
       return {
         status: ResultCode.Success,
-        data: {...user, deviceId: jwtUserData.deviceId, iat: jwtUserData.iat},
+        data: { ...user, deviceId: jwtUserData.deviceId, iat: jwtUserData.iat },
       };
     }
     return {
@@ -86,7 +110,6 @@ export class AuthServices {
       errorMessage: "JWT is broken",
     };
   }
-
 
   static async registrationUserWithConfirmation(
     registrationData: RequestInputUserType
@@ -246,6 +269,7 @@ export class AuthServices {
 
   static async refreshToken(token: string): Promise<any> {
     const claimantInfo = await jwtServise.getUserFromRefreshToken(token);
+
     if (!claimantInfo?.deviceId) {
       return {
         status: ResultCode.Unauthorised,
@@ -267,6 +291,7 @@ export class AuthServices {
       };
     }
 
+    // ----------логика проверки что токен в блэк листе ненужна ???????---------------------------
     // const isTokenInBlackListAlready = user?.blackListToken?.some(
     //   (token) => token === token
     // );
@@ -286,6 +311,7 @@ export class AuthServices {
     //     errorMessage: `Can't write token to user black list in database`,
     //   };
     // }
+    // ============================================================================
     const newAccessToken = await jwtServise.createAccessTokenJWT(
       user,
       claimantInfo.deviceId
@@ -294,13 +320,17 @@ export class AuthServices {
       user,
       claimantInfo.deviceId
     );
-    // rewrite device last active date by issue date of new refresh token
-    // go to devise list and find device with user id and device id
-    // should be overwroden 
-    const decodedRefreshToken = await jwtServise.getUserFromRefreshToken(newRefreshToken)
-    const deviceLastActiveDate = decodedRefreshToken!.exp
-    const deviceUpdate =await DevicesServices.updateDevicesLastActiveDate(claimantInfo.deviceId, deviceLastActiveDate)
-        if (deviceUpdate.status.ResultCode !== ResultCode.Success) {
+    const decodedRefreshToken = await jwtServise.getUserFromRefreshToken(
+      newRefreshToken
+    );
+    const deviceLastActiveDate = decodedRefreshToken!.exp;
+    const tokenCreatedAt = decodedRefreshToken!.iat;
+    const deviceUpdate = await DevicesServices.updateDevicesLastActiveDate(
+      claimantInfo.deviceId,
+      deviceLastActiveDate,
+      tokenCreatedAt
+    );  
+    if (deviceUpdate.status !== ResultCode.Success) {
       return {
         status: ResultCode.ServerError,
         errorMessage: `Can't update devices lastActiveDate field`,
@@ -312,7 +342,10 @@ export class AuthServices {
     };
   }
 
-  static async loginUser(authData: AuthUserInputModel, userAgent: string): Promise<Result< {newAT: string, newRT: string}>> {
+  static async loginUser(
+    authData: AuthUserInputModel,
+    userAgent: string
+  ): Promise<Result<{ newAT: string; newRT: string }>> {
     const authUsers = await UserServices.checkCredentials(authData);
     if (!authUsers) {
       return {
@@ -321,7 +354,8 @@ export class AuthServices {
       };
     }
     const twoTokensWithDeviceId = await DevicesServices.createdDevice(
-      authUsers, userAgent
+      authUsers,
+      userAgent
     );
     if (!twoTokensWithDeviceId) {
       return {

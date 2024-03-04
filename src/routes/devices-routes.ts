@@ -37,11 +37,11 @@ devicesRoute.delete(
     const userId = req.user!.id;
     const RefreshTokenIat = req.user!.iat;
 
-    const isTokenIatEqualDeviceIat = await DevicesServices.isTokenIatEqualDeviceIat(deviceId, RefreshTokenIat)
-       if (isTokenIatEqualDeviceIat.status !== ResultCode.Success){
-        sendCustomError(res, isTokenIatEqualDeviceIat);
-        return
-    }
+    // const isTokenIatEqualDeviceIat = await DevicesServices.isTokenIatEqualDeviceIat(deviceId, RefreshTokenIat)
+    //    if (isTokenIatEqualDeviceIat.status !== ResultCode.Success){
+    //     sendCustomError(res, isTokenIatEqualDeviceIat);
+    //     return
+    // }
 
     const result = await DevicesServices.deleteDevicesById(userId, deviceId, RefreshTokenIat);
     if (result.status === ResultCode.Success) {
@@ -59,14 +59,29 @@ devicesRoute.delete(
   async (req: Request, res: any) => {
     const userId = req.user!.id;
     const deviceId = req.user!.deviceId;
-    // console.log("--------------req.user-------------")
-    // console.log(req.user)
+    const RefreshTokenIat = req.user!.iat;
+    console.log("--------------userId-------------")
+    console.log(userId)
+    console.log("--------------deviceId-------------")
+    console.log(deviceId)
+    console.log("--------------RefreshTokenIat-------------")
+    console.log(RefreshTokenIat)
+
+//     const isTokenIatEqualDeviceIat = await DevicesServices.isTokenIatEqualDeviceIat(deviceId, RefreshTokenIat)
+//     console.log("--------------isTokenIatEqualDeviceIat-------------")
+//     console.log(isTokenIatEqualDeviceIat)
+//     if (isTokenIatEqualDeviceIat.status !== ResultCode.Success){
+//      sendCustomError(res, isTokenIatEqualDeviceIat);
+//      return
+//  }
+
     const result = await DevicesServices.deleteAllOtherDevices(
       userId,
       deviceId
     );
     if (result.status === ResultCode.Success) {
-      res.status(204);
+      res.sendStatus(204);
+      return
     } else {
       sendCustomError(res, result);
     }

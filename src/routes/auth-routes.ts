@@ -7,7 +7,7 @@ import {
 import { UserServices } from "../services/userServices";
 import { UserQueryRepository } from "../repositories/user.query-repository";
 import { jwtServise } from "../utils/JWTservise";
-import { jwtValidationAcssTokenMiddleware } from "../auth/jwtAuth-middleware";
+import { jwtValidationAcssTokenMiddleware, jwtValidationRefreshTokenMiddleware } from "../auth/jwtAuth-middleware";
 import {
   codeExistValidator,
   emailExistValidator,
@@ -47,7 +47,15 @@ authRoute.get(
 
 authRoute.post(
   "/refresh-token",
+  jwtValidationRefreshTokenMiddleware, // добавил нужен ли ????
   async (req: Request, res: Response) => {
+
+// --------------------------------------------------------
+    // const deviceId = req.params.deviceId;
+    // const userId = req.user!.id;
+    // const RefreshTokenIat = req.user!.iat;
+// -------------------------------------------------------
+
     const oldRefreshToken = req.cookies.refreshToken;
     if (!oldRefreshToken) {
       res.sendStatus(401);
@@ -55,8 +63,7 @@ authRoute.post(
     }
     const result = await AuthServices.refreshToken(oldRefreshToken);
     if (result.status === ResultCode.Success) {
-      res
-        .cookie("refreshToken", result.data.newRefreshToken, {
+      res.cookie("refreshToken", result.data.newRefreshToken, {
           httpOnly: true,
           secure: true,
         })

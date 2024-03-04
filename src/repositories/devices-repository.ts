@@ -25,13 +25,14 @@ export class DevicesRepository {
     return !!deleteDevice.deletedCount;
   }
 
-  static async refreshDevicesLastActiveDate(
+  static async refreshDeviceTokens(
     deviceId: string,
-    deviceLastActiveDate: string
+    deviceLastActiveDate: string,
+    refreshDevicesLastActiveDate: string
   ): Promise<Boolean> {
     const updateDevice = await securityDevicesCollection.updateOne(
       { deviceId: deviceId },
-      { $set: { lastActiveDate: deviceLastActiveDate } }
+      { $set: { lastActiveDate: deviceLastActiveDate, refreshDevicesLastActiveDate: refreshDevicesLastActiveDate} }
     );
     return !!updateDevice.modifiedCount;
   }

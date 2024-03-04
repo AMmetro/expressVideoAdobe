@@ -126,6 +126,7 @@ export class DevicesServices {
       deviceId,
       userId
     );
+
     if (!deleteDevices) {
       return {
         status: ResultCode.NotFound,
@@ -163,11 +164,13 @@ export class DevicesServices {
 
   static async updateDevicesLastActiveDate(
     deviceId: string,
-    deviceLastActiveDate: string
+    deviceLastActiveDate: string,
+    tokenCreatedAt: string
   ): Promise<any | string> {
-    const updateDevices = await DevicesRepository.refreshDevicesLastActiveDate(
+    const updateDevices = await DevicesRepository.refreshDeviceTokens(
       deviceId,
-      deviceLastActiveDate
+      deviceLastActiveDate,
+      tokenCreatedAt,
     );
     if (!updateDevices) {
       return {
