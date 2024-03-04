@@ -34,9 +34,7 @@ export class DevicesServices {
 
     return {
       status: ResultCode.Success,
-      // @ts-ignore
       data: cuttedUserDevices,
-      // data: userDevices,
     };
   }
 
@@ -148,7 +146,7 @@ export class DevicesServices {
     };
   }
 
-  static async updateDevicesLastActiveDate(
+  static async updateDevicesTokens(
     deviceId: string,
     deviceLastActiveDate: Date,
     tokenCreatedAt: Date

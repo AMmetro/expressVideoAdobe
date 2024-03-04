@@ -271,7 +271,6 @@ export class AuthServices {
 
   static async refreshToken(token: string): Promise<any> {
     const claimantInfo = await jwtServise.getUserFromRefreshToken(token);
-
     if (!claimantInfo?.deviceId) {
       return {
         status: ResultCode.Unauthorised,
@@ -328,7 +327,7 @@ export class AuthServices {
     const deviceLastActiveDate = new Date(decodedRefreshToken!.exp * 1000);
     const tokenCreatedAt = new Date (decodedRefreshToken!.iat * 1000);
 
-    const deviceUpdate = await DevicesServices.updateDevicesLastActiveDate(
+    const deviceUpdate = await DevicesServices.updateDevicesTokens(
       claimantInfo.deviceId,
       deviceLastActiveDate,
       tokenCreatedAt

@@ -94,11 +94,6 @@ authRoute.post(
   "/logout",
   jwtValidationRefreshTokenMiddleware,
   async (req: Request, res: Response) => {
-    // const user = await UserQueryRepository.getById(req.user!.id);
-    // if (!user) {
-    //   res.sendStatus(401);
-    //   return;
-    // }
     const oldRefreshToken = req.cookies.refreshToken;
     if (!oldRefreshToken) {
       res.sendStatus(401);
@@ -106,7 +101,7 @@ authRoute.post(
     }
     const result = await UserServices.logout(oldRefreshToken);
     if (result.status === ResultCode.Success) {
-      res.clearCookie("refreshToken").sendStatus(204);
+      res.clearCookie("refreshToken").sendStatus(206);
       return;
     } else {
       sendCustomError(res, result);
