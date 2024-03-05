@@ -68,7 +68,7 @@ authRoute.post(
     const { password, loginOrEmail } = req.body;
     const userAgent = res.locals.ua = req.get('User-Agent') || "unknown";
     // const userIp = req.ip?.split(':')[0] || "unknown";
-    const userIp = req.ip;
+    const userIp = req.ip || "unknown";
     // console.log("+++++++++++++++++++++++++++++++++++++++++++++++++")
     // console.log(userIp)
 
@@ -76,8 +76,8 @@ authRoute.post(
       res.sendStatus(400);
       return;
     }
-    const authData = { loginOrEmail: loginOrEmail, password: password, userIp: userIp };
-    const result = await AuthServices.loginUser(authData, userAgent)
+    const authData = { loginOrEmail: loginOrEmail, password: password };
+    const result = await AuthServices.loginUser(authData, userAgent, userIp)
     if (result.data && result.status === ResultCode.Success) {
       const accessToken = result.data.newAT;
       const refreshToken = result.data.newRT;
