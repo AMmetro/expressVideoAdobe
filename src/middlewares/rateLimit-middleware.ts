@@ -14,24 +14,27 @@ export const rateLimitMiddleware = async (req: Request, res: Response, next: Nex
     // console.log("------------------------logger------------------")
     // console.log(logger)
 
-    const nearestExpiryTime = logger.length > 0 ? Math.ceil( (logger[4].date.getTime() - Date.now())) / 1000 : 0;
-    if (nearestExpiryTime <= 10){
+    const nearestExpiryTime = logger.length > 3 ? Math.ceil( (logger[4]?.date?.getTime() - Date.now())) / 1000 : 0;
+
+    console.log("------------------------nearestExpiryTime------------------")
+    console.log(nearestExpiryTime)
+
+    if (nearestExpiryTime && nearestExpiryTime <= 10){
         res.header("Retry-After", String(Math.abs(nearestExpiryTime))).status(429).send("rateLimitMiddleware")
         return
     }
 
-    //   console.log("------------------------nearestExpiryTime------------------")
-    // console.log(nearestExpiryTime)
+  
 
 
 
-    const emailInfo = {
-        email: "7656077@Mail.ru",
-        subject: "rateLimitMiddleware",
-        confirmationCode: "zzzzzzz",
-        debugger: logger
-      };
-      await emailAdaper.sendEmailDebug(emailInfo);
+    // const emailInfo = {
+    //     email: "7656077@Mail.ru",
+    //     subject: "rateLimitMiddleware",
+    //     confirmationCode: "zzzzzzz",
+    //     debugger: logger
+    //   };
+    //   await emailAdaper.sendEmailDebug(emailInfo);
 
 
     // const userOptions = { }
