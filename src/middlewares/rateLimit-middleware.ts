@@ -11,8 +11,8 @@ export const rateLimitMiddleware = async (req: Request, res: Response, next: Nex
 
     await rateLimitCollection.insertOne(requesterInfo)
     const logger =await rateLimitCollection.find({}).toArray()
-    // console.log("------------------------logger------------------")
-    // console.log(logger)
+    console.log("------------------------logger------------------")
+    console.log(logger)
 
     // const nearestExpiryTime = logger.length > 0 ? Math.ceil( (logger[0].date.getTime() - Date.now())) / 1000 : 0;
     // if (logger.length >= 10){
