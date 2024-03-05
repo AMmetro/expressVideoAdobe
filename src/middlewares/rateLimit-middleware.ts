@@ -10,7 +10,7 @@ export const rateLimitMiddleware = async (req: Request, res: Response, next: Nex
     const requesterInfo = {ip: ip, URL: URL, date: date}
 
     await rateLimitCollection.insertOne(requesterInfo)
-    const logger =await rateLimitCollection.find({ip: ip}).toArray()
+    const logger =await rateLimitCollection.find({}).toArray()
     // console.log("------------------------logger------------------")
     // console.log(logger)
 
