@@ -40,7 +40,8 @@ export class DevicesServices {
 
   static async createdDevice(
     loginUser: OutputUserType,
-    userAgent: string
+    userAgent: string,
+    userIp: string
   ): Promise<{ newAT: string; newRT: string } | null> {
     const newDeviceId = randomUUID();
     const accessToken = await jwtServise.createAccessTokenJWT(
@@ -57,7 +58,7 @@ export class DevicesServices {
     const newDevices = {
       userId: loginUser.id,
       deviceId: newDeviceId,
-      ip: "123.456.789.000",
+      ip: userIp,
       title: userAgent,
       lastActiveDate: new Date(decodedRefreshToken!.exp * 1000),
       tokenCreatedAt: new Date(decodedRefreshToken!.iat * 1000),

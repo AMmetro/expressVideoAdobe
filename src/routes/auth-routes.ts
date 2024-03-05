@@ -67,11 +67,16 @@ authRoute.post(
   async (req: RequestWithBody<AuthUserInputModel>, res: Response) => {
     const { password, loginOrEmail } = req.body;
     const userAgent = res.locals.ua = req.get('User-Agent') || "unknown";
+    // const userIp = req.ip?.split(':')[0] || "unknown";
+    const userIp = req.ip;
+    // console.log("+++++++++++++++++++++++++++++++++++++++++++++++++")
+    // console.log(userIp)
+
     if (!password || !loginOrEmail) {
       res.sendStatus(400);
       return;
     }
-    const authData = { loginOrEmail: loginOrEmail, password: password };
+    const authData = { loginOrEmail: loginOrEmail, password: password, userIp: userIp };
     const result = await AuthServices.loginUser(authData, userAgent)
     if (result.data && result.status === ResultCode.Success) {
       const accessToken = result.data.newAT;

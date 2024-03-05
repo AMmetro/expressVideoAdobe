@@ -15,6 +15,7 @@ const cookieParser = require('cookie-parser');
 
 app.use(express.json());
 app.use(cookieParser());
+app.set('trust proxy', true);
 
 app.use("/auth", authRoute);
 app.use("/blogs", blogRoute);

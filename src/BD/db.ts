@@ -6,6 +6,7 @@ import { UserDB } from '../models/user/db/user-db';
 import { CommentDB } from '../models/comments/db/comment-db';
 import { appConfig } from '../appConfig';
 import { SecurityDevicesDB } from '../models/devices/db/devices-db';
+import { RateLimitDB } from '../models/rateLimit/db/rateLimit-db';
 
 // dotenv.config()
 // const mongoURI = process.env.MONGO_URL || "mongodb://0.0.0.0:27017"; 
@@ -23,6 +24,7 @@ export const securityDevicesCollection = database.collection<SecurityDevicesDB>(
 export const blogsCollection = database.collection<BlogDB>("blogs")
 export const postsCollection = database.collection<PostDB>("posts")
 export const commentsCollection = database.collection<CommentDB>("comments")
+export const rateLimitCollection = database.collection<RateLimitDB>("ratelimit")
 
 export const runDB = async ()=>{
     try {

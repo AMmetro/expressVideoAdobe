@@ -346,7 +346,8 @@ export class AuthServices {
 
   static async loginUser(
     authData: AuthUserInputModel,
-    userAgent: string
+    userAgent: string,
+    userIp: string,
   ): Promise<Result<{ newAT: string; newRT: string }>> {
     const authUsers = await UserServices.checkCredentials(authData);
     if (!authUsers) {
@@ -357,7 +358,8 @@ export class AuthServices {
     }
     const twoTokensWithDeviceId = await DevicesServices.createdDevice(
       authUsers,
-      userAgent
+      userAgent,
+      userIp
     );
     if (!twoTokensWithDeviceId) {
       return {
