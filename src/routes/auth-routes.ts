@@ -119,6 +119,7 @@ authRoute.post(
 
 authRoute.post(
   "/registration",
+  rateLimitMiddleware,
   passwordValidator,
   emailValidator,
   loginValidator,
@@ -145,7 +146,7 @@ authRoute.post(
 
 authRoute.post(
   "/registration-confirmation",
-  // codeExistValidator,
+  rateLimitMiddleware,
   // inputValidationMiddleware,
   async (req: RequestWithBody<{ code: string }>, res: Response) => {
     const confirmationCode = req.body.code;
@@ -164,6 +165,7 @@ authRoute.post(
 
 authRoute.post(
   "/registration-email-resending",
+  rateLimitMiddleware,
   emailValidator,
   emailIsAplliedValidator,
   inputValidationMiddleware,
