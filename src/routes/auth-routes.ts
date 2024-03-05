@@ -22,6 +22,7 @@ import { AuthServices } from "../services/authServices";
 import { ResultCode } from "../validators/error-validators";
 import { sendCustomError } from "../utils/sendResponse";
 import { DevicesServices } from "../services/devicesServices";
+import { rateLimitMiddleware } from "../middlewares/rateLimit-middleware";
 export const authRoute = Router({});
 
 authRoute.get(
@@ -64,13 +65,15 @@ authRoute.post(
 
 authRoute.post(
   "/login",
+  rateLimitMiddleware,
   async (req: RequestWithBody<AuthUserInputModel>, res: Response) => {
     const { password, loginOrEmail } = req.body;
     const userAgent = res.locals.ua = req.get('User-Agent') || "unknown";
-    // const userIp = req.ip?.split(':')[0] || "unknown";
-    const userIp = req.ip || "unknown";
-    // console.log("+++++++++++++++++++++++++++++++++++++++++++++++++")
-    // console.log(userIp)
+    
+    const userIp = req.headers?.['x-forwarded-for']?.[0] || req.ip || "unknown";
+
+//  console.log("--userIp----")
+//  console.log(userIp)
 
     if (!password || !loginOrEmail) {
       res.sendStatus(400);

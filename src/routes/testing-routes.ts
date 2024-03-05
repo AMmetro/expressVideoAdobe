@@ -3,6 +3,7 @@ import {
   blogsCollection,
   commentsCollection,
   postsCollection,
+  rateLimitCollection,
   securityDevicesCollection,
   usersCollection,
 } from "../BD/db";
@@ -19,6 +20,7 @@ testingRoute.delete(
     await usersCollection.deleteMany({});
     await securityDevicesCollection.deleteMany({});
     await commentsCollection.deleteMany({});
+    await rateLimitCollection.deleteMany({});
     //    await drop.darabase() - если есть права админа (в докере по умолчанию в атласе назначить)
     res.sendStatus(204);
   }
