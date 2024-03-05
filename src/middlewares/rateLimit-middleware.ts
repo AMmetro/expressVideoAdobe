@@ -26,10 +26,10 @@ export const rateLimitMiddleware = async (req: Request, res: Response, next: Nex
     // console.log("------------------------nearestExpiryTime------------------")
     // console.log(nearestExpiryTime)
 
-    if (nearestExpiryTime && nearestExpiryTime <= 1/1000){
-        res.header("Retry-After", String(nearestExpiryTime)).status(429).send("rateLimitMiddleware")
-        return
-    }
+    // if (nearestExpiryTime && nearestExpiryTime <= 10){
+    //     res.header("Retry-After", String(nearestExpiryTime)).status(429).send("rateLimitMiddleware")
+    //     return
+    // }
 
   
 
