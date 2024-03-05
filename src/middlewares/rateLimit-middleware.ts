@@ -14,13 +14,13 @@ export const rateLimitMiddleware = async (req: Request, res: Response, next: Nex
     // console.log("------------------------logger------------------")
     // console.log(logger)
 
-    const nearestExpiryTime = logger.length > 3 ? Math.ceil( (logger[4]?.date?.getTime() - Date.now())) / 1000 : 0;
+    const nearestExpiryTime = logger.length > 3 ? Math.ceil( (Date.now() - logger[4]?.date?.getTime() )) / 1000 : 0;
 
     console.log("------------------------nearestExpiryTime------------------")
     console.log(nearestExpiryTime)
 
     if (nearestExpiryTime && nearestExpiryTime <= 10){
-        res.header("Retry-After", String(Math.abs(nearestExpiryTime))).status(429).send("rateLimitMiddleware")
+        res.header("Retry-After", String(nearestExpiryTime)).status(429).send("rateLimitMiddleware")
         return
     }
 
