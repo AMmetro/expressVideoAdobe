@@ -18,7 +18,7 @@ export const rateLimitMiddleware = async (req: Request, res: Response, next: Nex
     // console.log("------------------------logger------------------")
     // console.log(logger)
 
-    if (logger > 5) return 429
+    if (logger > 5) return res.sendStatus(429);
 
     //    let nearestExpiryTime = 0
 
