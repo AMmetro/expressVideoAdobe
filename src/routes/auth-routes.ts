@@ -69,12 +69,7 @@ authRoute.post(
   async (req: RequestWithBody<AuthUserInputModel>, res: Response) => {
     const { password, loginOrEmail } = req.body;
     const userAgent = res.locals.ua = req.get('User-Agent') || "unknown";
-    
-    const userIp = req.headers?.['x-forwarded-for']?.[0] || req.ip || "unknown";
-
-//  console.log("--userIp----")
-//  console.log(userIp)
-
+    const userIp = req.ip || "unknown";
     if (!password || !loginOrEmail) {
       res.sendStatus(400);
       return;
