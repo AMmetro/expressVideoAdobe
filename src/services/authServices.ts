@@ -352,7 +352,7 @@ export class AuthServices {
     const authUsers = await UserServices.checkCredentials(authData);
     if (!authUsers) {
       return {
-        status: ResultCode.NotFound,
+        status: ResultCode.Unauthorised,
         errorMessage: `Can't login user`,
       };
     }
