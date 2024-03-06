@@ -1,22 +1,30 @@
 import { Request, Response, NextFunction} from "express"
-import { validationResult, ValidationError } from "express-validator"
 import { emailAdaper } from "../utils/emailAdaper";
 import { rateLimitCollection } from "../BD/db";
 
 export const rateLimitMiddleware = async (req: Request, res: Response, next: NextFunction) =>{
-    const URL = req.baseUrl;
-    const ip = req.headers?.['x-forwarded-for']?.[0] || req.ip || "unknown";
+    const URL = req.originalUrl;
+    const ip = req.ip || "unknown";
     const date = new Date();
     const requesterInfo = {ip: ip, URL: URL, date: date}
 
     await rateLimitCollection.insertOne(requesterInfo)
-    const logger =await rateLimitCollection.find({URL:URL}).toArray()
 
-    let nearestExpiryTime = 0
+ 
 
-    if (logger?.length > 4){
-        nearestExpiryTime = Math.ceil( (logger[0]?.date?.getTime() - logger[4]?.date?.getTime() )) / 1000 ; 
-    }
+    const logger =await rateLimitCollection.countDocuments({URL:URL, ip: ip, date: {$gte:new Date(Date.now() - 10000)}})
+    // const logger =await rateLimitCollection.find({URL:URL, ip: ip, date: {$gte:new Date(Date.now() - 10000)}}).toArray()
+
+    // console.log("------------------------logger------------------")
+    // console.log(logger)
+
+    if (logger > 5) return 429
+
+    //    let nearestExpiryTime = 0
+
+    // if (logger?.length > 4){
+    //     nearestExpiryTime = Math.ceil( (logger[0]?.date?.getTime() - logger[4]?.date?.getTime() )) / 1000 ; 
+    // }
 
     // console.log("------------------------logger------------------")
     // console.log(logger)
@@ -32,22 +40,6 @@ export const rateLimitMiddleware = async (req: Request, res: Response, next: Nex
     // }
 
   
-
-
-
-    // const emailInfo = {
-    //     email: "7656077@Mail.ru",
-    //     subject: "rateLimitMiddleware",
-    //     confirmationCode: "zzzzzzz",
-    //     debugger: logger
-    //   };
-    //   await emailAdaper.sendEmailDebug(emailInfo);
-
-
-    // const userOptions = { }
-
-    // Написать промежуточный слой (middleware), который будет считать количество документов 
-    // по фильтру (IP, URL, date >= текущей даты - 10 сек).
     
     return next()
 
