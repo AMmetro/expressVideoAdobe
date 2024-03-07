@@ -1,10 +1,10 @@
 import express, { Router, Request, Response } from "express";
 import {
-  blogsCollection,
+  BlogModel,
   commentsCollection,
   postsCollection,
   rateLimitCollection,
-  securityDevicesCollection,
+  SecurityDevicesModel,
   usersCollection,
 } from "../BD/db";
 
@@ -15,10 +15,10 @@ export const testingRoute = Router({});
 testingRoute.delete(
   "/all-data",
   async (req: Request, res: ResponseType<{}>) => {
-    await blogsCollection.deleteMany({});
+    await BlogModel.deleteMany({});
     await postsCollection.deleteMany({});
     await usersCollection.deleteMany({});
-    await securityDevicesCollection.deleteMany({});
+    await SecurityDevicesModel.deleteMany({});
     await commentsCollection.deleteMany({});
     await rateLimitCollection.deleteMany({});
     //    await drop.darabase() - если есть права админа (в докере по умолчанию в атласе назначить)

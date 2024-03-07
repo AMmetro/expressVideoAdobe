@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { postsCollection, securityDevicesCollection } from "../BD/db";
+import { postsCollection, SecurityDevicesModel } from "../BD/db";
 import {
   RequestInputPostType,
   UpdateInputPostType,
@@ -10,7 +10,7 @@ export class DevicesRepository {
     userId: string
   ): Promise<Boolean> {
 
-    const deleteDevices = await securityDevicesCollection.deleteMany({
+    const deleteDevices = await SecurityDevicesModel.deleteMany({
       deviceId: { $ne: deviceId },
       userId: userId,
     });
@@ -19,7 +19,7 @@ export class DevicesRepository {
   }
 
   static async deleteDeviceById(deviceId: string): Promise<Boolean> {
-    const deleteDevice = await securityDevicesCollection.deleteOne({
+    const deleteDevice = await SecurityDevicesModel.deleteOne({
       deviceId: deviceId,
     });
     return !!deleteDevice.deletedCount;
@@ -30,7 +30,7 @@ export class DevicesRepository {
     deviceLastActiveDate: Date,
     tokenCreatedAt: Date
   ): Promise<Boolean> {
-    const updateDevice = await securityDevicesCollection.updateOne(
+    const updateDevice = await SecurityDevicesModel.updateOne(
       { deviceId: deviceId },
       { $set: { lastActiveDate: deviceLastActiveDate, tokenCreatedAt: tokenCreatedAt} }
     );

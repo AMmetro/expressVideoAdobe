@@ -2,10 +2,9 @@ import { randomUUID } from "crypto";
 import { DevicesQueryRepository } from "../repositories/devices.query-repository";
 import {
   CuttedOutputDevicesType,
-  OutputDevicesType,
 } from "../models/devices/output/devices.output";
 import { Result, ResultCode } from "../validators/error-validators";
-import { securityDevicesCollection } from "../BD/db";
+import { SecurityDevicesModel } from "../BD/db";
 import { jwtServise } from "../utils/JWTservise";
 import { OutputUserType } from "../models/user/output/user.output";
 import { DevicesRepository } from "../repositories/devices-repository";
@@ -63,13 +62,12 @@ export class DevicesServices {
       lastActiveDate: new Date(decodedRefreshToken!.exp * 1000),
       tokenCreatedAt: new Date(decodedRefreshToken!.iat * 1000),
     };
-    const createdDeviceId = await securityDevicesCollection.insertOne(
+    const createdDeviceId = await SecurityDevicesModel.create(
       newDevices
     );
     if (!createdDeviceId) {
       return null;
     }
-    // return createdDeviceId.insertedId.toString();
     return { newAT: accessToken, newRT: refreshToken };
   }
 

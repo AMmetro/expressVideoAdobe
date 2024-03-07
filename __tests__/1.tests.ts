@@ -1,4 +1,5 @@
-import request from "supertest";
+import request from 'supertest' 
+import mongoose from 'mongoose'
 import { app } from "../src/settings";
 import { client } from "../src/BD/db";
 
@@ -45,7 +46,11 @@ const delay = (milliseconds: number): Promise<void> => {
 // -----------------------------------------------------------
 
 describe("should return API data", () => {
+  const mongoURI = 'mongodb+srv://metroexpress:suradet842@cluster0.gkpqpve.mongodb.net/?retryWrites=true&w=majority'
+
+
   beforeAll(async () => {
+    await mongoose.connect(mongoURI)
     await request(app).delete("/testing/all-data").expect(204);
   });
 
@@ -184,10 +189,14 @@ describe("should return API data", () => {
   });
 
 
+  afterAll(async () => {
+    /* Closing database connection after each test. */
+    await mongoose.connection.close()
+})
 
-  afterAll((done) => {
-    // Closing the DB connection allows Jest to exit successfully.
-    client.close();
-    done();
-  });
+  // afterAll((done) => {
+  //   // Closing the DB connection allows Jest to exit successfully.
+  //   client.close();
+  //   done();
+  // });
 });
