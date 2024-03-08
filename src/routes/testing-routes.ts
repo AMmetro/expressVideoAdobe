@@ -15,12 +15,12 @@ export const testingRoute = Router({});
 testingRoute.delete(
   "/all-data",
   async (req: Request, res: ResponseType<{}>) => {
-    await BlogModel.deleteMany({});
-    // await postsCollection.deleteMany({});
-    // await usersCollection.deleteMany({});
-    await SecurityDevicesModel.deleteMany({});
-    // await commentsCollection.deleteMany({});
-    // await rateLimitCollection.deleteMany({});
+    // await BlogModel.deleteMany({});
+    await postsCollection.deleteMany({});
+    await usersCollection.deleteMany({});
+    // await SecurityDevicesModel.deleteMany({});
+    await commentsCollection.deleteMany({});
+    await rateLimitCollection.deleteMany({});
     //    await drop.darabase() - если есть права админа (в докере по умолчанию в атласе назначить)
     res.sendStatus(204);
   }
