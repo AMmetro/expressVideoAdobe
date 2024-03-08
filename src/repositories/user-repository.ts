@@ -8,6 +8,12 @@ export class UserRepository {
     return newUserId.insertedId.toString();
   }
 
+  static async updatePassword(userId: string, newPswrdHash: string) {
+    const passwordUpdated = await usersCollection.updateOne(
+      {_id: new ObjectId(userId)}, { $set: { "passwordHash": newPswrdHash } });
+    return passwordUpdated.modifiedCount === 1;
+  }
+
   static async createWithConfirmation(confirmationNewUserData: UserDB) {
     const newUserId = await usersCollection.insertOne(confirmationNewUserData);
     return newUserId.insertedId.toString();
@@ -39,16 +45,29 @@ export class UserRepository {
     return user.modifiedCount === 1;
   }
 
-  static async addTokenToBlackListById(
-    refreshToken: string,
-    userId: string
+
+  static async updatePswdRecoveryConfirmationCode(
+    userId: ObjectId,
+    newRecoveryCode: string
   ): Promise<boolean> {
     const user = await usersCollection.updateOne(
       { _id: new ObjectId(userId) },
-      {$push: {blackListToken: refreshToken}}
-      )
+      { $set: { passwordRecoveryConfirmationCode: newRecoveryCode } }
+    );
     return user.modifiedCount === 1;
   }
+  
+
+  // static async addTokenToBlackListById(
+  //   refreshToken: string,
+  //   userId: string
+  // ): Promise<boolean> {
+  //   const user = await usersCollection.updateOne(
+  //     { _id: new ObjectId(userId) },
+  //     {$push: {blackListToken: refreshToken}}
+  //     )
+  //   return user.modifiedCount === 1;
+  // }
 
 
 

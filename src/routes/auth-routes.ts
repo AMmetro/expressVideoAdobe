@@ -182,7 +182,24 @@ authRoute.post(
   inputValidationMiddleware,
   async (req: RequestWithBody<{ email: string }>, res: Response) => {
     const { email } = req.body;
-    const result = await AuthServices.emailRecovery(email);
+    const result = await AuthServices.sendCodePasswordRecovery(email);
+    if (result.status === ResultCode.Success) {
+      res.sendStatus(204);
+    } else {
+      sendCustomError(res, result);
+    }
+  }
+);
+
+
+authRoute.post(
+  "/new-password",
+  rateLimitMiddleware,
+  emailValidator,
+  inputValidationMiddleware,
+  async (req: RequestWithBody<{ newPassword: string, recoveryCode: string }>, res: Response) => {
+    const { newPassword, recoveryCode } = req.body;
+    const result = await AuthServices.newPassword(newPassword, recoveryCode);
     if (result.status === ResultCode.Success) {
       res.sendStatus(204);
     } else {

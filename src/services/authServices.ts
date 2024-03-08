@@ -17,7 +17,7 @@ type OutputType = {
   login: string;
   email: string;
   createdAt: string;
-  blackListToken: string[];
+  passwordRecoveryConfirmationCode: string;
   emailConfirmation: any;
   deviceId: string;
   iat: number;
@@ -124,7 +124,7 @@ export class AuthServices {
       email: email,
       passwordHash: passwordHash,
       passwordSalt: passwordSalt,
-      blackListToken: [],
+      passwordRecoveryConfirmationCode: "some dificalt not existing code",
       createdAt: new Date().toISOString(),
       emailConfirmation: {
         confirmationCode: randomUUID(),
@@ -142,7 +142,7 @@ export class AuthServices {
     const emailInfo = {
       email: newUser.email,
       subject: "confirm Email",
-      confirmationCode: newUser.emailConfirmation.confirmationCode,
+      code: newUser.emailConfirmation.confirmationCode,
     };
     await emailAdaper.sendEmailRecoveryMessage(emailInfo);
     return {
@@ -241,7 +241,7 @@ export class AuthServices {
     }
     const emailInfo = {
       email: userForEmailResending.email,
-      confirmationCode: newConfirmationCode,
+      code: newConfirmationCode,
       subject: "resending confirmation code",
     };
     emailAdaper.sendEmailRecoveryMessage(emailInfo);
@@ -250,31 +250,45 @@ export class AuthServices {
       data: true,
     };
   }
+  
+
+  static async newPassword(newPassword: string, recoveryCode: string ): Promise<any> {
+    const userForNewPassword =
+      await UserQueryRepository.getOneByPasswordRecoveryCode(recoveryCode);
+    if (!userForNewPassword) {
+      return {
+        status: ResultCode.ClientError,
+        errorMessage: JSON.stringify({
+          errorsMessages: [
+            { message: `Not found user with ${recoveryCode}`, field: "email" },
+          ],
+        }),
+      };
+    }
+    const passwordSalt = await hashServise.generateSalt();
+    const passwordHash = await hashServise.generateHash(newPassword, passwordSalt);
+    const isPasswordUpdated = await UserRepository.updatePassword(userForNewPassword.id, passwordHash);
+    if (!isPasswordUpdated) {
+      return {
+        status: ResultCode.Conflict,
+        errorMessage: "Some error saving new password",
+        }
+      };
+    return {
+      status: ResultCode.Success,
+      data: true,
+    };
+  }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  static async emailRecovery(email: string): Promise<any> {
+  static async sendCodePasswordRecovery(email: string): Promise<any> {
     const userSearchData = { email: email, login: " " }; 
-    const userForEmailResending =
+    const userForPasswordRecovery =
       await UserQueryRepository.getOneByLoginOrEmail(userSearchData);
 
 
 
-    if (!userForEmailResending) {
+    if (!userForPasswordRecovery) {
       return {
         status: ResultCode.Success,
         // ----------------------check error message !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -287,33 +301,26 @@ export class AuthServices {
     }
 
 
-    const emailIsConfirmed =
-      userForEmailResending.emailConfirmation?.isConfirmed;
-    if (!emailIsConfirmed) {
+    const recoveryCode = randomUUID();
+
+    const settedRecoveryCode = await UserRepository.updatePswdRecoveryConfirmationCode(
+      userForPasswordRecovery._id,
+      recoveryCode
+    );
+    if (!settedRecoveryCode) {
       return {
-        status: ResultCode.Success,
-        errorMessage: "Email is not confirmed yet",
+        status: ResultCode.ServerError,
+        errorMessage: "Some error of save password recovery code",
       };
     }
 
-    
-    const newConfirmationCode = randomUUID();
-    const codeUpd = await UserRepository.updateConfirmationCode(
-      userForEmailResending._id,
-      newConfirmationCode
-    );
-    if (!codeUpd) {
-      return {
-        status: ResultCode.ServerError,
-        errorMessage: "Som eerror",
-      };
-    }
     const emailInfo = {
-      email: userForEmailResending.email,
-      confirmationCode: newConfirmationCode,
-      subject: "resending confirmation code",
+      email: userForPasswordRecovery.email,
+      code: recoveryCode,
+      subject: "password recovery code",
     };
-    emailAdaper.sendEmailRecoveryMessage(emailInfo);
+
+    emailAdaper.sendRecoveryCode(emailInfo);
     return {
       status: ResultCode.Success,
       data: true,
@@ -361,27 +368,6 @@ export class AuthServices {
       };
     }
 
-    // ----------логика проверки что токен в блэк листе ненужна ???????---------------------------
-    // const isTokenInBlackListAlready = user?.blackListToken?.some(
-    //   (token) => token === token
-    // );
-    // if (isTokenInBlackListAlready) {
-    //   return {
-    //     status: ResultCode.Unauthorised,
-    //     errorMessage: `Token ${token} in black list already`,
-    //   };
-    // }
-    // const tokenAddedToBlackList = await UserRepository.addTokenToBlackListById(
-    //   token,
-    //   userId
-    // );
-    // if (!tokenAddedToBlackList) {
-    //   return {
-    //     status: ResultCode.ServerError,
-    //     errorMessage: `Can't write token to user black list in database`,
-    //   };
-    // }
-    // ============================================================================
     const newAccessToken = await jwtServise.createAccessTokenJWT(
       user,
       claimantInfo.deviceId

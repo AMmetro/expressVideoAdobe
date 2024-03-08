@@ -5,7 +5,7 @@ export type UserDB = {
   login: string;
   passwordHash: string;
   passwordSalt: string;
-  blackListToken: string[];
+  passwordRecoveryConfirmationCode: string;
   email: string;
   createdAt: string;
   emailConfirmation: emailConfirmationType;
