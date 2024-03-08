@@ -79,7 +79,6 @@ export class AuthServices {
           errorMessage: "Not found deviceId" + jwtUserData.deviceId,
         };
       }
-
       const device = await DevicesQueryRepository.getByDeviceId(jwtUserData.deviceId);
       if (!device) {
         return {
@@ -87,21 +86,12 @@ export class AuthServices {
           errorMessage: "Token device IAT is not exist",
         };
       }
-      // console.log("device.tokenCreatedAt")
-      // console.log(device.tokenCreatedAt)
-      // console.log("jwtUserData.iat")
-      // console.log(new Date(jwtUserData.iat * 1000))
-      // console.log("========================")
-      // console.log(`${device.tokenCreatedAt} ??? ${new Date(jwtUserData.iat * 1000)}`)
       if (device.tokenCreatedAt.toISOString() !== new Date(jwtUserData.iat * 1000).toISOString()) {
-        // console.log("!!!!!!!!!!!!!!!!!!")
         return {
           status: ResultCode.Unauthorised,
           errorMessage: "Token device IAT is belong to another device",
         };
       }
-// ----------------------------------------------------------
-
       return {
         status: ResultCode.Success,
         data: { ...user, deviceId: jwtUserData.deviceId, iat: jwtUserData.iat },
@@ -210,14 +200,6 @@ export class AuthServices {
         errorMessage: `Confirmation code ${code}`,
       };
     }
-    // const createdDeviceId = await DevicesServices.createdDevice(userForConfirmation.id);
-    // if (!createdDeviceId) {
-    //   return {
-    //     status: ResultCode.Conflict,
-    //     errorMessage:
-    //       `Can't create device for user id: ${userForConfirmation.id}`,
-    //   };
-    // }
     return {
       status: ResultCode.Success,
       data: isConfirmed,
@@ -268,6 +250,93 @@ export class AuthServices {
       data: true,
     };
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  static async emailRecovery(email: string): Promise<any> {
+    const userSearchData = { email: email, login: " " }; 
+    const userForEmailResending =
+      await UserQueryRepository.getOneByLoginOrEmail(userSearchData);
+
+
+
+    if (!userForEmailResending) {
+      return {
+        status: ResultCode.Success,
+        // ----------------------check error message !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        errorMessage: JSON.stringify({
+          errorsMessages: [
+            { message: `Not found user with ${email}`, field: "email" },
+          ],
+        }),
+      };
+    }
+
+
+    const emailIsConfirmed =
+      userForEmailResending.emailConfirmation?.isConfirmed;
+    if (!emailIsConfirmed) {
+      return {
+        status: ResultCode.Success,
+        errorMessage: "Email is not confirmed yet",
+      };
+    }
+
+    
+    const newConfirmationCode = randomUUID();
+    const codeUpd = await UserRepository.updateConfirmationCode(
+      userForEmailResending._id,
+      newConfirmationCode
+    );
+    if (!codeUpd) {
+      return {
+        status: ResultCode.ServerError,
+        errorMessage: "Som eerror",
+      };
+    }
+    const emailInfo = {
+      email: userForEmailResending.email,
+      confirmationCode: newConfirmationCode,
+      subject: "resending confirmation code",
+    };
+    emailAdaper.sendEmailRecoveryMessage(emailInfo);
+    return {
+      status: ResultCode.Success,
+      data: true,
+    };
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   static async refreshToken(token: string): Promise<any> {
     const claimantInfo = await jwtServise.getUserFromRefreshToken(token);

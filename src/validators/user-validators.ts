@@ -77,4 +77,3 @@ export const userValidation = () => [
   inputValidationMiddleware,
 ];
 
-// export const emailOrLoginExistValidation=()=>[emailExistValidator, loginExistValidator, inputValidationMiddleware]
