@@ -1,6 +1,5 @@
-// import mongoose from 'mongoose'
 import { MongoClient } from "mongodb";
-const mongoose = require("mongoose");
+import  mongoose from "mongoose";
 import dotenv from 'dotenv'
 import { BlogDB, BlogSchema } from '../models/blog/db/blog-db';
 import { PostDB } from '../models/post/db/post-db';  
@@ -21,14 +20,23 @@ if (!mongoURI){
 export const client = new MongoClient(mongoURI);
 const database = client.db("BlogDB")
 
+
+
+
+const kittySchema = new mongoose.Schema({
+    name: String
+})
+export const  Kitten = mongoose.model('Kitten', kittySchema)
+
+
+
+
 export const usersCollection = database.collection<UserDB>("users")
-// export const UsersModel = database.collection<UserDB>("users") 
+export const UsersModel = database.collection<UserDB>("users") 
 // export const UsersModel = mongoose.model<any>('blogs', UserSchema)
-// export const securityDevicesCollection = database.collection<SecurityDevicesDB>("devices")
-export const SecurityDevicesModel = database.collection<SecurityDevicesDB>("devices") // fake
-// export const SecurityDevicesModel = mongoose.model<any>('devices', DevicesSchema)
-// export const blogsCollection = database.collection<BlogDB>("blogs")
-// export const BlogModel = database.collection<BlogDB>("blogs")// fake
+export const securityDevicesCollection = database.collection<SecurityDevicesDB>("devices")
+export const SecurityDevicesModel = mongoose.model('devices', DevicesSchema)
+export const blogsCollection = database.collection<BlogDB>("blogs")
 export const BlogModel = mongoose.model('blogs', BlogSchema)
 export const postsCollection = database.collection<PostDB>("posts")
 export const commentsCollection = database.collection<CommentDB>("comments")
@@ -37,7 +45,7 @@ export const rateLimitCollection = database.collection<RateLimitDB>("ratelimit")
 export const runDB = async ()=>{
     try {
         // await client.connect()
-        await mongoose.connect(`${mongoURI}/BlogDB`)
+        await mongoose.connect(mongoURI + "/BlogDB")
         console.log("DB connected...") 
     } 
     catch(e) {

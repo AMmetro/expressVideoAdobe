@@ -15,7 +15,8 @@ export class BlogRepository {
   // * const blog2Method = new BlogModel (newBlog) 
   // * blog2Method.save() 
   // **
-    return blogId.insertedId.toString();
+    // return blogId.insertedId.toString();
+    return "blogId.insertedId.toString()";
     } catch(e){
       console.log(e) 
       return null

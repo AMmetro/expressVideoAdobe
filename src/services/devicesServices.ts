@@ -62,12 +62,12 @@ export class DevicesServices {
       lastActiveDate: new Date(decodedRefreshToken!.exp * 1000),
       tokenCreatedAt: new Date(decodedRefreshToken!.iat * 1000),
     };
-    const createdDeviceId = await SecurityDevicesModel.insertOne(
-      newDevices
-    );
-    // const createdDeviceId = await SecurityDevicesModel.create(
+    // const createdDeviceId = await SecurityDevicesModel.insertOne(
     //   newDevices
     // );
+    const createdDeviceId = await SecurityDevicesModel.create(
+      newDevices
+    );
     if (!createdDeviceId) {
       return null;
     }

@@ -65,7 +65,9 @@ export class BlogQueryRepository {
   static async create(newBlog: InputBlogType): Promise<string> {
     // const blogId = await BlogModel.create(newBlog); 
     const blogId = await BlogModel.create(newBlog); 
-    return blogId.insertedId.toString();
+
+    return "blogId.insertedId.toString()";
+    // return blogId.insertedId.toString();
     
   }
 
