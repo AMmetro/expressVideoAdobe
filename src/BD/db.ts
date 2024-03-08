@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+// import mongoose from 'mongoose'
 import { MongoClient } from "mongodb";
 import dotenv from 'dotenv'
 import { BlogDB, BlogSchema } from '../models/blog/db/blog-db';
@@ -23,9 +23,9 @@ const database = client.db("BlogDB")
 export const usersCollection = database.collection<UserDB>("users")
 // export const UsersModel = mongoose.model<any>('blogs', UserSchema)
 // export const securityDevicesCollection = database.collection<SecurityDevicesDB>("devices")
-export const SecurityDevicesModel = mongoose.model<any>('devices', DevicesSchema)
+// export const SecurityDevicesModel = mongoose.model<any>('devices', DevicesSchema)
 // export const blogsCollection = database.collection<BlogDB>("blogs")
-export const BlogModel = mongoose.model<any>('blogs', BlogSchema)
+// export const BlogModel = mongoose.model<any>('blogs', BlogSchema)
 export const postsCollection = database.collection<PostDB>("posts")
 export const commentsCollection = database.collection<CommentDB>("comments")
 export const rateLimitCollection = database.collection<RateLimitDB>("ratelimit")
