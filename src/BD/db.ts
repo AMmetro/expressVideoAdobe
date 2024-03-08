@@ -36,7 +36,7 @@ export const rateLimitCollection = database.collection<RateLimitDB>("ratelimit")
 export const runDB = async ()=>{
     try {
         // await client.connect()
-        await mongoose.connect(mongoURI)
+        await mongoose.connect(`${mongoURI}/BlogDB`)
         console.log("DB connected...") 
     } 
     catch(e) {
