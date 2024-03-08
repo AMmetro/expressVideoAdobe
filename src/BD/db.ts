@@ -1,5 +1,6 @@
-import mongoose from 'mongoose'
+// import mongoose from 'mongoose'
 import { MongoClient } from "mongodb";
+const mongoose = require("mongoose");
 import dotenv from 'dotenv'
 import { BlogDB, BlogSchema } from '../models/blog/db/blog-db';
 import { PostDB } from '../models/post/db/post-db';  
@@ -28,7 +29,7 @@ export const SecurityDevicesModel = database.collection<SecurityDevicesDB>("devi
 // export const SecurityDevicesModel = mongoose.model<any>('devices', DevicesSchema)
 // export const blogsCollection = database.collection<BlogDB>("blogs")
 // export const BlogModel = database.collection<BlogDB>("blogs")// fake
-export const BlogModel = mongoose.model<any>('blogs', BlogSchema)
+export const BlogModel = mongoose.model('blogs', BlogSchema)
 export const postsCollection = database.collection<PostDB>("posts")
 export const commentsCollection = database.collection<CommentDB>("comments")
 export const rateLimitCollection = database.collection<RateLimitDB>("ratelimit")
