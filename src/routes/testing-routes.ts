@@ -17,7 +17,7 @@ testingRoute.delete(
   "/all-data",
   async (req: Request, res: ResponseType<{}>) => {
     // await BlogModel.deleteMany({});
-    await KittenModel.deleteMany({});
+    // await KittenModel.deleteMany({});
     await postsCollection.deleteMany({});
     await usersCollection.deleteMany({});
     // await SecurityDevicesModel.deleteMany({});
