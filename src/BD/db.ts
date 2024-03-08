@@ -18,8 +18,8 @@ if (!mongoURI){
     throw new Error ("No URL for MongoDB conection")
 }
 export const client = new MongoClient(mongoURI);
-
 const database = client.db("BlogDB")
+
 export const usersCollection = database.collection<UserDB>("users")
 // export const UsersModel = mongoose.model<any>('blogs', UserSchema)
 // export const securityDevicesCollection = database.collection<SecurityDevicesDB>("devices")
@@ -32,13 +32,13 @@ export const rateLimitCollection = database.collection<RateLimitDB>("ratelimit")
 
 export const runDB = async ()=>{
     try {
-        await client.connect()
+        // await client.connect()
         await mongoose.connect(mongoURI + "/" + "BlogDB")
         console.log("DB connected...") 
     } 
     catch(e) {
         console.log(e)
-        await client.close()  
+        // await client.close()  
         await mongoose.disconnect()  
     }
 } 
