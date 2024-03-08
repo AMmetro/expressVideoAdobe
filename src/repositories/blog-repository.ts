@@ -10,7 +10,7 @@ export class BlogRepository {
   static async create(newBlog: InputBlogType): Promise<string | null> {
       try{
     // const blogId = await BlogModel.create(newBlog); 
-    const blogId = await BlogModel.insertOne(newBlog); 
+    const blogId = await BlogModel.create(newBlog); 
   // **
   // * const blog2Method = new BlogModel (newBlog) 
   // * blog2Method.save() 
