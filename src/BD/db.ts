@@ -21,10 +21,13 @@ export const client = new MongoClient(mongoURI);
 const database = client.db("BlogDB")
 
 export const usersCollection = database.collection<UserDB>("users")
+// export const UsersModel = database.collection<UserDB>("users") 
 // export const UsersModel = mongoose.model<any>('blogs', UserSchema)
 // export const securityDevicesCollection = database.collection<SecurityDevicesDB>("devices")
+export const SecurityDevicesModel = database.collection<SecurityDevicesDB>("devices") // fake
 // export const SecurityDevicesModel = mongoose.model<any>('devices', DevicesSchema)
 // export const blogsCollection = database.collection<BlogDB>("blogs")
+export const BlogModel = database.collection<BlogDB>("blogs")// fake
 // export const BlogModel = mongoose.model<any>('blogs', BlogSchema)
 export const postsCollection = database.collection<PostDB>("posts")
 export const commentsCollection = database.collection<CommentDB>("comments")

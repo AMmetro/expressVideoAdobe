@@ -37,7 +37,7 @@ export class BlogQueryRepository {
     // !!!!!!!!!!!!
     .skip((pageNumber-1) * pageSize)
     .limit(pageSize)
-    // .toArray();
+    .toArray();
 
     const totalCount = await BlogModel.countDocuments(filter)
     const pagesCount = Math.ceil(totalCount / pageSize);
@@ -63,7 +63,8 @@ export class BlogQueryRepository {
   }
   
   static async create(newBlog: InputBlogType): Promise<string> {
-    const blogId = await BlogModel.create(newBlog); 
+    // const blogId = await BlogModel.create(newBlog); 
+    const blogId = await BlogModel.insertOne(newBlog); 
     return blogId.insertedId.toString();
     
   }

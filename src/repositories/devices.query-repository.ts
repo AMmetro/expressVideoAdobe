@@ -8,7 +8,7 @@ export class DevicesQueryRepository {
   static async getByUserId(id: string): Promise<OutputDevicesType[] | null> {
     const devices: WithId<SecurityDevicesDB>[] = await SecurityDevicesModel
       .find({ userId: id })
-      // .toArray();
+      .toArray();
     if (!devices) {
       return null;
     }
