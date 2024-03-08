@@ -26,7 +26,7 @@ const database = client.db("BlogDB")
 const kittySchema = new mongoose.Schema({
     name: String
 })
-export const  Kitten = mongoose.model('Kitten', kittySchema)
+export const  KittenModel = mongoose.model('Kitten', kittySchema)
 
 
 
