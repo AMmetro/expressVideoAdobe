@@ -1,11 +1,11 @@
 import express, { Router, Request, Response } from "express";
 import {
-  RateLimitModel,
+  // RateLimitModel,
   // UserModel,
   blogsCollection,
   commentsCollection,
   postsCollection,
-  // rateLimitCollection,
+  rateLimitCollection,
   securityDevicesCollection,
   usersCollection,
 } from "../BD/db";
@@ -24,7 +24,7 @@ testingRoute.delete(
     await usersCollection.deleteMany({});
     await securityDevicesCollection.deleteMany({});
     await commentsCollection.deleteMany({});
-    // await rateLimitCollection.deleteMany({});
+    await rateLimitCollection.deleteMany({});
     //    await drop.darabase() - если есть права админа (в докере по умолчанию в атласе назначить)
     res.sendStatus(204);
   }
