@@ -1,6 +1,7 @@
 import express, { Router, Request, Response } from "express";
 import {
-  BlogModel,
+  RateLimitModel,
+  // UserModel,
   blogsCollection,
   commentsCollection,
   postsCollection,
@@ -16,8 +17,9 @@ export const testingRoute = Router({});
 testingRoute.delete(
   "/all-data",
   async (req: Request, res: ResponseType<{}>) => {
-    await BlogModel.deleteMany({});
-    // await blogsCollection.deleteMany({});
+    // await UserModel.deleteMany({});
+    await RateLimitModel.deleteMany({});
+    await blogsCollection.deleteMany({});
     await postsCollection.deleteMany({});
     await usersCollection.deleteMany({});
     await securityDevicesCollection.deleteMany({});

@@ -19,7 +19,7 @@ type emailConfirmationType = {
   isConfirmed: boolean;
 };
 
-// export const BlackListTokenSchema = new mongoose.Schema<blackListTokenType>()
+// export const BlackListTokenSchema = new mongoose.Schema<blackListTokenType>() // wrong!!
 
 export const EmailConfirmationsChema = new mongoose.Schema<emailConfirmationType>({
   confirmationCode: { type: String, require: true },

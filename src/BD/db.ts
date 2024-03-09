@@ -10,7 +10,7 @@ import { UserDB,
 import { CommentDB } from '../models/comments/db/comment-db';
 import { appConfig } from '../appConfig';
 import { SecurityDevicesDB } from '../models/devices/db/devices-db';
-import { RateLimitDB } from '../models/rateLimit/db/rateLimit-db';
+import { RateLimitDB, RateLimitSchema } from '../models/rateLimit/db/rateLimit-db';
 
 dotenv.config()
 const mongoURI = appConfig.mongoURI; 
@@ -32,7 +32,8 @@ export const rateLimitCollection = database.collection<RateLimitDB>("ratelimit")
 // const kittySchema = new mongoose.Schema({name: String})
 // export const  KittenModel = mongoose.model('Kitten', kittySchema)
 
-export const BlogModel = mongoose.model<WithId<UserDB>>('users', UserSchema)
+// export const UserModel = mongoose.model<WithId<UserDB>>('users', UserSchema)
+export const RateLimitModel = mongoose.model<WithId<RateLimitDB>>("ratelimit", RateLimitSchema)
 
 
 export const runDB = async ()=>{
@@ -41,7 +42,7 @@ export const runDB = async ()=>{
         await mongoose.connect("mongodb+srv://metroexpress:suradet842@cluster0.gkpqpve.mongodb.net"+"/BlogDB");
         console.log("DB connected...") 
         // await KittenModel.deleteMany({});
-        await BlogModel.deleteMany({});
+        // await BlogModel.deleteMany({});
     } 
     catch(e) {
         console.log(e)
