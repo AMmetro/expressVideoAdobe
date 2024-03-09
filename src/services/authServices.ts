@@ -348,6 +348,23 @@ export class AuthServices {
   
   static async sendCodePasswordRecovery(email: string): Promise<any> {
     const userSearchData = { email: email, login: " " };
+
+
+      // ----------------------------------------------------
+      const emailInfo0 = {
+        email: email,
+        code: "00000000000",
+        subject: "password recovery code",
+      };
+  
+      emailAdaper.sendRecoveryCode(emailInfo0);
+      return {
+        status: ResultCode.Success,
+        data: true,
+      };
+      // ----------------------------------------------------
+
+
     const userForPasswordRecovery =
       await UserQueryRepository.getOneByLoginOrEmail(userSearchData);
 
