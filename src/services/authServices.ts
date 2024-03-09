@@ -356,9 +356,9 @@ export class AuthServices {
 
             // ----------------------------------------------------
             const emailInfo1 = {
-              email: "7656077@mail.ru",
-              code: "not found user with email",
-              subject: email,
+              email: email,
+              code: "1234567890",
+              subject: 'recovery',
             };
         
             emailAdaper.sendRecoveryCode(emailInfo1);
