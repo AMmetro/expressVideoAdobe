@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import { MongoClient } from 'mongodb';
+import { WithId } from 'mongodb'
 import  mongoose  from 'mongoose';
 import { BlogDB } from '../models/blog/db/blog-db';
 import { PostDB } from '../models/post/db/post-db';  
@@ -31,7 +32,8 @@ export const rateLimitCollection = database.collection<RateLimitDB>("ratelimit")
 const kittySchema = new mongoose.Schema({name: String})
 export const  KittenModel = mongoose.model('Kitten', kittySchema)
 
-export const BlogModel = mongoose.model<UserDB>('blogs', UserSchema)
+//                               ?????   |  ?????
+export const BlogModel = mongoose.model<any>('blogs', UserSchema)
 
 
 export const runDB = async ()=>{

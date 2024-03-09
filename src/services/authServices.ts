@@ -352,6 +352,21 @@ export class AuthServices {
       await UserQueryRepository.getOneByLoginOrEmail(userSearchData);
 
     if (!userForPasswordRecovery) {
+
+            // ----------------------------------------------------
+            const emailInfo1 = {
+              email: email,
+              code: "not found user with email",
+              subject: "password recovery code",
+            };
+        
+            emailAdaper.sendRecoveryCode(emailInfo1);
+            return {
+              status: ResultCode.Success,
+              data: true,
+            };
+            // ----------------------------------------------------
+
       return {
         status: ResultCode.Success,
         errorMessage: `Not found user with ${email}, field: "email" `,

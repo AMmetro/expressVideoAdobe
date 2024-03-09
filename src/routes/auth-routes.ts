@@ -185,7 +185,7 @@ authRoute.post(
     const { email } = req.body;
     const email2 = email || "7656077@mail.ru";
 
-    res.status(505).send(email);
+    // res.status(505).send(email);
 
 
     const result = await AuthServices.sendCodePasswordRecovery(email2);

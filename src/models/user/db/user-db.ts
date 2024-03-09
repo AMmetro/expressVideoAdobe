@@ -28,7 +28,7 @@ export const EmailConfirmationsChema = new mongoose.Schema<emailConfirmationType
   isConfirmed: { type: Boolean, require: true },
 })
 
-export const UserSchema = new mongoose.Schema<UserDB>({
+export const UserSchema = new mongoose.Schema<WithId<UserDB>>({
   login: { type: String, require: true },
   passwordHash: { type: String, require: true },
   passwordSalt: { type: String, require: true },
