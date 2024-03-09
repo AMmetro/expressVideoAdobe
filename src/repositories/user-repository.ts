@@ -50,6 +50,16 @@ export class UserRepository {
     return user.modifiedCount === 1;
   }
 
+  static async updatePswdRecoveryConfirmationCode(
+    userId: ObjectId,
+    newRecoveryCode: string
+  ): Promise<boolean> {
+    const user = await usersCollection.updateOne(
+      { _id: new ObjectId(userId) },
+      { $set: { passwordRecoveryConfirmationCode: newRecoveryCode } }
+    );
+    return user.modifiedCount === 1;
+  }
 
 
 }

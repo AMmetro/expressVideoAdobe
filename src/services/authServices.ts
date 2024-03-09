@@ -87,20 +87,12 @@ export class AuthServices {
           errorMessage: "Token device IAT is not exist",
         };
       }
-      // console.log("device.tokenCreatedAt")
-      // console.log(device.tokenCreatedAt)
-      // console.log("jwtUserData.iat")
-      // console.log(new Date(jwtUserData.iat * 1000))
-      // console.log("========================")
-      // console.log(`${device.tokenCreatedAt} ??? ${new Date(jwtUserData.iat * 1000)}`)
       if (device.tokenCreatedAt.toISOString() !== new Date(jwtUserData.iat * 1000).toISOString()) {
-        // console.log("!!!!!!!!!!!!!!!!!!")
         return {
           status: ResultCode.Unauthorised,
           errorMessage: "Token device IAT is belong to another device",
         };
       }
-// ----------------------------------------------------------
 
       return {
         status: ResultCode.Success,
@@ -152,7 +144,7 @@ export class AuthServices {
     const emailInfo = {
       email: newUser.email,
       subject: "confirm Email",
-      confirmationCode: newUser.emailConfirmation.confirmationCode,
+      code: newUser.emailConfirmation.confirmationCode,
     };
     await emailAdaper.sendEmailRecoveryMessage(emailInfo);
     return {
@@ -210,14 +202,7 @@ export class AuthServices {
         errorMessage: `Confirmation code ${code}`,
       };
     }
-    // const createdDeviceId = await DevicesServices.createdDevice(userForConfirmation.id);
-    // if (!createdDeviceId) {
-    //   return {
-    //     status: ResultCode.Conflict,
-    //     errorMessage:
-    //       `Can't create device for user id: ${userForConfirmation.id}`,
-    //   };
-    // }
+
     return {
       status: ResultCode.Success,
       data: isConfirmed,
@@ -259,7 +244,7 @@ export class AuthServices {
     }
     const emailInfo = {
       email: userForEmailResending.email,
-      confirmationCode: newConfirmationCode,
+      code: newConfirmationCode,
       subject: "resending confirmation code",
     };
     emailAdaper.sendEmailRecoveryMessage(emailInfo);
@@ -292,27 +277,6 @@ export class AuthServices {
       };
     }
 
-    // ----------логика проверки что токен в блэк листе ненужна ???????---------------------------
-    // const isTokenInBlackListAlready = user?.blackListToken?.some(
-    //   (token) => token === token
-    // );
-    // if (isTokenInBlackListAlready) {
-    //   return {
-    //     status: ResultCode.Unauthorised,
-    //     errorMessage: `Token ${token} in black list already`,
-    //   };
-    // }
-    // const tokenAddedToBlackList = await UserRepository.addTokenToBlackListById(
-    //   token,
-    //   userId
-    // );
-    // if (!tokenAddedToBlackList) {
-    //   return {
-    //     status: ResultCode.ServerError,
-    //     errorMessage: `Can't write token to user black list in database`,
-    //   };
-    // }
-    // ============================================================================
     const newAccessToken = await jwtServise.createAccessTokenJWT(
       user,
       claimantInfo.deviceId
@@ -375,4 +339,53 @@ export class AuthServices {
       },
     };
   }
+
+
+  static async sendCodePasswordRecovery(email: string): Promise<any> {
+    const userSearchData = { email: email, login: " " }; 
+    const userForPasswordRecovery =
+      await UserQueryRepository.getOneByLoginOrEmail(userSearchData);
+
+    if (!userForPasswordRecovery) {
+      return {
+        status: ResultCode.Success,
+        // ----------------------check error message !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        errorMessage: JSON.stringify({
+          errorsMessages: [
+            { message: `Not found user with ${email}, field: "email" ` },
+          ],
+        }),
+      };
+    }
+
+
+    const recoveryCode = randomUUID();
+
+    const settedRecoveryCode = await UserRepository.updatePswdRecoveryConfirmationCode(
+      userForPasswordRecovery._id,
+      recoveryCode
+    );
+    if (!settedRecoveryCode) {
+      return {
+        status: ResultCode.ServerError,
+        errorMessage: "Some error of save password recovery code",
+      };
+    }
+
+    const emailInfo = {
+      email: userForPasswordRecovery.email,
+      code: recoveryCode,
+      subject: "password recovery code",
+    };
+
+    emailAdaper.sendRecoveryCode(emailInfo);
+    return {
+      status: ResultCode.Success,
+      data: true,
+    };
+  }
+
+
+
+
 }
