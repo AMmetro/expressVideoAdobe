@@ -354,22 +354,22 @@ export class AuthServices {
 
     if (!userForPasswordRecovery) {
                                         // ----------------------------------------------------
-                                        const emailInfo1 = {
-                                          email: email,
-                                          code: "1234567890",
-                                          subject: 'fake email recovery',
-                                        };
+                                        // const emailInfo1 = {
+                                        //   email: email,
+                                        //   code: "1234567890",
+                                        //   subject: 'fake email recovery',
+                                        // };
                                     
-                                        emailAdaper.sendRecoveryCode(emailInfo1);
-                                        return {
-                                          status: ResultCode.Success,
-                                          data: true,
-                                        };
+                                        // await emailAdaper.sendRecoveryCode(emailInfo1);
+                                        // return {
+                                        //   status: ResultCode.Success,
+                                        //   data: true,
+                                        // };
                                         // ----------------------------------------------------
-      // return {
-      //   status: ResultCode.Success,
-      //   errorMessage: `Not found user with ${email}, field: "email" `,
-      // };
+      return {
+        status: ResultCode.Success,
+        errorMessage: `Not found user with ${email}, field: "email" `,
+      };
     }
 
 

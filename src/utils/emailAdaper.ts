@@ -50,6 +50,7 @@ export const emailAdaper = {
          html: mailLayout,
        });
        console.log("Message sent: %s", info);
+       return info
      } catch (e) {
        console.log(e);
      }
