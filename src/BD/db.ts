@@ -1,20 +1,7 @@
-<<<<<<< HEAD
 import dotenv from 'dotenv';
 import { MongoClient } from "mongodb";
 import { BlogDB } from '../models/blog/db/blog-db';
 import { PostDB } from '../models/post/db/post-db'; 
-=======
-import { MongoClient } from "mongodb";
-import  mongoose from "mongoose";
-import dotenv from 'dotenv'
-import { BlogDB, BlogSchema } from '../models/blog/db/blog-db';
-import { PostDB } from '../models/post/db/post-db';  
-import { UserDB, UserSchema } from '../models/user/db/user-db';
-import { CommentDB } from '../models/comments/db/comment-db';
-import { appConfig } from '../appConfig';
-import { DevicesSchema, SecurityDevicesDB } from '../models/devices/db/devices-db';
-import { RateLimitDB } from '../models/rateLimit/db/rateLimit-db';
->>>>>>> f57c33f99c6e3925419a2f699e9e66a824a13df1
 
 dotenv.config()
 // const mongoURI = process.env.MONGO_URL || "mongodb://0.0.0.0:27017"; 
@@ -24,48 +11,19 @@ if (!mongoURI){
     throw new Error ("No URL for MongoDB conection")
 }
 export const client = new MongoClient(mongoURI);
+
 const database = client.db("BlogDB")
-<<<<<<< HEAD
 export const blogsCollection = database.collection<BlogDB>("blogs")
-=======
-
-
-
-
-const kittySchema = new mongoose.Schema({
-    name: String
-})
-export const  KittenModel = mongoose.model('Kitten', kittySchema)
-
-
-
-
-export const usersCollection = database.collection<UserDB>("users")
-export const UsersModel = database.collection<UserDB>("users") 
-// export const UsersModel = mongoose.model<any>('blogs', UserSchema)
-export const securityDevicesCollection = database.collection<SecurityDevicesDB>("devices")
-export const SecurityDevicesModel = mongoose.model('devices', DevicesSchema)
-export const blogsCollection = database.collection<BlogDB>("blogs")
-export const BlogModel = mongoose.model('blogs', BlogSchema)
->>>>>>> f57c33f99c6e3925419a2f699e9e66a824a13df1
 export const postsCollection = database.collection<PostDB>("posts")
 
 export const runDB = async ()=>{
     try {
         await client.connect()
-<<<<<<< HEAD
-=======
-        // await mongoose.connect(mongoURI + "/BlogDB")
->>>>>>> f57c33f99c6e3925419a2f699e9e66a824a13df1
         console.log("DB connected...") 
     } 
     catch(e) {
         console.log(e)
         await client.close()  
-<<<<<<< HEAD
-=======
-        // await mongoose.disconnect()  
->>>>>>> f57c33f99c6e3925419a2f699e9e66a824a13df1
     }
 } 
 
