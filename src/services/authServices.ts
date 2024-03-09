@@ -408,7 +408,7 @@ export class AuthServices {
     console.log("passwordHash")
     console.log(passwordHash)
 
-    const isPasswordUpdated = await UserRepository.updatePassword(userForNewPassword.id, passwordHash);
+    const isPasswordUpdated = await UserRepository.updatePassword(userForNewPassword.email, passwordHash);
     if (!isPasswordUpdated) {
       return {
         status: ResultCode.Conflict,

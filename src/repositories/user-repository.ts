@@ -9,9 +9,9 @@ export class UserRepository {
   }
 
 
-  static async updatePassword(userId: string, newPswrdHash: string) {
+  static async updatePassword(userEmail: string, newPswrdHash: string) {
     const passwordUpdated = await usersCollection.updateOne(
-      {_id: new ObjectId(userId)}, { $set: { "passwordHash": newPswrdHash } });
+      {email: userEmail}, { $set: { "passwordHash": newPswrdHash } });
     return passwordUpdated.modifiedCount === 1;
   }
 
