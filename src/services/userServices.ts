@@ -70,10 +70,20 @@ export class UserServices {
       return null;
     }
 
-    const userLogInPasswordHash = await hashServise.generateHash(
+      const userLogInPasswordHash = await hashServise.generateHash(
       authUserData.password,
       user.passwordSalt
     );
+
+    // -----------------------------------------------
+    console.log("user")
+    console.log(user)
+    console.log("authUserData")
+    console.log(authUserData)
+    console.log("userLogInPasswordHash")
+    console.log(userLogInPasswordHash)
+    // -----------------------------------------------
+
     if (user.passwordHash !== userLogInPasswordHash || !user) {
       return null;
     }

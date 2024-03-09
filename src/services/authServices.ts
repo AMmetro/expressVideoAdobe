@@ -391,19 +391,23 @@ export class AuthServices {
     const userForNewPassword =
       await UserQueryRepository.getOneByPasswordRecoveryCode(recoveryCode);
     if (!userForNewPassword) {
-
-      console.log("---------recoveryCode--------")
-      console.log(recoveryCode)
-      console.log("---------userForNewPassword--------")
-      console.log(userForNewPassword)
-
       return {
         status: ResultCode.ClientError,
         errorMessage: "Not found user with recoveryCode",
       };
     }
-    const passwordSalt = await hashServise.generateSalt();
+
+    console.log("newPassword for recovery")
+    console.log(newPassword)
+    console.log("userForNewPassword")
+    console.log(userForNewPassword)
+
+    const passwordSalt = userForNewPassword.passwordSalt;
     const passwordHash = await hashServise.generateHash(newPassword, passwordSalt);
+
+    console.log("passwordHash")
+    console.log(passwordHash)
+
     const isPasswordUpdated = await UserRepository.updatePassword(userForNewPassword.id, passwordHash);
     if (!isPasswordUpdated) {
       return {

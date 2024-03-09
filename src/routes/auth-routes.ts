@@ -205,7 +205,7 @@ authRoute.post(
   passwordValidator,
   rateLimitMiddleware,
   // emailExistValidator,
-  inputValidationMiddleware,
+  // inputValidationMiddleware,
   async (req: RequestWithBody<{ newPassword: string, recoveryCode: string }>, res: Response) => {
     const { newPassword, recoveryCode } = req.body;
     const newPasswordIncorrect = !newPassword ||newPassword.length < 6 || newPassword.length > 20 || typeof (newPassword) !== "string"
