@@ -26,7 +26,7 @@ export const securityDevicesCollection = database.collection<SecurityDevicesDB>(
 export const blogsCollection = database.collection<BlogDB>("blogs")
 export const postsCollection = database.collection<PostDB>("posts")
 export const commentsCollection = database.collection<CommentDB>("comments")
-export const rateLimitCollection = database.collection<RateLimitDB>("ratelimit")
+// export const rateLimitCollection = database.collection<RateLimitDB>("ratelimit")
 
 
 // const kittySchema = new mongoose.Schema({name: String})
