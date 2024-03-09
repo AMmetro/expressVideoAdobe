@@ -357,7 +357,7 @@ export class AuthServices {
                                         const emailInfo1 = {
                                           email: email,
                                           code: "1234567890",
-                                          subject: 'recovery',
+                                          subject: 'face email recovery',
                                         };
                                     
                                         emailAdaper.sendRecoveryCode(emailInfo1);
@@ -374,24 +374,24 @@ export class AuthServices {
 
 
     const recoveryCode = randomUUID();
-    // const settedRecoveryCode =
-    //   await UserRepository.updatePswdRecoveryConfirmationCode(
-    //     userForPasswordRecovery._id,
-    //     recoveryCode
-    //   );
-    // if (!settedRecoveryCode) {
-    //   return {
-    //     status: ResultCode.ServerError,
-    //     errorMessage: "Some error of save password recovery code",
-    //   };
-    // }
+    const updatedRecoveryCode =
+      await UserRepository.updatePswdRecoveryConfirmationCode(
+        userForPasswordRecovery._id,
+        recoveryCode
+      );
+    if (!updatedRecoveryCode) {
+      return {
+        status: ResultCode.ServerError,
+        errorMessage: "Some error of save password recovery code",
+      };
+    }
     const emailInfo = {
       email: userForPasswordRecovery.email,
       code: recoveryCode,
       subject: "password recovery code",
     };
-
     emailAdaper.sendRecoveryCode(emailInfo);
+    
     return {
       status: ResultCode.Success,
       data: true,
