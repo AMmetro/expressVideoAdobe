@@ -1,21 +1,22 @@
 import dotenv from 'dotenv';
-import { MongoClient } from "mongodb";
+import { MongoClient } from 'mongodb';
+import  mongoose  from 'mongoose';
 import { BlogDB } from '../models/blog/db/blog-db';
 import { PostDB } from '../models/post/db/post-db';  
-import { UserDB } from '../models/user/db/user-db';
+import { UserDB, 
+    UserSchema
+ } from '../models/user/db/user-db';
 import { CommentDB } from '../models/comments/db/comment-db';
 import { appConfig } from '../appConfig';
 import { SecurityDevicesDB } from '../models/devices/db/devices-db';
 import { RateLimitDB } from '../models/rateLimit/db/rateLimit-db';
 
-// dotenv.config()
-// const mongoURI = process.env.MONGO_URL || "mongodb://0.0.0.0:27017"; 
-// const mongoURI = process.env.MONGO_URL; 
+dotenv.config()
 const mongoURI = appConfig.mongoURI; 
-
 if (!mongoURI){
     throw new Error ("No URL for MongoDB conection")
 }
+
 export const client = new MongoClient(mongoURI);
 
 const database = client.db("BlogDB")
@@ -25,6 +26,13 @@ export const blogsCollection = database.collection<BlogDB>("blogs")
 export const postsCollection = database.collection<PostDB>("posts")
 export const commentsCollection = database.collection<CommentDB>("comments")
 export const rateLimitCollection = database.collection<RateLimitDB>("ratelimit")
+
+
+const kittySchema = new mongoose.Schema({name: String})
+export const  KittenModel = mongoose.model('Kitten', kittySchema)
+
+export const BlogModel = mongoose.model<UserDB>('blogs', UserSchema)
+
 
 export const runDB = async ()=>{
     try {
