@@ -43,7 +43,7 @@ export const runDB = async ()=>{
         console.log("DB connected...") 
         // await KittenModel.deleteMany({});
         // await BlogModel.deleteMany({});
-        await RateLimitModel.deleteMany({});
+        // await RateLimitModel.deleteMany({});
     } 
     catch(e) {
         console.log(e)
