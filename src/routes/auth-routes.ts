@@ -185,6 +185,13 @@ authRoute.post(
     const { email } = req.body;
     const result = await AuthServices.sendCodePasswordRecovery(email);
     if (result.status === ResultCode.Success) {
+                                                          // // ----
+                                                          // console.log("==========result=========")
+                                                          // const xxx = {code:result.data}
+                                                          // console.log(xxx)
+                                                          // res.status(200).send(xxx);
+                                                          // return
+                                                          // // -----
       res.sendStatus(204);
     } else {
       sendCustomError(res, result);
@@ -195,13 +202,18 @@ authRoute.post(
 
 authRoute.post(
   "/new-password",
+  passwordValidator,
   rateLimitMiddleware,
-  emailExistValidator,
-  inputValidationMiddleware,
+  // emailExistValidator,
+  // inputValidationMiddleware,
   async (req: RequestWithBody<{ newPassword: string, recoveryCode: string }>, res: Response) => {
     const { newPassword, recoveryCode } = req.body;
-    // res.sendStatus(504);
-    // return
+    if (!newPassword || !recoveryCode ){
+      // проверка на код протух ???
+      // и новый пароль нормальный ???
+      res.sendStatus(400);
+      return
+    }
     const result = await AuthServices.newPassword(newPassword, recoveryCode);
     if (result.status === ResultCode.Success) {
       res.sendStatus(204);

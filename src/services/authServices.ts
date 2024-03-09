@@ -349,31 +349,14 @@ export class AuthServices {
   
   static async sendCodePasswordRecovery(email: string): Promise<any> {
     const userSearchData = { email: email, login: " " };
-
     const userForPasswordRecovery =
       await UserQueryRepository.getOneByLoginOrEmail(userSearchData);
-
     if (!userForPasswordRecovery) {
-                                        // ----------------------------------------------------
-                                        // const emailInfo1 = {
-                                        //   email: email,
-                                        //   code: "1234567890",
-                                        //   subject: 'fake email recovery',
-                                        // };
-                                    
-                                        // await emailAdaper.sendRecoveryCode(emailInfo1);
-                                        // return {
-                                        //   status: ResultCode.Success,
-                                        //   data: true,
-                                        // };
-                                        // ----------------------------------------------------
       return {
         status: ResultCode.Success,
         errorMessage: `Not found user with ${email}, field: "email" `,
       };
     }
-
-
     const recoveryCode = randomUUID();
     const updatedRecoveryCode =
       await UserRepository.updatePswdRecoveryConfirmationCode(
@@ -392,11 +375,15 @@ export class AuthServices {
       subject: "password recovery code",
     };
     emailAdaper.sendRecoveryCode(emailInfo);
-
     return {
       status: ResultCode.Success,
       data: true,
     };
+
+                                                                        // return {
+                                                                        //   status: ResultCode.Success,
+                                                                        //   data: recoveryCode,
+                                                                        // };
   }
 
 
@@ -404,6 +391,12 @@ export class AuthServices {
     const userForNewPassword =
       await UserQueryRepository.getOneByPasswordRecoveryCode(recoveryCode);
     if (!userForNewPassword) {
+
+      console.log("---------recoveryCode--------")
+      console.log(recoveryCode)
+      console.log("---------userForNewPassword--------")
+      console.log(userForNewPassword)
+
       return {
         status: ResultCode.ClientError,
         errorMessage: "Not found user with recoveryCode",

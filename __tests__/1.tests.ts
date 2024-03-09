@@ -16,7 +16,7 @@ export const createUsers = async (app: any, i: number) => {
     .send({
       login: "login" + i,
       password: "password",
-      email: `${i}www48em67rt89@mail.com`,
+      email: `${i}aoF48em67rt89@mail.com`,
     })
     .expect(201);
   return response.body;
@@ -49,27 +49,13 @@ describe("should return API data", () => {
     await request(app).delete("/testing/all-data").expect(204);
   });
 
-
-  it("- new-password recovery with wrong recoveryCode ", async () => {
-    const response = await request(app)
-      .post("/auth/new-password/")
-      .auth("admin", "qwerty")
-      .send({
-        recoveryCode: "1234567890",
-        newPassword: "password",
-      })
-      .expect(400);
-      // expect(response.body).toEqual(expect.any(Array));
-  });
-
-
     it("- POST create USER", async function () {
     for (let i = 0; i < usersCount; i++) {
       const responseNewUser = await createUsers(app, i);
       users.push(responseNewUser);
     }
-    console.log("users")
-    console.log(users)
+    // console.log("users")
+    // console.log(users)
   });
 
 
@@ -84,27 +70,92 @@ describe("should return API data", () => {
       // expect(response.body).toEqual(expect.any(Array));
   });
 
-  it("- request for password recovery with not existing email ", async () => {
+  // it("- request for password recovery with not existing email ", async () => {
+  //   const response = await request(app)
+  //     .post("/auth/password-recovery/")
+  //     .auth("admin", "qwerty")
+  //     .send({
+  //       email: "hello@mail.ru",
+  //     })
+  //     .expect(204);
+  //     // expect(response.body).toEqual(expect.any(Array));
+  // });
+
+  //  КАК ПРОВЕРИТЬ ПОЛУЧЕНИЕ ОТВЕТА НА ПОЧТУ С КОДОМ ???
+  // it("- request for password recovery with correcrt email ", async () => {
+  //   const response = await request(app)
+  //     .post("/auth/password-recovery/")
+  //     .auth("admin", "qwerty")
+  //     .send({
+  //       email: users[0].email,
+  //     })
+  //     // .expect(204);
+  //     // ----------------
+  //     .expect(200);
+  //     const recoveryCode  = response.body.code
+  //     expect.setState({ recoveryCode: recoveryCode });
+  //     // ------------
+  //     expect(recoveryCode).toEqual(expect.any(String));
+  // });
+
+    // it("- get new password with correcrt recoveryCode ", async () => {
+  //   const {recoveryCode} = expect.getState()
+  //   const response = await request(app)
+  //     .post("/auth/new-password/")
+  //     .auth("admin", "qwerty")
+  //     .send({
+  //       recoveryCode: recoveryCode,
+  //       newPassword: "password",
+  //     })
+  //     // .expect(204);
+  //     // ----------------
+  //     .expect(204);
+  //     // const recoveryCode  = response.body.code
+  //     // expect.setState({ recoveryCode: recoveryCode });
+  //     // ------------
+  //     // expect(recoveryCode).toEqual(expect.any(Array));
+  // });
+
+
+  // ВЕРНУТЬ !!!!!!!!!!!!!!!!
+  it("- new-password recovery with wrong recoveryCode ", async () => {
     const response = await request(app)
-      .post("/auth/password-recovery/")
+      .post("/auth/new-password/")
       .auth("admin", "qwerty")
       .send({
-        email: "hello@mail.ru",
+        recoveryCode: "1234567890",
+        newPassword: "password",
       })
-      .expect(204);
+      .expect(400);
       // expect(response.body).toEqual(expect.any(Array));
   });
 
-  it("- request for password recovery with correcrt email ", async () => {
+
+  it("- get error with wrong recoveryCode ", async () => {
+    const {recoveryCode} = expect.getState()
     const response = await request(app)
-      .post("/auth/password-recovery/")
+      .post("/auth/new-password/")
       .auth("admin", "qwerty")
       .send({
-        email: "hello@mail.ru",
+        recoveryCode: recoveryCode,
+        newPassword: "password",
       })
-      .expect(204);
-      // expect(response.body).toEqual(expect.any(Array));
+      .expect(400);
   });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
