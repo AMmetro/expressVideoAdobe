@@ -11,6 +11,7 @@ export const testingRoute = Router({})
 
 testingRoute.delete('/all-data', async(req: Request, res: ResponseType<{}>) => {
 //    await KittenModel.deleteMany({});
+   await KittenModel.create({name: 'test'});
 //    await blogsCollection.deleteMany({});
 //    await postsCollection.deleteMany({});  
 //    await drop.darabase() - если есть права админа (в докере по умолчанию в атласе назначить)
