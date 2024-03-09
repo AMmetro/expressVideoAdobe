@@ -179,8 +179,8 @@ authRoute.post(
 authRoute.post(
   "/password-recovery",
   rateLimitMiddleware,
-  emailValidator,
-  inputValidationMiddleware,
+  // emailValidator,
+  // inputValidationMiddleware,
   async (req: RequestWithBody<{ email: string }>, res: Response) => {
     const { email } = req.body;
     const result = await AuthServices.sendCodePasswordRecovery(email);

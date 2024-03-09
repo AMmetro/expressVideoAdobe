@@ -80,14 +80,19 @@ export class AuthServices {
         };
       }
 
-      const device = await DevicesQueryRepository.getByDeviceId(jwtUserData.deviceId);
+      const device = await DevicesQueryRepository.getByDeviceId(
+        jwtUserData.deviceId
+      );
       if (!device) {
         return {
           status: ResultCode.Unauthorised,
           errorMessage: "Token device IAT is not exist",
         };
       }
-      if (device.tokenCreatedAt.toISOString() !== new Date(jwtUserData.iat * 1000).toISOString()) {
+      if (
+        device.tokenCreatedAt.toISOString() !==
+        new Date(jwtUserData.iat * 1000).toISOString()
+      ) {
         return {
           status: ResultCode.Unauthorised,
           errorMessage: "Token device IAT is belong to another device",
@@ -289,13 +294,13 @@ export class AuthServices {
       newRefreshToken
     );
     const deviceLastActiveDate = new Date(decodedRefreshToken!.exp * 1000);
-    const tokenCreatedAt = new Date (decodedRefreshToken!.iat * 1000);
+    const tokenCreatedAt = new Date(decodedRefreshToken!.iat * 1000);
 
     const deviceUpdate = await DevicesServices.updateDevicesTokens(
       claimantInfo.deviceId,
       deviceLastActiveDate,
       tokenCreatedAt
-    );  
+    );
     if (deviceUpdate.status !== ResultCode.Success) {
       return {
         status: ResultCode.ServerError,
@@ -311,7 +316,7 @@ export class AuthServices {
   static async loginUser(
     authData: AuthUserInputModel,
     userAgent: string,
-    userIp: string,
+    userIp: string
   ): Promise<Result<{ newAT: string; newRT: string }>> {
     const authUsers = await UserServices.checkCredentials(authData);
     if (!authUsers) {
@@ -340,38 +345,30 @@ export class AuthServices {
     };
   }
 
-
+  
   static async sendCodePasswordRecovery(email: string): Promise<any> {
-    const userSearchData = { email: email, login: " " }; 
+    const userSearchData = { email: email, login: " " };
     const userForPasswordRecovery =
       await UserQueryRepository.getOneByLoginOrEmail(userSearchData);
 
     if (!userForPasswordRecovery) {
       return {
         status: ResultCode.Success,
-        // ----------------------check error message !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        errorMessage: JSON.stringify({
-          errorsMessages: [
-            { message: `Not found user with ${email}, field: "email" ` },
-          ],
-        }),
+        errorMessage: `Not found user with ${email}, field: "email" `,
       };
     }
-
-
     const recoveryCode = randomUUID();
-
-    const settedRecoveryCode = await UserRepository.updatePswdRecoveryConfirmationCode(
-      userForPasswordRecovery._id,
-      recoveryCode
-    );
+    const settedRecoveryCode =
+      await UserRepository.updatePswdRecoveryConfirmationCode(
+        userForPasswordRecovery._id,
+        recoveryCode
+      );
     if (!settedRecoveryCode) {
       return {
         status: ResultCode.ServerError,
         errorMessage: "Some error of save password recovery code",
       };
     }
-
     const emailInfo = {
       email: userForPasswordRecovery.email,
       code: recoveryCode,
@@ -384,8 +381,4 @@ export class AuthServices {
       data: true,
     };
   }
-
-
-
-
 }
