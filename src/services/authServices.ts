@@ -357,7 +357,7 @@ export class AuthServices {
                                         const emailInfo1 = {
                                           email: email,
                                           code: "1234567890",
-                                          subject: 'face email recovery',
+                                          subject: 'fake email recovery',
                                         };
                                     
                                         emailAdaper.sendRecoveryCode(emailInfo1);
@@ -391,7 +391,7 @@ export class AuthServices {
       subject: "password recovery code",
     };
     emailAdaper.sendRecoveryCode(emailInfo);
-    
+
     return {
       status: ResultCode.Success,
       data: true,
