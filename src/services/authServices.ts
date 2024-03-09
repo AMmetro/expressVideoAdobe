@@ -393,7 +393,21 @@ export class AuthServices {
     if (!userForNewPassword) {
       return {
         status: ResultCode.ClientError,
-        errorMessage: "Not found user with recoveryCode",
+        // errorMessage: "Not found user with recoveryCode",
+
+        errorMessage: JSON.stringify({
+          errorsMessages: [
+            {
+              message: `Not found user with recoveryCode ${recoveryCode}`,
+              field: "recoveryCode",
+            },
+          ],
+        }),
+
+
+
+
+
       };
     }
 
