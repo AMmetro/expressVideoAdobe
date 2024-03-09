@@ -1,9 +1,7 @@
 import { Request, Response, NextFunction} from "express"
-
-// const AcsessLogin = process.env.AcsessLogin
-// const AcsessPass = process.env.AcsessPass
-const AcsessLogin = "admin"
-const AcsessPass = "qwerty"
+import { appConfig } from '../appConfig';
+const AcsessLogin = appConfig.LOGIN
+const AcsessPass = appConfig.PASS
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction):void => {
    

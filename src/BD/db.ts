@@ -1,38 +1,39 @@
 import dotenv from 'dotenv';
 import { MongoClient } from "mongodb";
-import mongoose from "mongoose";
 import { BlogDB } from '../models/blog/db/blog-db';
-import { PostDB } from '../models/post/db/post-db'; 
+import { PostDB } from '../models/post/db/post-db';  
+import { UserDB } from '../models/user/db/user-db';
+import { CommentDB } from '../models/comments/db/comment-db';
+import { appConfig } from '../appConfig';
+import { SecurityDevicesDB } from '../models/devices/db/devices-db';
+import { RateLimitDB } from '../models/rateLimit/db/rateLimit-db';
 
-dotenv.config()
-const mongoURI = process.env.MONGO_URL; 
+// dotenv.config()
+// const mongoURI = process.env.MONGO_URL || "mongodb://0.0.0.0:27017"; 
+// const mongoURI = process.env.MONGO_URL; 
+const mongoURI = appConfig.mongoURI; 
+
 if (!mongoURI){
     throw new Error ("No URL for MongoDB conection")
 }
 export const client = new MongoClient(mongoURI);
 
-
-const kittySchema = new mongoose.Schema({
-    name: String
-})
-export const  KittenModel = mongoose.model('Kitten', kittySchema)
-
-
-
 const database = client.db("BlogDB")
+export const usersCollection = database.collection<UserDB>("users")
+export const securityDevicesCollection = database.collection<SecurityDevicesDB>("devices")
 export const blogsCollection = database.collection<BlogDB>("blogs")
 export const postsCollection = database.collection<PostDB>("posts")
+export const commentsCollection = database.collection<CommentDB>("comments")
+export const rateLimitCollection = database.collection<RateLimitDB>("ratelimit")
 
 export const runDB = async ()=>{
     try {
-        // await client.connect()
-        await mongoose.connect(mongoURI+"/blogDB")
+        await client.connect()
         console.log("DB connected...") 
     } 
     catch(e) {
         console.log(e)
-        await mongoose.disconnect()  
-        // await client.close()  
+        await client.close()  
     }
 } 
 

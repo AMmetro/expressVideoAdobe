@@ -6,14 +6,15 @@ import { blogMapper } from "../models/blog/mapper/blog-mapper";
 import { InputBlogType, UpdateBlogType } from "../models/blog/input/updateblog-input-model";
 
 export class BlogRepository {
-    static async getAll(): Promise<OutputBlogType[] | null> {
-    try {
-    const blogs: WithId<BlogDB>[] = await blogsCollection.find({}).toArray();
-    return blogs.map(blogMapper);
-    }catch (e){
-      console.log(e)
-      return null 
-    }
+  
+  static async create(newBlog: InputBlogType): Promise<string | null> {
+      try{
+    const blogId = await blogsCollection.insertOne(newBlog); 
+    return blogId.insertedId.toString();
+    } catch(e){
+      console.log(e) 
+      return null
+    } 
   }
 
   static async getById(id: string): Promise<OutputBlogType | null> {
@@ -22,16 +23,6 @@ export class BlogRepository {
       return null;
     }
     return blogMapper(blog);
-  }
-  static async create(newBlog: InputBlogType): Promise<string> {
-    //   try{
-    const blogId = await blogsCollection.insertOne(newBlog); 
-    // console.log(blogId)
-    return blogId.insertedId.toString();
-    // } catch(e){
-    //   console.log(e) 
-    // }
-    
   }
 
   static async update(
@@ -50,7 +41,6 @@ export class BlogRepository {
         }
       );
       return !!blogForUpd.matchedCount;
-      // ИЛИ true / false
     } catch (e) {
       console.log(e);
       return false;
