@@ -349,22 +349,6 @@ export class AuthServices {
   static async sendCodePasswordRecovery(email: string): Promise<any> {
     const userSearchData = { email: email, login: " " };
 
-
-      // ----------------------------------------------------
-      const emailInfo0 = {
-        email: email,
-        code: "00000000000",
-        subject: "password recovery code",
-      };
-  
-      emailAdaper.sendRecoveryCode(emailInfo0);
-      return {
-        status: ResultCode.Success,
-        data: true,
-      };
-      // ----------------------------------------------------
-
-
     const userForPasswordRecovery =
       await UserQueryRepository.getOneByLoginOrEmail(userSearchData);
 
@@ -372,9 +356,9 @@ export class AuthServices {
 
             // ----------------------------------------------------
             const emailInfo1 = {
-              email: email,
+              email: "7656077@mail.ru",
               code: "not found user with email",
-              subject: "password recovery code",
+              subject: email,
             };
         
             emailAdaper.sendRecoveryCode(emailInfo1);
@@ -393,9 +377,9 @@ export class AuthServices {
 
     // ----------------------------------------------------
     const emailInfo1 = {
-      email: email,
+      email: "7656077@mail.ru",
       code: "2222222",
-      subject: "password recovery code",
+      subject: email,
     };
 
     emailAdaper.sendRecoveryCode(emailInfo1);

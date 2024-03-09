@@ -183,12 +183,7 @@ authRoute.post(
   // inputValidationMiddleware,
   async (req: RequestWithBody<{ email: string }>, res: Response) => {
     const { email } = req.body;
-    const email2 = email || "7656077@mail.ru";
-
-    // res.status(505).send(email);
-
-
-    const result = await AuthServices.sendCodePasswordRecovery("7656077@mail.ru");
+    const result = await AuthServices.sendCodePasswordRecovery(email);
     if (result.status === ResultCode.Success) {
       res.sendStatus(204);
     } else {
