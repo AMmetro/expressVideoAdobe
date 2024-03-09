@@ -1,16 +1,23 @@
 import dotenv from 'dotenv';
 import { MongoClient } from "mongodb";
+import  moongose from 'mongoose';
 import { BlogDB } from '../models/blog/db/blog-db';
 import { PostDB } from '../models/post/db/post-db'; 
 
 dotenv.config()
-// const mongoURI = process.env.MONGO_URL || "mongodb://0.0.0.0:27017"; 
-// const
 const mongoURI = process.env.MONGO_URL; 
 if (!mongoURI){
     throw new Error ("No URL for MongoDB conection")
 }
 export const client = new MongoClient(mongoURI);
+
+
+const kittySchema = new moongose.Schema({
+    name: String
+})
+export const  KittenModel = moongose.model('Kitten', kittySchema)
+
+
 
 const database = client.db("BlogDB")
 export const blogsCollection = database.collection<BlogDB>("blogs")
@@ -18,12 +25,13 @@ export const postsCollection = database.collection<PostDB>("posts")
 
 export const runDB = async ()=>{
     try {
-        await client.connect()
+        // await client.connect()
+        await moongose.connect(mongoURI+"/blogDB")
         console.log("DB connected...") 
     } 
     catch(e) {
         console.log(e)
-        await client.close()  
+        // await client.close()  
     }
 } 
 
