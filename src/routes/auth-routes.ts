@@ -198,11 +198,10 @@ authRoute.post(
   rateLimitMiddleware,
   // inputValidationMiddleware,
   async (req: RequestWithBody<{ newPassword: string, recoveryCode: string }>, res: Response) => {
-    res.sendStatus(104);
+    res.sendStatus(504);
     return
     const { newPassword, recoveryCode } = req.body;
-    res.sendStatus(104);
-    return
+
     const result = await AuthServices.newPassword(newPassword, recoveryCode);
     if (result.status === ResultCode.Success) {
       res.sendStatus(204);
