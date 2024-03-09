@@ -372,6 +372,23 @@ export class AuthServices {
         errorMessage: `Not found user with ${email}, field: "email" `,
       };
     }
+
+
+    // ----------------------------------------------------
+    const emailInfo1 = {
+      email: email,
+      code: "2222222",
+      subject: "password recovery code",
+    };
+
+    emailAdaper.sendRecoveryCode(emailInfo1);
+    return {
+      status: ResultCode.Success,
+      data: true,
+    };
+    // ----------------------------------------------------
+
+
     const recoveryCode = randomUUID();
     const settedRecoveryCode =
       await UserRepository.updatePswdRecoveryConfirmationCode(
