@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import { MongoClient } from "mongodb";
-import  moongose from 'mongoose';
+// import  moongose from 'mongoose';
+import mongoose from "mongoose";
 import { BlogDB } from '../models/blog/db/blog-db';
 import { PostDB } from '../models/post/db/post-db'; 
 
@@ -12,10 +13,10 @@ if (!mongoURI){
 export const client = new MongoClient(mongoURI);
 
 
-const kittySchema = new moongose.Schema({
+const kittySchema = new mongoose.Schema({
     name: String
 })
-export const  KittenModel = moongose.model('Kitten', kittySchema)
+export const  KittenModel = mongoose.model('Kitten', kittySchema)
 
 
 
@@ -26,11 +27,12 @@ export const postsCollection = database.collection<PostDB>("posts")
 export const runDB = async ()=>{
     try {
         // await client.connect()
-        await moongose.connect(mongoURI+"/blogDB")
+        await mongoose.connect(mongoURI+"/blogDB")
         console.log("DB connected...") 
     } 
     catch(e) {
         console.log(e)
+        await mongoose.disconnect()  
         // await client.close()  
     }
 } 
