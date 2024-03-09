@@ -205,10 +205,11 @@ authRoute.post(
   passwordValidator,
   rateLimitMiddleware,
   // emailExistValidator,
-  // inputValidationMiddleware,
+  inputValidationMiddleware,
   async (req: RequestWithBody<{ newPassword: string, recoveryCode: string }>, res: Response) => {
     const { newPassword, recoveryCode } = req.body;
-    if (!newPassword || !recoveryCode ){
+    const newPasswordIncorrect = !newPassword ||newPassword.length < 6 || newPassword.length > 20 || typeof (newPassword) !== "string"
+    if (newPasswordIncorrect || !recoveryCode ){
       // проверка на код протух ???
       // и новый пароль нормальный ???
       res.sendStatus(400);
