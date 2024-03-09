@@ -6,14 +6,19 @@ import { blogMapper } from "../models/blog/mapper/blog-mapper";
 import { InputBlogType, UpdateBlogType } from "../models/blog/input/updateblog-input-model";
 
 export class BlogRepository {
-    static async getAll(): Promise<OutputBlogType[] | null> {
-    try {
-    const blogs: WithId<BlogDB>[] = await blogsCollection.find({}).toArray();
-    return blogs.map(blogMapper);
-    }catch (e){
-      console.log(e)
-      return null 
-    }
+  
+  static async create(newBlog: InputBlogType): Promise<string | null> {
+      try{
+    const blogId = await BlogModel.create(newBlog); 
+  // **
+  // * const blog2Method = new BlogModel (newBlog) 
+  // * blog2Method.save() 
+  // **
+    return blogId.insertedId.toString();
+    } catch(e){
+      console.log(e) 
+      return null
+    } 
   }
 
   static async getById(id: string): Promise<OutputBlogType | null> {
