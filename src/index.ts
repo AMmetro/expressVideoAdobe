@@ -1,9 +1,8 @@
 import 'dotenv/config'
 import {app} from './settings';
 import { runDB } from './BD/db';
-import { appConfig } from './appConfig';
 
-app.listen( appConfig.PORT, async() => {
+app.listen(process.env.PORT || 80, async() => {
   await runDB() 
-  console.log(`Example app listening on port ${appConfig.PORT}`)
+  console.log(`Example app listening on port ${process.env.PORT || 80}`)
 })

@@ -1,45 +1,29 @@
-import mongoose from 'mongoose'
+import dotenv from 'dotenv';
 import { MongoClient } from "mongodb";
-import dotenv from 'dotenv'
-import { BlogDB, BlogSchema } from '../models/blog/db/blog-db';
-import { PostDB } from '../models/post/db/post-db';  
-import { UserDB, UserSchema } from '../models/user/db/user-db';
-import { CommentDB } from '../models/comments/db/comment-db';
-import { appConfig } from '../appConfig';
-import { DevicesSchema, SecurityDevicesDB } from '../models/devices/db/devices-db';
-import { RateLimitDB } from '../models/rateLimit/db/rateLimit-db';
+import { BlogDB } from '../models/blog/db/blog-db';
+import { PostDB } from '../models/post/db/post-db'; 
 
 dotenv.config()
 // const mongoURI = process.env.MONGO_URL || "mongodb://0.0.0.0:27017"; 
-// const mongoURI = process.env.MONGO_URL; 
-const mongoURI = appConfig.mongoURI; 
-
+// const
+const mongoURI = process.env.MONGO_URL; 
 if (!mongoURI){
     throw new Error ("No URL for MongoDB conection")
 }
 export const client = new MongoClient(mongoURI);
 
 const database = client.db("BlogDB")
-export const usersCollection = database.collection<UserDB>("users")
-// export const UsersModel = mongoose.model<any>('blogs', UserSchema)
-// export const securityDevicesCollection = database.collection<SecurityDevicesDB>("devices")
-export const SecurityDevicesModel = mongoose.model<any>('devices', DevicesSchema)
-// export const blogsCollection = database.collection<BlogDB>("blogs")
-export const BlogModel = mongoose.model<any>('blogs', BlogSchema)
+export const blogsCollection = database.collection<BlogDB>("blogs")
 export const postsCollection = database.collection<PostDB>("posts")
-export const commentsCollection = database.collection<CommentDB>("comments")
-export const rateLimitCollection = database.collection<RateLimitDB>("ratelimit")
 
 export const runDB = async ()=>{
     try {
         await client.connect()
-        await mongoose.connect(mongoURI + "/" + "BlogDB")
         console.log("DB connected...") 
     } 
     catch(e) {
         console.log(e)
         await client.close()  
-        await mongoose.disconnect()  
     }
 } 
 
