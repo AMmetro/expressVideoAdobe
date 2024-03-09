@@ -24,6 +24,7 @@ type OutputType = {
 };
 
 export class AuthServices {
+
   static async checkAcssesToken(
     authRequest: string
   ): Promise<Result<OutputType>> {
@@ -397,4 +398,42 @@ export class AuthServices {
       data: true,
     };
   }
+
+
+  static async newPassword(newPassword: string, recoveryCode: string ): Promise<any> {
+    const userForNewPassword =
+      await UserQueryRepository.getOneByPasswordRecoveryCode(recoveryCode);
+    if (!userForNewPassword) {
+      return {
+        status: ResultCode.ClientError,
+        errorMessage: "Not found user with recoveryCode",
+      };
+    }
+    const passwordSalt = await hashServise.generateSalt();
+    const passwordHash = await hashServise.generateHash(newPassword, passwordSalt);
+    const isPasswordUpdated = await UserRepository.updatePassword(userForNewPassword.id, passwordHash);
+    if (!isPasswordUpdated) {
+      return {
+        status: ResultCode.Conflict,
+        errorMessage: "Some error saving new password",
+        }
+      };
+    return {
+      status: ResultCode.Success,
+      data: true,
+    };
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

@@ -18,6 +18,15 @@ type SortDataType = {
 };
 
 export class UserQueryRepository {
+
+  static async getOneByPasswordRecoveryCode(recoveryCode: string): Promise<OutputUserType | null> {
+    const user = await usersCollection.findOne({ passwordRecoveryConfirmationCode: recoveryCode });
+    if (!user) {
+      return null;
+    }
+    return userMapper(user);
+  }
+
   static async getAll(
     sortData: SortDataType
   ): Promise<PaginationType<OutputUserType> | null> {

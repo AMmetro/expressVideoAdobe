@@ -8,6 +8,13 @@ export class UserRepository {
     return newUserId.insertedId.toString();
   }
 
+
+  static async updatePassword(userId: string, newPswrdHash: string) {
+    const passwordUpdated = await usersCollection.updateOne(
+      {_id: new ObjectId(userId)}, { $set: { "passwordHash": newPswrdHash } });
+    return passwordUpdated.modifiedCount === 1;
+  }
+
   static async createWithConfirmation(confirmationNewUserData: UserDB) {
     const newUserId = await usersCollection.insertOne(confirmationNewUserData);
     return newUserId.insertedId.toString();
