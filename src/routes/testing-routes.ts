@@ -5,7 +5,7 @@ import {
   blogsCollection,
   commentsCollection,
   postsCollection,
-  rateLimitCollection,
+  // rateLimitCollection,
   securityDevicesCollection,
   usersCollection,
 } from "../BD/db";
@@ -18,13 +18,13 @@ testingRoute.delete(
   "/all-data",
   async (req: Request, res: ResponseType<{}>) => {
     // await UserModel.deleteMany({});
-    // await RateLimitModel.deleteMany({});
+    await RateLimitModel.deleteMany({});
     await blogsCollection.deleteMany({});
     await postsCollection.deleteMany({});
     await usersCollection.deleteMany({});
     await securityDevicesCollection.deleteMany({});
     await commentsCollection.deleteMany({});
-    await rateLimitCollection.deleteMany({});
+    // await rateLimitCollection.deleteMany({});
     //    await drop.darabase() - если есть права админа (в докере по умолчанию в атласе назначить)
     res.sendStatus(204);
   }
