@@ -16,7 +16,7 @@ export const testingRoute = Router({});
 testingRoute.delete(
   "/all-data",
   async (req: Request, res: ResponseType<{}>) => {
-    await KittenModel.deleteMany({});
+    // await KittenModel.deleteMany({});
     await blogsCollection.deleteMany({});
     await postsCollection.deleteMany({});
     await usersCollection.deleteMany({});
