@@ -353,55 +353,38 @@ export class AuthServices {
       await UserQueryRepository.getOneByLoginOrEmail(userSearchData);
 
     if (!userForPasswordRecovery) {
-
-            // ----------------------------------------------------
-            const emailInfo1 = {
-              email: email,
-              code: "1234567890",
-              subject: 'recovery',
-            };
-        
-            emailAdaper.sendRecoveryCode(emailInfo1);
-            return {
-              status: ResultCode.Success,
-              data: true,
-            };
-            // ----------------------------------------------------
-
-      return {
-        status: ResultCode.Success,
-        errorMessage: `Not found user with ${email}, field: "email" `,
-      };
+                                        // ----------------------------------------------------
+                                        const emailInfo1 = {
+                                          email: email,
+                                          code: "1234567890",
+                                          subject: 'recovery',
+                                        };
+                                    
+                                        emailAdaper.sendRecoveryCode(emailInfo1);
+                                        return {
+                                          status: ResultCode.Success,
+                                          data: true,
+                                        };
+                                        // ----------------------------------------------------
+      // return {
+      //   status: ResultCode.Success,
+      //   errorMessage: `Not found user with ${email}, field: "email" `,
+      // };
     }
-
-
-    // ----------------------------------------------------
-    const emailInfo1 = {
-      email: "7656077@mail.ru",
-      code: "2222222",
-      subject: email,
-    };
-
-    emailAdaper.sendRecoveryCode(emailInfo1);
-    return {
-      status: ResultCode.Success,
-      data: true,
-    };
-    // ----------------------------------------------------
 
 
     const recoveryCode = randomUUID();
-    const settedRecoveryCode =
-      await UserRepository.updatePswdRecoveryConfirmationCode(
-        userForPasswordRecovery._id,
-        recoveryCode
-      );
-    if (!settedRecoveryCode) {
-      return {
-        status: ResultCode.ServerError,
-        errorMessage: "Some error of save password recovery code",
-      };
-    }
+    // const settedRecoveryCode =
+    //   await UserRepository.updatePswdRecoveryConfirmationCode(
+    //     userForPasswordRecovery._id,
+    //     recoveryCode
+    //   );
+    // if (!settedRecoveryCode) {
+    //   return {
+    //     status: ResultCode.ServerError,
+    //     errorMessage: "Some error of save password recovery code",
+    //   };
+    // }
     const emailInfo = {
       email: userForPasswordRecovery.email,
       code: recoveryCode,
