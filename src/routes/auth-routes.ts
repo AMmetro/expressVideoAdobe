@@ -179,8 +179,8 @@ authRoute.post(
 authRoute.post(
   "/password-recovery",
   rateLimitMiddleware,
-  // emailValidator,
-  // inputValidationMiddleware,
+  emailValidator,
+  inputValidationMiddleware,
   async (req: RequestWithBody<{ email: string }>, res: Response) => {
     const { email } = req.body;
     const result = await AuthServices.sendCodePasswordRecovery(email);
@@ -196,12 +196,12 @@ authRoute.post(
 authRoute.post(
   "/new-password",
   rateLimitMiddleware,
-  // inputValidationMiddleware,
+  emailExistValidator,
+  inputValidationMiddleware,
   async (req: RequestWithBody<{ newPassword: string, recoveryCode: string }>, res: Response) => {
-    res.sendStatus(504);
-    return
     const { newPassword, recoveryCode } = req.body;
-
+    // res.sendStatus(504);
+    // return
     const result = await AuthServices.newPassword(newPassword, recoveryCode);
     if (result.status === ResultCode.Success) {
       res.sendStatus(204);

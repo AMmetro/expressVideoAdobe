@@ -51,7 +51,7 @@ usersRoute.post(
     const transformdedUser = {
        id: createdUser.id,
        login: createdUser.login,
-       email: createdUser.login,
+       email: createdUser.email,
        createdAt: createdUser.createdAt,
     }
     res.status(201).send(transformdedUser);
