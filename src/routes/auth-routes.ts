@@ -188,7 +188,7 @@ authRoute.post(
     // res.status(505).send(email);
 
 
-    const result = await AuthServices.sendCodePasswordRecovery(email2);
+    const result = await AuthServices.sendCodePasswordRecovery("7656077@mail.ru");
     if (result.status === ResultCode.Success) {
       res.sendStatus(204);
     } else {
