@@ -1,6 +1,5 @@
 import dotenv from 'dotenv';
 import { MongoClient } from "mongodb";
-// import  moongose from 'mongoose';
 import mongoose from "mongoose";
 import { BlogDB } from '../models/blog/db/blog-db';
 import { PostDB } from '../models/post/db/post-db'; 
