@@ -33,19 +33,20 @@ const kittySchema = new mongoose.Schema({name: String})
 export const  KittenModel = mongoose.model('Kitten', kittySchema)
 
 //                               ?????   |  ?????
-export const BlogModel = mongoose.model<any>('blogs', UserSchema)
+// export const BlogModel = mongoose.model<WithId<UserDB>>('users', UserSchema)
 
 
 export const runDB = async ()=>{
     try {
         await client.connect()
-        await mongoose.connect(mongoURI+"/BlogDB");
+        // await mongoose.connect("mongodb+srv://metroexpress:suradet842@cluster0.gkpqpve.mongodb.net"+"/BlogDB");
         console.log("DB connected...") 
+        await KittenModel.deleteMany({});
     } 
     catch(e) {
         console.log(e)
         await client.close()  
-        await mongoose.disconnect();
+        // await mongoose.disconnect();
     }
 } 
 

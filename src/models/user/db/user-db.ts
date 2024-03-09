@@ -1,7 +1,6 @@
 import mongoose from 'mongoose'
 import { WithId } from 'mongodb'
 
-
 export type blackListTokenType = string[]
 
 export type UserDB = {
@@ -20,7 +19,7 @@ type emailConfirmationType = {
   isConfirmed: boolean;
 };
 
-export const BlackListTokenSchema = new mongoose.Schema<blackListTokenType>()
+// export const BlackListTokenSchema = new mongoose.Schema<blackListTokenType>()
 
 export const EmailConfirmationsChema = new mongoose.Schema<emailConfirmationType>({
   confirmationCode: { type: String, require: true },
@@ -32,7 +31,7 @@ export const UserSchema = new mongoose.Schema<WithId<UserDB>>({
   login: { type: String, require: true },
   passwordHash: { type: String, require: true },
   passwordSalt: { type: String, require: true },
-  // blackListToken: { type: BlackListTokenSchema, require: true },
+  blackListToken: { type: [String], require: true },
   email: { type: String, require: true },
   createdAt: { type: String, require: true },
   emailConfirmation: { type: EmailConfirmationsChema, require: true },
