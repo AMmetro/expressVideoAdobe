@@ -34,7 +34,7 @@ export const commentsCollection = database.collection<CommentDB>("comments")
 
 // export const UserModel = mongoose.model<WithId<UserDB>>('users', UserSchema)
 export const RateLimitModel = mongoose.model<WithId<RateLimitDB>>("ratelimit", RateLimitSchema)
-// export const BlogModel = mongoose.model<WithId<BlogDB>>("blogs", BlogDBSchema)
+export const BlogModel = mongoose.model<WithId<BlogDB>>("blogs", BlogDBSchema)
 
 
 export const runDB = async ()=>{
@@ -42,7 +42,7 @@ export const runDB = async ()=>{
         // await client.connect()
         await mongoose.connect("mongodb+srv://metroexpress:suradet842@cluster0.gkpqpve.mongodb.net"+"/BlogDB");
         console.log("DB connected...") 
-        // await BlogModel.deleteMany({});
+        await BlogModel.deleteMany({});
     } 
     catch(e) {
         console.log(e)
