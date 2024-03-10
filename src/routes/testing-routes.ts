@@ -1,6 +1,6 @@
 import express, { Router, Request, Response } from "express";
 import {
-  // BlogModel,
+  BlogModel,
   RateLimitModel,
   // UserModel,
   blogsCollection,
@@ -22,7 +22,7 @@ testingRoute.delete(
     await RateLimitModel.deleteMany({});
     
     // await blogsCollection.deleteMany({});
-    // await BlogModel.deleteMany({});
+    await BlogModel.deleteMany({});
 
     await postsCollection.deleteMany({});
     await usersCollection.deleteMany({});
