@@ -7,7 +7,7 @@ import {
   CommentModel,
   PostModel,
   // rateLimitCollection,
-  securityDevicesCollection,
+  SecurityDevicesModel,
   UserModel,
 } from "../BD/db";
 
@@ -26,7 +26,7 @@ testingRoute.delete(
     // await postsCollection.deleteMany({});
     await PostModel.deleteMany({});
     await UserModel.deleteMany({});
-    await securityDevicesCollection.deleteMany({});
+    await SecurityDevicesModel.deleteMany({});
     await CommentModel.deleteMany({});
     // await rateLimitCollection.deleteMany({});
     //    await drop.darabase() - если есть права админа (в докере по умолчанию в атласе назначить)

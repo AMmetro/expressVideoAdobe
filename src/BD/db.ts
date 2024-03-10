@@ -9,7 +9,7 @@ import { UserDB,
  } from '../models/user/db/user-db';
 import { CommentDB, CommentSchema } from '../models/comments/db/comment-db';
 import { appConfig } from '../appConfig';
-import { SecurityDevicesDB } from '../models/devices/db/devices-db';
+import { SecurityDevicesDB, SecurityDevicesSchema } from '../models/devices/db/devices-db';
 import { RateLimitDB, RateLimitSchema } from '../models/rateLimit/db/rateLimit-db';
 
 dotenv.config()
@@ -22,7 +22,7 @@ export const client = new MongoClient(mongoURI);
 
 const database = client.db("BlogDB")
 // export const usersCollection = database.collection<UserDB>("users")
-export const securityDevicesCollection = database.collection<SecurityDevicesDB>("devices")
+// export const securityDevicesCollection = database.collection<SecurityDevicesDB>("devices")
 // export const blogsCollection = database.collection<BlogDB>("blogs")
 // export const postsCollection = database.collection<PostDB>("posts")
 // export const commentsCollection = database.collection<CommentDB>("comments")
@@ -37,6 +37,7 @@ export const RateLimitModel = mongoose.model<WithId<RateLimitDB>>("ratelimit", R
 export const BlogModel = mongoose.model<WithId<BlogDB>>("blogs", BlogDBSchema)
 export const PostModel = mongoose.model<WithId<PostDB>>("posts", PostSchema)
 export const CommentModel = mongoose.model<WithId<CommentDB>>("comments", CommentSchema)
+export const SecurityDevicesModel = mongoose.model<WithId<SecurityDevicesDB>>("devices", SecurityDevicesSchema)
 
 
 export const runDB = async ()=>{
