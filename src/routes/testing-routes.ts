@@ -5,7 +5,7 @@ import {
   // UserModel,
   // blogsCollection,
   commentsCollection,
-  postsCollection,
+  PostModel,
   // rateLimitCollection,
   securityDevicesCollection,
   usersCollection,
@@ -24,7 +24,8 @@ testingRoute.delete(
     // await blogsCollection.deleteMany({});
     await BlogModel.deleteMany({});
 
-    await postsCollection.deleteMany({});
+    // await postsCollection.deleteMany({});
+    await PostModel.deleteMany({});
     await usersCollection.deleteMany({});
     await securityDevicesCollection.deleteMany({});
     await commentsCollection.deleteMany({});

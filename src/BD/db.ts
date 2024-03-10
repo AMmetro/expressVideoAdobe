@@ -3,7 +3,7 @@ import { MongoClient } from 'mongodb';
 import { WithId } from 'mongodb'
 import  mongoose  from 'mongoose';
 import { BlogDB, BlogDBSchema } from '../models/blog/db/blog-db';
-import { PostDB } from '../models/post/db/post-db';  
+import { PostDB, PostSchema } from '../models/post/db/post-db';  
 import { UserDB, 
     UserSchema
  } from '../models/user/db/user-db';
@@ -24,7 +24,7 @@ const database = client.db("BlogDB")
 export const usersCollection = database.collection<UserDB>("users")
 export const securityDevicesCollection = database.collection<SecurityDevicesDB>("devices")
 // export const blogsCollection = database.collection<BlogDB>("blogs")
-export const postsCollection = database.collection<PostDB>("posts")
+// export const postsCollection = database.collection<PostDB>("posts")
 export const commentsCollection = database.collection<CommentDB>("comments")
 // export const rateLimitCollection = database.collection<RateLimitDB>("ratelimit")
 
@@ -35,6 +35,7 @@ export const commentsCollection = database.collection<CommentDB>("comments")
 // export const UserModel = mongoose.model<WithId<UserDB>>('users', UserSchema)
 export const RateLimitModel = mongoose.model<WithId<RateLimitDB>>("ratelimit", RateLimitSchema)
 export const BlogModel = mongoose.model<WithId<BlogDB>>("blogs", BlogDBSchema)
+export const PostModel = mongoose.model<WithId<PostDB>>("posts", PostSchema)
 
 
 export const runDB = async ()=>{

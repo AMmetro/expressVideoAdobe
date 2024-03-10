@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { postsCollection, securityDevicesCollection } from "../BD/db";
+import { securityDevicesCollection } from "../BD/db"; 
 import {
   RequestInputPostType,
   UpdateInputPostType,

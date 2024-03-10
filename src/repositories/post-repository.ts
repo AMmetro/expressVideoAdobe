@@ -1,11 +1,11 @@
 import { ObjectId } from "mongodb";
-import { postsCollection } from "../BD/db";
+import { PostModel } from "../BD/db";
 import { RequestInputPostType, UpdateInputPostType } from "../models/post/input/updateposts-input-model";
 export class PostRepository {
 
   static async create(newPostData: UpdateInputPostType) {
-        const newPostId = await postsCollection.insertOne(newPostData);
-       return newPostId.insertedId.toString()
+        const newPostId = await PostModel.create(newPostData);
+       return newPostId._id.toString()
   }
 
   static async update(
@@ -13,7 +13,7 @@ export class PostRepository {
     updatedPostData: RequestInputPostType
   ): Promise<Boolean> {
 
-    const postForUpd = await postsCollection.updateOne(
+    const postForUpd = await PostModel.updateOne(
       { _id: new ObjectId(updatedPostId) },
       {$set: {...updatedPostData}}
     );
@@ -21,7 +21,7 @@ export class PostRepository {
   }
 
   static async delete(deletePostId: string): Promise<Boolean> {
-    const deletePost = await postsCollection.deleteOne({
+    const deletePost = await PostModel.deleteOne({
       _id: new ObjectId(deletePostId),
     });
     return !!deletePost.deletedCount;
