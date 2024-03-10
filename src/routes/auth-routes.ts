@@ -6,10 +6,11 @@ import {
 } from "../models/user/input/authUser-input-model";
 import { UserServices } from "../services/userServices";
 import { UserQueryRepository } from "../repositories/user.query-repository";
-import { jwtServise } from "../utils/JWTservise";
-import { jwtValidationAcssTokenMiddleware, jwtValidationRefreshTokenMiddleware } from "../auth/jwtAuth-middleware";
 import {
-  codeExistValidator,
+  jwtValidationAcssTokenMiddleware,
+  jwtValidationRefreshTokenMiddleware,
+} from "../auth/jwtAuth-middleware";
+import {
   emailExistValidator,
   emailIsAplliedValidator,
   emailValidator,
@@ -28,7 +29,7 @@ export const authRoute = Router({});
 authRoute.get(
   "/me",
   jwtValidationAcssTokenMiddleware,
-  async (req: Request, res: Response) => { 
+  async (req: Request, res: Response) => {
     const me = await UserQueryRepository.getById(req.user!.id);
     if (!me) {
       res.sendStatus(401);
@@ -50,7 +51,8 @@ authRoute.post(
     }
     const result = await AuthServices.refreshToken(oldRefreshToken);
     if (result.status === ResultCode.Success) {
-      res.cookie("refreshToken", result.data.newRefreshToken, {
+      res
+        .cookie("refreshToken", result.data.newRefreshToken, {
           httpOnly: true,
           secure: true,
         })
@@ -68,27 +70,27 @@ authRoute.post(
   rateLimitMiddleware,
   async (req: RequestWithBody<AuthUserInputModel>, res: Response) => {
     const { password, loginOrEmail } = req.body;
-    const userAgent = res.locals.ua = req.get('User-Agent') || "unknown";
+    const userAgent = (res.locals.ua = req.get("User-Agent") || "unknown");
     const userIp = req.ip || "unknown";
     if (!password || !loginOrEmail) {
       res.sendStatus(400);
       return;
     }
     const authData = { loginOrEmail: loginOrEmail, password: password };
-    const result = await AuthServices.loginUser(authData, userAgent, userIp)
+    const result = await AuthServices.loginUser(authData, userAgent, userIp);
     if (result.data && result.status === ResultCode.Success) {
       const accessToken = result.data.newAT;
       const refreshToken = result.data.newRT;
-      return res.cookie("refreshToken", refreshToken, {
-        httpOnly: true,
-        secure: true,
-      })
-      .status(200)
-      .send({ accessToken });
+      return res
+        .cookie("refreshToken", refreshToken, {
+          httpOnly: true,
+          secure: true,
+        })
+        .status(200)
+        .send({ accessToken });
     } else {
-                                                // res.sendStatus(422);
       sendCustomError(res, result);
-      return
+      return;
     }
   }
 );
@@ -175,7 +177,6 @@ authRoute.post(
   }
 );
 
-
 authRoute.post(
   "/password-recovery",
   rateLimitMiddleware,
@@ -185,13 +186,6 @@ authRoute.post(
     const { email } = req.body;
     const result = await AuthServices.sendCodePasswordRecovery(email);
     if (result.status === ResultCode.Success) {
-                                                          // // ----
-                                                          // console.log("==========result=========")
-                                                          // const xxx = {code:result.data}
-                                                          // console.log(xxx)
-                                                          // res.status(200).send(xxx);
-                                                          // return
-                                                          // // -----
       res.sendStatus(204);
     } else {
       sendCustomError(res, result);
@@ -199,17 +193,21 @@ authRoute.post(
   }
 );
 
-
 authRoute.post(
   "/new-password",
   rateLimitMiddleware,
-  async (req: RequestWithBody<{ newPassword: string, recoveryCode: string }>, res: Response) => {
+  async (
+    req: RequestWithBody<{ newPassword: string; recoveryCode: string }>,
+    res: Response
+  ) => {
     const { newPassword, recoveryCode } = req.body;
-    const newPasswordIncorrect = !newPassword ||newPassword.length < 6 || newPassword.length > 20 || typeof (newPassword) !== "string"
-    if (newPasswordIncorrect || !recoveryCode ){
-      // проверка на код протух ???
-      sendCustomError(res,
-         {
+    const newPasswordIncorrect =
+      !newPassword ||
+      newPassword.length < 6 ||
+      newPassword.length > 20 ||
+      typeof newPassword !== "string";
+    if (newPasswordIncorrect || !recoveryCode) {
+      sendCustomError(res, {
         status: ResultCode.ClientError,
         errorMessage: JSON.stringify({
           errorsMessages: [
@@ -219,11 +217,8 @@ authRoute.post(
             },
           ],
         }),
-      }
-        )
-
-      // res.sendStatus(400);
-      return
+      });
+      return;
     }
     const result = await AuthServices.newPassword(newPassword, recoveryCode);
     if (result.status === ResultCode.Success) {
