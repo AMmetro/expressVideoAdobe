@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 import { MongoClient } from 'mongodb';
 import { WithId } from 'mongodb'
 import  mongoose  from 'mongoose';
-import { BlogDB } from '../models/blog/db/blog-db';
+import { BlogDB, BlogDBSchema } from '../models/blog/db/blog-db';
 import { PostDB } from '../models/post/db/post-db';  
 import { UserDB, 
     UserSchema
@@ -34,6 +34,7 @@ export const commentsCollection = database.collection<CommentDB>("comments")
 
 // export const UserModel = mongoose.model<WithId<UserDB>>('users', UserSchema)
 export const RateLimitModel = mongoose.model<WithId<RateLimitDB>>("ratelimit", RateLimitSchema)
+export const BlogModel = mongoose.model<WithId<BlogDB>>("blogs", BlogDBSchema)
 
 
 export const runDB = async ()=>{
