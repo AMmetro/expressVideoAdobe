@@ -1,5 +1,5 @@
 import { WithId, ObjectId } from "mongodb";
-import { blogsCollection, securityDevicesCollection } from "../BD/db";
+import { securityDevicesCollection } from "../BD/db";
 import { devicesMapper } from "../models/devices/mapper/devices-mapper";
 import { OutputDevicesType } from "../models/devices/output/devices.output";
 import { SecurityDevicesDB } from "../models/devices/db/devices-db";
