@@ -1,13 +1,13 @@
 import { ObjectId } from "mongodb";
-import { commentsCollection } from "../BD/db";
+import { CommentModel } from "../BD/db";
 import { CommentDB } from "../models/comments/db/comment-db";
 
 export class CommentRepository {
   
   static async create(newCommentModal: CommentDB): Promise<string | null> {
       try{
-    const commentId = await commentsCollection.insertOne(newCommentModal); 
-    return commentId.insertedId.toString();
+    const commentId = await CommentModel.create(newCommentModal); 
+    return commentId._id.toString();
     } catch(e){
       console.log(e) 
       return null
@@ -19,7 +19,7 @@ export class CommentRepository {
     updateContent: string 
   ): Promise<Boolean> { 
     try { 
-      const commentForUpd = await commentsCollection.updateOne(
+      const commentForUpd = await CommentModel.updateOne(
         { _id: new ObjectId(updatedCommentId) },
         {
           $set: {
@@ -35,7 +35,7 @@ export class CommentRepository {
   }
 
   static async delete(deleteCommentId: string): Promise<Boolean> {
-    const commentForDelete = await commentsCollection.deleteOne({
+    const commentForDelete = await CommentModel.deleteOne({
       _id: new ObjectId(deleteCommentId),
     });
 

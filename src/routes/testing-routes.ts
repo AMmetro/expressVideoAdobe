@@ -4,7 +4,7 @@ import {
   RateLimitModel,
   // UserModel,
   // blogsCollection,
-  commentsCollection,
+  CommentModel,
   PostModel,
   // rateLimitCollection,
   securityDevicesCollection,
@@ -28,7 +28,7 @@ testingRoute.delete(
     await PostModel.deleteMany({});
     await usersCollection.deleteMany({});
     await securityDevicesCollection.deleteMany({});
-    await commentsCollection.deleteMany({});
+    await CommentModel.deleteMany({});
     // await rateLimitCollection.deleteMany({});
     //    await drop.darabase() - если есть права админа (в докере по умолчанию в атласе назначить)
     res.sendStatus(204);
