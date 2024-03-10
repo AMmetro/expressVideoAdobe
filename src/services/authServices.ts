@@ -379,7 +379,6 @@ export class AuthServices {
       status: ResultCode.Success,
       data: true,
     };
-
                                                                         // return {
                                                                         //   status: ResultCode.Success,
                                                                         //   data: recoveryCode,
@@ -393,8 +392,6 @@ export class AuthServices {
     if (!userForNewPassword) {
       return {
         status: ResultCode.ClientError,
-        // errorMessage: "Not found user with recoveryCode",
-
         errorMessage: JSON.stringify({
           errorsMessages: [
             {
@@ -403,25 +400,16 @@ export class AuthServices {
             },
           ],
         }),
-
-
-
-
-
       };
     }
-
-    console.log("newPassword for recovery")
-    console.log(newPassword)
-    console.log("userForNewPassword")
-    console.log(userForNewPassword)
-
+                                                                console.log("newPassword for recovery")
+                                                                console.log(newPassword)
+                                                                console.log("userForNewPassword")
+                                                                console.log(userForNewPassword)
     const passwordSalt = userForNewPassword.passwordSalt;
     const passwordHash = await hashServise.generateHash(newPassword, passwordSalt);
-
-    console.log("passwordHash")
-    console.log(passwordHash)
-
+                                                                console.log("passwordHash")
+                                                                console.log(passwordHash)
     const isPasswordUpdated = await UserRepository.updatePassword(userForNewPassword.email, passwordHash);
     if (!isPasswordUpdated) {
       return {

@@ -202,17 +202,27 @@ authRoute.post(
 
 authRoute.post(
   "/new-password",
-  passwordValidator,
   rateLimitMiddleware,
-  // emailExistValidator,
-  // inputValidationMiddleware,
   async (req: RequestWithBody<{ newPassword: string, recoveryCode: string }>, res: Response) => {
     const { newPassword, recoveryCode } = req.body;
     const newPasswordIncorrect = !newPassword ||newPassword.length < 6 || newPassword.length > 20 || typeof (newPassword) !== "string"
     if (newPasswordIncorrect || !recoveryCode ){
       // проверка на код протух ???
-      // и новый пароль нормальный ???
-      res.sendStatus(400);
+      sendCustomError(res,
+         {
+        status: ResultCode.ClientError,
+        errorMessage: JSON.stringify({
+          errorsMessages: [
+            {
+              message: `New password is incorrect`,
+              field: "newPassword",
+            },
+          ],
+        }),
+      }
+        )
+
+      // res.sendStatus(400);
       return
     }
     const result = await AuthServices.newPassword(newPassword, recoveryCode);
