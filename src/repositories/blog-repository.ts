@@ -1,5 +1,5 @@
 import { WithId, ObjectId } from "mongodb";
-import { blogsCollection, db } from "../BD/db";
+import { blogsCollection } from "../BD/db";
 import { OutputBlogType } from "../models/blog/output/blog.output";
 import { BlogDB } from "../models/blog/db/blog-db";
 import { blogMapper } from "../models/blog/mapper/blog-mapper";
