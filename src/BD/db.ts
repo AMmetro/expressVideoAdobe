@@ -21,7 +21,7 @@ if (!mongoURI){
 export const client = new MongoClient(mongoURI);
 
 const database = client.db("BlogDB")
-export const usersCollection = database.collection<UserDB>("users")
+// export const usersCollection = database.collection<UserDB>("users")
 export const securityDevicesCollection = database.collection<SecurityDevicesDB>("devices")
 // export const blogsCollection = database.collection<BlogDB>("blogs")
 // export const postsCollection = database.collection<PostDB>("posts")
@@ -32,7 +32,7 @@ export const securityDevicesCollection = database.collection<SecurityDevicesDB>(
 // const kittySchema = new mongoose.Schema({name: String})
 // export const  KittenModel = mongoose.model('Kitten', kittySchema)
 
-// export const UserModel = mongoose.model<WithId<UserDB>>('users', UserSchema)
+export const UserModel = mongoose.model<WithId<UserDB>>('users', UserSchema)
 export const RateLimitModel = mongoose.model<WithId<RateLimitDB>>("ratelimit", RateLimitSchema)
 export const BlogModel = mongoose.model<WithId<BlogDB>>("blogs", BlogDBSchema)
 export const PostModel = mongoose.model<WithId<PostDB>>("posts", PostSchema)

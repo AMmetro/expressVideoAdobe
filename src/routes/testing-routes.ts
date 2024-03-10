@@ -8,7 +8,7 @@ import {
   PostModel,
   // rateLimitCollection,
   securityDevicesCollection,
-  usersCollection,
+  UserModel,
 } from "../BD/db";
 
 type ResponseType<P> = Response<P, Record<string, any>>;
@@ -18,7 +18,6 @@ export const testingRoute = Router({});
 testingRoute.delete(
   "/all-data",
   async (req: Request, res: ResponseType<{}>) => {
-    // await UserModel.deleteMany({});
     await RateLimitModel.deleteMany({});
     
     // await blogsCollection.deleteMany({});
@@ -26,7 +25,7 @@ testingRoute.delete(
 
     // await postsCollection.deleteMany({});
     await PostModel.deleteMany({});
-    await usersCollection.deleteMany({});
+    await UserModel.deleteMany({});
     await securityDevicesCollection.deleteMany({});
     await CommentModel.deleteMany({});
     // await rateLimitCollection.deleteMany({});

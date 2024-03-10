@@ -1,5 +1,5 @@
 import { WithId, ObjectId } from "mongodb";
-import { CommentModel, usersCollection } from "../BD/db";
+import { CommentModel } from "../BD/db";
 import { SortDirection } from "mongodb";
 import { PaginationType } from "../models/common";
 import { UserDB } from "../models/user/db/user-db";

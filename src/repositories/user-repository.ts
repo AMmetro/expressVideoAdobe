@@ -1,34 +1,34 @@
 import { ObjectId } from "mongodb";
-import { usersCollection } from "../BD/db";
+import { UserModel } from "../BD/db";
 import { UserDB } from "../models/user/db/user-db";
 
 export class UserRepository {
   static async createWithOutConfirmation(newUserData: UserDB) {
-    const newUserId = await usersCollection.insertOne(newUserData);
-    return newUserId.insertedId.toString();
+    const newUserId = await UserModel.create(newUserData);
+    return newUserId._id.toString();
   }
 
 
   static async updatePassword(userEmail: string, newPswrdHash: string) {
-    const passwordUpdated = await usersCollection.updateOne(
+    const passwordUpdated = await UserModel.updateOne(
       {email: userEmail}, { $set: { "passwordHash": newPswrdHash } });
     return passwordUpdated.modifiedCount === 1;
   }
 
   static async createWithConfirmation(confirmationNewUserData: UserDB) {
-    const newUserId = await usersCollection.insertOne(confirmationNewUserData);
-    return newUserId.insertedId.toString();
+    const newUserId = await UserModel.create(confirmationNewUserData);
+    return newUserId._id.toString();
   }
 
   static async delete(deleteUserId: string): Promise<Boolean> {
-    const deletePost = await usersCollection.deleteOne({
+    const deletePost = await UserModel.deleteOne({
       _id: new ObjectId(deleteUserId),
     });
     return !!deletePost.deletedCount;
   }
 
   static async confirmRegistration(userId: string): Promise<boolean> {
-    const user = await usersCollection.updateOne(
+    const user = await UserModel.updateOne(
       { _id: new ObjectId(userId) },
       { $set: { "emailConfirmation.isConfirmed": true } }
     );
@@ -39,7 +39,7 @@ export class UserRepository {
     userId: ObjectId,
     newConfirmationCode: string
   ): Promise<boolean> {
-    const user = await usersCollection.updateOne(
+    const user = await UserModel.updateOne(
       { _id: new ObjectId(userId) },
       { $set: { "emailConfirmation.confirmationCode": newConfirmationCode } }
     );
@@ -50,7 +50,7 @@ export class UserRepository {
     refreshToken: string,
     userId: string
   ): Promise<boolean> {
-    const user = await usersCollection.updateOne(
+    const user = await UserModel.updateOne(
       { _id: new ObjectId(userId) },
       {$push: {blackListToken: refreshToken}}
       )
@@ -61,7 +61,7 @@ export class UserRepository {
     userId: ObjectId,
     newRecoveryCode: string
   ): Promise<boolean> {
-    const user = await usersCollection.updateOne(
+    const user = await UserModel.updateOne(
       { _id: new ObjectId(userId) },
       { $set: { passwordRecoveryConfirmationCode: newRecoveryCode } }
     );
