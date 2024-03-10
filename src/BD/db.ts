@@ -42,7 +42,7 @@ export const runDB = async ()=>{
         // await client.connect()
         await mongoose.connect("mongodb+srv://metroexpress:suradet842@cluster0.gkpqpve.mongodb.net"+"/BlogDB");
         console.log("DB connected...") 
-        await BlogModel.deleteMany({});
+        // await BlogModel.deleteMany({});
     } 
     catch(e) {
         console.log(e)
