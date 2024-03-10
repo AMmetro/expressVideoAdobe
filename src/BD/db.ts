@@ -34,7 +34,7 @@ export const commentsCollection = database.collection<CommentDB>("comments")
 
 // export const UserModel = mongoose.model<WithId<UserDB>>('users', UserSchema)
 export const RateLimitModel = mongoose.model<WithId<RateLimitDB>>("ratelimit", RateLimitSchema)
-export const BlogModel = mongoose.model<WithId<BlogDB>>("blogs", BlogDBSchema)
+// export const BlogModel = mongoose.model<WithId<BlogDB>>("blogs", BlogDBSchema)
 
 
 export const runDB = async ()=>{
