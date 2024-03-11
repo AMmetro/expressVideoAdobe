@@ -6,6 +6,10 @@ export class CommentRepository {
   
   static async create(newCommentModal: CommentDB): Promise<string | null> {
       try{
+    //**
+    //*  const CommentInstance = new CommentModel(newCommentModal)
+    //*  await CommentInstance.save()
+    //**
     const commentId = await CommentModel.create(newCommentModal); 
     return commentId._id.toString();
     } catch(e){
@@ -18,7 +22,15 @@ export class CommentRepository {
     updatedCommentId: string,
     updateContent: string 
   ): Promise<Boolean> { 
+
+
+
     try { 
+    //**
+    //*  const Comment =  CommentInstance.findOne({_id:id})
+    //*  const Comment.content = updateContent
+    //*  await CommentInstance.save()
+    //**
       const commentForUpd = await CommentModel.updateOne(
         { _id: new ObjectId(updatedCommentId) },
         {

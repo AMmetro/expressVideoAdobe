@@ -1,7 +1,6 @@
 import mongoose from 'mongoose'
 import { WithId } from 'mongodb'
 
-
 export type commentatorInfoType = { userId: string; userLogin: string;}
 export type CommentDB = {
   content: string;
