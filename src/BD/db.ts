@@ -19,9 +19,9 @@ if (!mongoURI){
     throw new Error ("No URL for MongoDB conection")
 }
 
-export const client = new MongoClient(mongoURI);
+// export const client = new MongoClient(mongoURI);
 
-const database = client.db("BlogDB")
+// const database = client.db("BlogDB")
 // export const usersCollection = database.collection<UserDB>("users")
 // export const securityDevicesCollection = database.collection<SecurityDevicesDB>("devices")
 // export const blogsCollection = database.collection<BlogDB>("blogs")
