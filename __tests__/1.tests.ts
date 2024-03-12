@@ -6,12 +6,10 @@ describe('Mongoose integration', () => {
     const mongoURI = "mongodb+srv://metroexpress:suradet842@cluster0.gkpqpve.mongodb.net"+"/BlogDB"
     
     beforeAll(async () => {
-        /* Connecting to the database. */
         await mongoose.connect(mongoURI)
     })
 
     afterAll(async () => {
-        /* Closing database connection after each test. */
         await mongoose.connection.close()
     })
 
