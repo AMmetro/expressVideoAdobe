@@ -121,31 +121,53 @@ export class CommentsServices {
 
 
   static async composeComment(commentId:string): Promise<ResultCommentType> {
-    const comment = await CommentsQueryRepository.getById(commentId);
-    if (!comment){
-      return {
-        status: ResultCode.NotFound,
-        errorMessage: "Not found comment with id " + commentId,
-        }
-    }
+    // const comment = await CommentsQueryRepository.getById(commentId);
+    // if (!comment){
+    //   return {
+    //     status: ResultCode.NotFound,
+    //     errorMessage: "Not found comment with id " + commentId,
+    //     }
+    // }
     const commentsLikes = await LikesQueryRepository.getById(commentId);
     if (!commentsLikes){
       return {
         status: ResultCode.NotFound,
-        errorMessage: "Not found likes for comment",
+        errorMessage: "Cant read database with likes ",
         }
     }
 
-    // let likesCount = 0;
-    // commentsLikes.foreach(like=>{ 
-    //   if (like.commentId === comment.id) {
-    //     likesCount  += 1
 
-    // }),
-    // "dislikesCount": 0,
-    // "myStatus": "None"
+//     --------commentsLikes--------
+// [ { id: '65f0798f29143caaadc8d69b', commentId: '555' } ]
+    console.log("--------commentsLikes--------")
+    console.log(commentsLikes)
 
-    const result = {...comment, likesInfo:commentsLikes }
+    let likesCount = 0;
+    let dislikesCount = 0;
+    commentsLikes.forEach(like=>{ 
+      if (like.commentId !== commentId) {
+        likesCount  += 1
+      }
+      if (like.commentId !== commentId) {
+        dislikesCount  += 1
+      }
+    })
+
+    
+    const result = {
+    id: "string",
+    content: "string",
+    commentatorInfo: {
+      userId: "string",
+      userLogin: "string",
+    },
+    likesInfo: {
+      likesCount: likesCount,
+      dislikesCount: dislikesCount,
+      },
+    createdAt: "string",
+    }
+
 
     return {
       status: ResultCode.Success,

@@ -8,9 +8,9 @@ import { CommentDB } from "../models/comments/db/comment-db";
 import { commentMapper } from "../models/comments/mapper/comment-mapper";
 import { OutputCommentType } from "../models/comments/output/comment.output";
 import { OutputBasicSortQueryType } from "../utils/sortQeryUtils";
-import { likesMapper } from "../models/likes/mapper/user-mapper";
 import { OutputLikesType } from "../models/likes/output/likes.output";
 import { LikesDB } from "../models/likes/db/likes-db";
+import { likesMapper } from "../models/likes/mapper/likes-mapper";
 
 
 
@@ -49,16 +49,18 @@ export class LikesQueryRepository {
   //     };
   //   } catch (e) {
   //     console.log(e);
-  //     return null;
+  //     return null; 
   //   }
   // }
 
-  static async getById(id: string): Promise<OutputLikesType | null> {
+  static async getById(id: string): Promise<[OutputLikesType] | null> {
     const likes:WithId<LikesDB> | null = await LikesModel.find({ commentId: id }).lean();
     if (!likes) {
       return null;
     }
-    return likesMapper(likes);
+
+// @ts-ignore
+    return likes.map(likesMapper);
   }
 
 }

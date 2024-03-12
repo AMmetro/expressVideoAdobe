@@ -52,17 +52,22 @@ commentsRoute.get(
     res: ResposesType<OutputCommentType | null>
   ) => {
     const id = req.params.id;
-    if (!ObjectId.isValid(id)) {
+
+    // console.log("--------id--------")
+    // console.log(id)
+
+    // if (!ObjectId.isValid(id)) {
+    //   res.sendStatus(404);
+    //   return;
+    // }
+    const comment = await CommentsServices.composeComment(id);
+    // const comment = await CommentsQueryRepository.getById(id);
+    if (!comment) {
       res.sendStatus(404);
       return;
     }
-    const comment = await CommentsServices.composeComment(id);
-    // const comment = await CommentsQueryRepository.getById(id);
-  //   if (!comment) {
-  //     res.sendStatus(404);
-  //     return;
-  //   }
-  //   res.status(200).send(comment);
+    // @ts-ignore
+    res.status(200).send(comment);
   }
 );
 
