@@ -5,6 +5,7 @@ import { CommentRepository } from '../repositories/comment-repository';
 import { CommentsQueryRepository } from '../repositories/comments.query-repository';
 import { ResultCommentType } from '../models/comments/output/comment.output';
 import { ResultCode } from '../validators/error-validators';
+import { likeStatusEnum } from "../models/likes/db/likes-db";
 
 
 export class CommentsServices {
@@ -109,6 +110,41 @@ export class CommentsServices {
     return {
       status: ResultCode.Success,
       data: commentIsDelete
+    }
+  }
+
+
+  static async addLike(commentId:string, likeStatus: typeof likeStatusEnum, userId:string): Promise<ResultLikeType> {
+    
+    const commentForValidation = await CommentModel.findOne({ _id: new ObjectId(commentId) });
+    console.log("commentForValidation")
+    console.log(commentForValidation)
+        if (!commentForValidation){
+      return {
+        status: ResultCode.NotFound,
+        errorMessage: "Not found comment with id " + commentId,
+        }
+    }
+    
+    const newLike = {
+    userId: userId,
+    commentId: commentId,
+    myStatus:  likeStatusEnum.None ?? "None",
+    }
+
+    //  const LikeInstance = new LikesModel(newLike)
+    //  await LikeInstance.save()
+
+    // if (!comment){
+    //   return {
+    //     status: ResultCode.NotFound,
+    //     errorMessage: "Not found comment with id " + commentId,
+    //     }
+    // }
+
+    return {
+      status: ResultCode.Success,
+      data: true
     }
   }
 

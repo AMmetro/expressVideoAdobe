@@ -25,3 +25,10 @@ app.use("/users", usersRoute);
 app.use("/comments", commentsRoute);
 app.use("/testing", testingRoute);
 
+// app.use((error: Error, _req: Request, res: Response, next: NextFunction) => {
+//     if (error){
+//         console.log(error.message)
+//         res.send(error.message)
+//     }
+//     next();
+// });
