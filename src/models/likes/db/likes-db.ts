@@ -2,24 +2,19 @@ import mongoose from 'mongoose'
 import { WithId } from 'mongodb'
 
 export type LikesDB = {
+  commentId: string;
   likesCount: number;
   dislikesCount: number;
   myStatus: string;
 };
 
-// type emailConfirmationType = {
-//   confirmationCode: string;
-//   expirationDate: any;
-//   isConfirmed: boolean;
-// };
 
-// export const BlackListTokenSchema = new mongoose.Schema<blackListTokenType>() // wrong!!
-
-// export const EmailConfirmationsChema = new mongoose.Schema<emailConfirmationType>({
-//   confirmationCode: { type: String, require: true },
-//   expirationDate: { type: String, require: true },
-//   isConfirmed: { type: Boolean, require: true },
-// })
+export const likeStatusEnum = {
+  None: "None",
+  Like: "Like",
+  Dislike: "Dislike",
+  };
+  
 
 export const LikesSchema = new mongoose.Schema<WithId<LikesDB>>({
   likesCount: { type: Number, require: true },
