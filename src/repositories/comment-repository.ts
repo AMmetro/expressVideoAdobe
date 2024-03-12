@@ -22,9 +22,6 @@ export class CommentRepository {
     updatedCommentId: string,
     updateContent: string 
   ): Promise<Boolean> { 
-
-
-
     try { 
     //**
     //*  const Comment =  CommentInstance.findOne({_id:id})

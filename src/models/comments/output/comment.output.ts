@@ -5,6 +5,10 @@ export type OutputCommentType = {
       userId: string;
       userLogin: string;
     };
+    likesInfo: {
+      likesCount: number;
+      dislikesCount: number;
+      };
     createdAt: string;
   };
 
@@ -13,3 +17,8 @@ export type ResultCommentType = {
   errorMessage?: string,
   data?: OutputCommentType | Boolean,
   };
+
+  export type likesInfoType = {
+    likesCount: number;
+    dislikesCount: number;
+    }

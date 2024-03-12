@@ -31,16 +31,21 @@ export class CommentsServices {
         errorMessage: "Not found user with id " + userCommentatorId,
         }
     }
-    const newCommentModal = {
+    const newCommentModel = {
       content: content,
       postId: commentedPostId,
       commentatorInfo: {
         userId: commentatorInfo.id,
         userLogin: commentatorInfo.login,
       },
+      likesInfo: {
+        likesCount: 0,
+        dislikesCount: 0,
+        myStatus: "None"
+      },
       createdAt: new Date().toISOString(),
     };
-    const createdCommentId = await CommentRepository.create(newCommentModal);
+    const createdCommentId = await CommentRepository.create(newCommentModel);
       if (!createdCommentId) {
       return {
         status: ResultCode.NotFound,
@@ -54,7 +59,6 @@ export class CommentsServices {
         errorMessage: "Service temporarily unavailable"
         }
     }
-
     return {
       status: ResultCode.Success,
       data: createdComment
