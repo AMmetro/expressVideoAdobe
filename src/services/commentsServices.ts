@@ -147,6 +147,13 @@ export class CommentsServices {
       }
     })
 
+   let myStatus;
+    commentLikes.forEach(like=>{ 
+      if (comment.commentatorInfo.userId === like.userId) {
+        myStatus = like.myStatus
+      }
+    })
+
     const resultComment = {
     id: commentId,
     content: comment.content,
@@ -157,7 +164,8 @@ export class CommentsServices {
     likesInfo: {
       likesCount: likesCount,
       dislikesCount: dislikesCount,
-      },
+      myStatus: myStatus, 
+         },
     createdAt: comment.createdAt,
     }
 

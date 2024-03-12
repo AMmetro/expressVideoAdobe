@@ -2,6 +2,7 @@ export type OutputLikesType = {
   commentId: string;
   id: string;
   myStatus: string;
+  userId: string;
 };
 
 export type ResultLikeType = {

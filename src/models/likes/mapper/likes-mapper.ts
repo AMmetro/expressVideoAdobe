@@ -8,8 +8,10 @@ export const likesMapper = (like:WithId<LikesDB>):OutputLikesType => {
         id: like._id.toString(),
         commentId: like.commentId,
         myStatus: like.myStatus,
+        userId: like.userId,
     }
 }
+
 
 
 

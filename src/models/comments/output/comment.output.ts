@@ -8,6 +8,7 @@ export type OutputCommentType = {
     likesInfo: {
       likesCount: number;
       dislikesCount: number;
+      myStatus: string;
       };
     createdAt: string;
   };
