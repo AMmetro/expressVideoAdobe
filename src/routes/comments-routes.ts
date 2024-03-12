@@ -52,14 +52,10 @@ commentsRoute.get(
     res: ResposesType<OutputCommentType | null>
   ) => {
     const id = req.params.id;
-
-    // console.log("--------id--------")
-    // console.log(id)
-
-    // if (!ObjectId.isValid(id)) {
-    //   res.sendStatus(404);
-    //   return;
-    // }
+    if (!ObjectId.isValid(id)) {
+      res.sendStatus(404);
+      return;
+    }
     const comment = await CommentsServices.composeComment(id);
     // const comment = await CommentsQueryRepository.getById(id);
     if (!comment) {

@@ -179,19 +179,19 @@ export class CommentsServices {
   static async addLike(commentId:string, likeStatus: typeof likeStatusEnum, userId:string): Promise<ResultLikeType> {
     
     const commentForValidation = await CommentModel.findOne({ _id: new ObjectId(commentId) });
-    console.log("commentForValidation")
-    console.log(commentForValidation)
+                                                    console.log("commentForValidation")
+                                                    console.log(commentForValidation)
         if (!commentForValidation){
       return {
         status: ResultCode.NotFound,
         errorMessage: "Not found comment with id " + commentId,
         }
     }
-    
+
     const newLike = {
     userId: userId,
     commentId: commentId,
-    myStatus:  likeStatusEnum.None ?? "None",
+    myStatus:  likeStatus,
     }
 
      const LikeInstance = new LikesModel(newLike)
