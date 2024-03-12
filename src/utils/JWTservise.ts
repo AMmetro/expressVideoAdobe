@@ -8,7 +8,7 @@ import bcrypt from "bcrypt";
 export const jwtServise = {
   async createAccessTokenJWT(user: OutputUserType, deviceId:string) {
     const token = jwt.sign({ userId: user.id, deviceId }, appConfig.JWT_ACSS_SECRET, {
-      expiresIn: "5m",
+      expiresIn: "10s",
     });
     return token;
     //     return {
@@ -19,7 +19,7 @@ export const jwtServise = {
 
   async createRefreshTokenJWT(user: OutputUserType,  deviceId:string) {
     const token: any = jwt.sign({ userId: user.id, deviceId }, appConfig.JWT_REFRESH_SECRET, {
-      expiresIn: "10m",
+      expiresIn: "20s",
     });
     return token;
   },
