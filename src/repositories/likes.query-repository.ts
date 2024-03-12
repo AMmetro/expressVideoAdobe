@@ -1,5 +1,7 @@
 import { WithId, ObjectId } from "mongodb";
-import { CommentModel, LikesModel } from "../BD/db";
+import { CommentModel,
+  //  LikesModel 
+  } from "../BD/db";
 import { SortDirection } from "mongodb";
 import { PaginationType } from "../models/common";
 import { UserDB } from "../models/user/db/user-db";
@@ -53,12 +55,18 @@ export class LikesQueryRepository {
   //   }
   // }
 
-  static async getById(id: string): Promise<OutputLikesType | null> {
-    const likes:WithId<LikesDB> | null = await LikesModel.find({ commentId: id }).lean();
-    if (!likes) {
-      return null;
-    }
-    return likesMapper(likes);
+  // static async getById(id: string): Promise<OutputLikesType | null> {
+  static async getById(id: string) {
+  //   const likes:WithId<LikesDB> | null = await LikesModel.find({ commentId: id }).lean();
+  //   if (!likes) {
+  //     return null;
+  //   }
+  //   return likesMapper(likes);
+  return [{}]
+
   }
+
+
+
 
 }

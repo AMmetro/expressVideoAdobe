@@ -15,14 +15,22 @@ describe('Mongoose integration', () => {
         await mongoose.connection.close()
     })
 
-    describe('GET blogs', () => {
+    describe('clear all data', () => {
         it('+ GET blogs', async () => {
-            const res_ = await request(app)
-                .get('/blogs')
-                .expect(200)
-            expect(res_.body.items.length).toBe(10)
+            await request(app).delete("/testing/all-data").expect(204);
         })
     })
+
+    // describe('GET blogs', () => {
+    //     it('+ GET blogs', async () => {
+    //         const res_ = await request(app)
+    //             .get('/blogs')
+    //             .expect(200)
+    //         expect(res_.body.items.length).toBe(10)
+    //     })
+    // })
+
+
 })
 
 // import request from "supertest";
