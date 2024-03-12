@@ -57,10 +57,6 @@ commentsRoute.get(
       return;
     }
     const comment = await CommentsServices.composeComment(id);
-    // @ts-ignore
-    res.send({ dislikesCount: 50,
-                  likesCount: 100
-    });
     // const comment = await CommentsQueryRepository.getById(id);
   //   if (!comment) {
   //     res.sendStatus(404);

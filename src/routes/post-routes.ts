@@ -120,6 +120,15 @@ postRoute.post(
       res.sendStatus(404);
       return;
     }
+
+
+        // @ts-ignore
+        res.send({ dislikesCount: 50,
+          likesCount: 100
+        });
+
+
+
     const result = await CommentsServices.create(commentedPostId, userCommentatorId, content );
     if (result.status === ResultCode.Success){
       res.status(201).send(result.data);
