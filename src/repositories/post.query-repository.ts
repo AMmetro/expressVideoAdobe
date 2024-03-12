@@ -1,5 +1,5 @@
 import { WithId, ObjectId } from "mongodb";
-import { postsCollection } from "../BD/db";
+import { PostModel } from "../BD/db";
 import { postMapper } from "../models/post/mapper/post-mapper";
 import { OutputPostType } from "../models/post/output/post.output";
 import { postsSortDataType } from "../models/post/input/updateposts-input-model";
@@ -13,13 +13,13 @@ export class PostQueryRepository {
    let filter = {}
    if (blogId){filter = {blogId: blogId} }
    try {
-    const posts: WithId<PostDB>[] = await postsCollection
+    const posts: WithId<PostDB>[] = await PostModel
     .find(filter)
-    .sort(sortBy, sortDirection)
+    .sort({[sortBy]: sortDirection})
     .skip((pageNumber-1) * pageSize)
     .limit(pageSize)
-    .toArray();
-    const totalCount = await postsCollection.countDocuments(filter)
+    .lean();
+    const totalCount = await PostModel.countDocuments(filter)
     const pagesCount = Math.ceil(totalCount / pageSize);
     return {
       pagesCount: pagesCount,
@@ -32,7 +32,7 @@ export class PostQueryRepository {
   }
   
   static async getById(id: string): Promise<OutputPostType | null> {
-    const post = await postsCollection.findOne({
+    const post = await PostModel.findOne({
        _id: new ObjectId(id) 
     });
     if (!post) {

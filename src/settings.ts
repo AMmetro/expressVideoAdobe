@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { NextFunction } from 'express';
 import { blogRoute } from './routes/blog-routes';
 import { postRoute } from './routes/post-routes';
 import { testingRoute } from './routes/testing-routes';
@@ -17,6 +17,10 @@ app.use(express.json());
 app.use(cookieParser());
 app.set('trust proxy', true);
 
+app.get("/", (_req, res) => {
+   res.send("ok ") 
+});
+
 app.use("/auth", authRoute);
 app.use("/blogs", blogRoute);
 app.use("/posts", postRoute);
@@ -24,4 +28,15 @@ app.use("/security", devicesRoute);
 app.use("/users", usersRoute);
 app.use("/comments", commentsRoute);
 app.use("/testing", testingRoute);
+
+
+// app.use((error: Error, _req: Request, res: Response, next: NextFunction) => {
+//     if (error){
+//         console.log(error.message)
+//         res.send(error.message)
+//     }
+//     next();
+// });
+
+
 

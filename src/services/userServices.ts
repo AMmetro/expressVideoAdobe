@@ -75,15 +75,6 @@ export class UserServices {
       user.passwordSalt
     );
 
-    // -----------------------------------------------
-    console.log("user")
-    console.log(user)
-    console.log("authUserData")
-    console.log(authUserData)
-    console.log("userLogInPasswordHash")
-    console.log(userLogInPasswordHash)
-    // -----------------------------------------------
-
     if (user.passwordHash !== userLogInPasswordHash || !user) {
       return null;
     }
@@ -129,27 +120,5 @@ export class UserServices {
     status: ResultCode.Success,
     data: true,
   };
-// -----------------black list----------------------------------------------------------------
-    // const isTokenInBlackListAlready = user?.blackListToken?.some(
-    //   (blackToken) => blackToken === refreshToken
-    // );
-    // if (isTokenInBlackListAlready) {
-    //   return {
-    //     status: ResultCode.Unauthorised,
-    //     errorMessage: `Token ${refreshToken} is in black list already`,
-    //   };
-    // }
-
-    // const userBlackListUpdated = await UserRepository.addTokenToBlackListById(
-    //   refreshToken,
-    //   userId
-    // );
-    // if (!userBlackListUpdated) {
-    //   return {
-    //     status: ResultCode.ServerError,
-    //     errorMessage: "Can't write user refresh token to black list",
-    //   };
-    // }
-  // ------------------------------------------------------------------
   }
 }

@@ -1,6 +1,6 @@
 import { body, param } from "express-validator";
 import { inputValidationMiddleware } from "../inputValidation/input-validation-middleware";
-import { usersCollection } from "../BD/db";
+import { UserModel } from "../BD/db";
 
 export const loginValidator = body("login")
   .isString()
@@ -27,7 +27,7 @@ export const emailValidator = body("email")
 
 export const emailExistValidator = body("email").custom(
   async (value: string) => {
-    const existingEmail = await usersCollection.findOne({ email: value });
+    const existingEmail = await UserModel.findOne({ email: value });
     if (existingEmail) {
       // false
       throw Error("email already exist");
@@ -38,7 +38,7 @@ export const emailExistValidator = body("email").custom(
 
 export const codeExistValidator = body("code").custom(
   async (value: string) => {
-    const existingUser  = await usersCollection.findOne({ "emailConfirmation.confirmationCode": value })
+    const existingUser  = await UserModel.findOne({ "emailConfirmation.confirmationCode": value })
     if (!existingUser) {
       // false
       throw Error(`user with code ${value} not found`);
@@ -49,7 +49,7 @@ export const codeExistValidator = body("code").custom(
 
 export const loginExistValidator = body("login").custom(
   async (value: string) => {
-    const existingLogin = await usersCollection.findOne({ login: value });
+    const existingLogin = await UserModel.findOne({ login: value });
     if (existingLogin) {
       // false
       throw Error("login already exist");
@@ -60,7 +60,7 @@ export const loginExistValidator = body("login").custom(
 
 export const emailIsAplliedValidator = body("email").custom(
   async (value: string) => {
-    const userForValidation = await usersCollection.findOne({ email: value });
+    const userForValidation = await UserModel.findOne({ email: value });
     const emailIsApllied = userForValidation?.emailConfirmation?.isConfirmed;
     if (emailIsApllied) {
       // false
