@@ -28,7 +28,7 @@ testingRoute.delete(
     await PostModel.deleteMany({});
     await UserModel.deleteMany({});
     await SecurityDevicesModel.deleteMany({});
-    await CommentModel.deleteMany({});
+                      // await CommentModel.deleteMany({});
     await LikesModel.deleteMany({});
     // await rateLimitCollection.deleteMany({});
     //    await drop.darabase() - если есть права админа (в докере по умолчанию в атласе назначить)
