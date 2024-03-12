@@ -11,15 +11,15 @@ import { jwtValidationAcssTokenMiddleware } from '../auth/jwtAuth-middleware';
 import { CommentsServices } from '../services/commentsServices';
 import { ResultCode } from '../validators/error-validators';
 import { sendCustomError } from '../utils/sendResponse';
-import { commentValidation } from '../validators/comment-validators';
+import { commentBelongToUserValidation, commentValidation } from '../validators/comment-validators';
 import { likeStatusEnum } from "../models/likes/db/likes-db";
 
 export const commentsRoute = Router({});
 
-
 commentsRoute.put(
   "/:commentId/like-status",
   jwtValidationAcssTokenMiddleware,
+  commentBelongToUserValidation, // ????
   async (
     req: RequestWithParams<{commentId: string}>,
     res: Response,
@@ -37,18 +37,6 @@ commentsRoute.put(
       return;
     }
     const result = await CommentsServices.addLike(commentId, likeStatus, userId);
-  // --------------------------------------------------
-    const composetComment = {
-      likesCount: 0,
-      dislikesCount: 0,
-      userId: 0,
-      myStatus: 0,
-    }
-
-    res.send(composetComment)
-    return
-    // --------------------------------------------------
-
     if (!result) {
       res.sendStatus(401);
       return;
@@ -56,8 +44,6 @@ commentsRoute.put(
     res.sendStatus(204)
   }
 );
-
-
 
 commentsRoute.get(
   "/:id",
@@ -70,14 +56,16 @@ commentsRoute.get(
       res.sendStatus(404);
       return;
     }
-    const comment = await CommentsQueryRepository.getById(id);
-    if (!comment) {
-      res.sendStatus(404);
-      return;
-    }
-    res.status(200).send(comment);
+    const comment = await CommentsServices.composeComment(id);
+    // const comment = await CommentsQueryRepository.getById(id);
+  //   if (!comment) {
+  //     res.sendStatus(404);
+  //     return;
+  //   }
+  //   res.status(200).send(comment);
   }
 );
+
 
 commentsRoute.put(
   "/:commentId",

@@ -5,10 +5,11 @@ import { CommentRepository } from '../repositories/comment-repository';
 import { CommentsQueryRepository } from '../repositories/comments.query-repository';
 import { ResultCommentType } from '../models/comments/output/comment.output';
 import { ResultCode } from '../validators/error-validators';
+import { LikesQueryRepository } from "../repositories/likes.query-repository";
+import { CommentModel, LikesModel } from "../BD/db";
 import { likeStatusEnum } from "../models/likes/db/likes-db";
-import { CommentModel } from "../BD/db";
-import { ObjectId } from "mongodb";
 import { ResultLikeType } from "../models/likes/output/likes.output";
+import { ObjectId } from "mongodb";
 
 
 export class CommentsServices {
@@ -53,8 +54,6 @@ export class CommentsServices {
         errorMessage: "Service temporarily unavailable"
         }
     }
-
-    // const mappedCreatedComment = commentMapper(createdComment)
 
     return {
       status: ResultCode.Success,
@@ -117,6 +116,40 @@ export class CommentsServices {
   }
 
 
+  static async composeComment(commentId:string): Promise<ResultCommentType> {
+    const comment = await CommentsQueryRepository.getById(commentId);
+    if (!comment){
+      return {
+        status: ResultCode.NotFound,
+        errorMessage: "Not found comment with id " + commentId,
+        }
+    }
+    const commentsLikes = await LikesQueryRepository.getById(commentId);
+    if (!commentsLikes){
+      return {
+        status: ResultCode.NotFound,
+        errorMessage: "Not found likes for comment",
+        }
+    }
+
+    // let likesCount = 0;
+    // commentsLikes.foreach(like=>{ 
+    //   if (like.commentId === comment.id) {
+    //     likesCount  += 1
+
+    // }),
+    // "dislikesCount": 0,
+    // "myStatus": "None"
+
+    const result = {...comment, likesInfo:commentsLikes }
+
+    return {
+      status: ResultCode.Success,
+      data: result
+    }
+  }
+
+
   static async addLike(commentId:string, likeStatus: typeof likeStatusEnum, userId:string): Promise<ResultLikeType> {
     
     const commentForValidation = await CommentModel.findOne({ _id: new ObjectId(commentId) });
@@ -135,15 +168,8 @@ export class CommentsServices {
     myStatus:  likeStatusEnum.None ?? "None",
     }
 
-    //  const LikeInstance = new LikesModel(newLike)
-    //  await LikeInstance.save()
-
-    const composetComment = {
-      likesCount: 0,
-      dislikesCount: 0,
-      userId: 0,
-      myStatus: 0,
-    }
+     const LikeInstance = new LikesModel(newLike)
+     await LikeInstance.save()
 
     // if (!comment){
     //   return {

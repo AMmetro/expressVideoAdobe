@@ -8,7 +8,6 @@ import { CommentDB } from "../models/comments/db/comment-db";
 import { commentMapper } from "../models/comments/mapper/comment-mapper";
 import { OutputCommentType } from "../models/comments/output/comment.output";
 import { OutputBasicSortQueryType } from "../utils/sortQeryUtils";
-import { PostQueryRepository } from "./post.query-repository";
 
 
 
