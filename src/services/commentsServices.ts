@@ -4,7 +4,7 @@ import { UserQueryRepository } from "../repositories/user.query-repository";
 import { CommentRepository } from '../repositories/comment-repository';
 import { CommentsQueryRepository } from '../repositories/comments.query-repository';
 import { ResultCommentType } from '../models/comments/output/comment.output';
-import { ResultCode } from '../validators/error-validators';
+import { Result, ResultCode } from '../validators/error-validators';
 import { LikesQueryRepository } from "../repositories/likes.query-repository";
 import { CommentModel, LikesModel } from "../BD/db";
 import { likeStatusEnum } from "../models/likes/db/likes-db";

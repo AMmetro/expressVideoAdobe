@@ -58,9 +58,9 @@ commentsRoute.get(
     }
     const result = await CommentsServices.composeComment(id);
     if (result.status === ResultCode.Success){
-      res.sendStatus(200)
+      res.status(200).send(result.data as OutputCommentType);
     }
-      else {sendCustomError(res, result)}
+    else {sendCustomError(res, result)}
   }
 );
 
