@@ -6,6 +6,9 @@ import { CommentsQueryRepository } from '../repositories/comments.query-reposito
 import { ResultCommentType } from '../models/comments/output/comment.output';
 import { ResultCode } from '../validators/error-validators';
 import { likeStatusEnum } from "../models/likes/db/likes-db";
+import { CommentModel } from "../BD/db";
+import { ObjectId } from "mongodb";
+import { ResultLikeType } from "../models/likes/output/likes.output";
 
 
 export class CommentsServices {
@@ -134,6 +137,13 @@ export class CommentsServices {
 
     //  const LikeInstance = new LikesModel(newLike)
     //  await LikeInstance.save()
+
+    const composetComment = {
+      likesCount: 0,
+      dislikesCount: 0,
+      userId: 0,
+      myStatus: 0,
+    }
 
     // if (!comment){
     //   return {

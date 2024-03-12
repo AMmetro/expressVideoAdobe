@@ -37,6 +37,18 @@ commentsRoute.put(
       return;
     }
     const result = await CommentsServices.addLike(commentId, likeStatus, userId);
+  // --------------------------------------------------
+    const composetComment = {
+      likesCount: 0,
+      dislikesCount: 0,
+      userId: 0,
+      myStatus: 0,
+    }
+
+    res.send(composetComment)
+    return
+    // --------------------------------------------------
+
     if (!result) {
       res.sendStatus(401);
       return;
