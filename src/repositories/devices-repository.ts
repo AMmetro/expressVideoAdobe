@@ -1,5 +1,9 @@
-
+import { ObjectId } from "mongodb";
 import { SecurityDevicesModel } from "../BD/db"; 
+import {
+  RequestInputPostType,
+  UpdateInputPostType,
+} from "../models/post/input/updateposts-input-model";
 export class DevicesRepository {
   static async deleteDevicesExeptCurrent(
     deviceId: string,

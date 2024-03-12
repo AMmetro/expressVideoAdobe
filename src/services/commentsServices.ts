@@ -50,6 +50,8 @@ export class CommentsServices {
         }
     }
 
+    // const mappedCreatedComment = commentMapper(createdComment)
+
     return {
       status: ResultCode.Success,
       data: createdComment

@@ -6,6 +6,7 @@ import { UserDB } from "../models/user/db/user-db";
 import { userMapper } from "../models/user/mapper/user-mapper";
 import { OutputUserType } from "../models/user/output/user.output";
 import { searchDataType } from "../models/user/input/queryUser-input-model";
+// import { AuthUserFindModel, AuthUserInputModel } from "../models/user/input/authUser-input-model";
 
 type SortDataType = {
   searchEmailTerm?: string | null;
