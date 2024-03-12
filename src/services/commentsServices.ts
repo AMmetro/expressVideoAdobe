@@ -121,57 +121,49 @@ export class CommentsServices {
 
 
   static async composeComment(commentId:string): Promise<ResultCommentType> {
-    // const comment = await CommentsQueryRepository.getById(commentId);
-    // if (!comment){
-    //   return {
-    //     status: ResultCode.NotFound,
-    //     errorMessage: "Not found comment with id " + commentId,
-    //     }
-    // }
-    const commentsLikes = await LikesQueryRepository.getById(commentId);
-    if (!commentsLikes){
+    const comment = await CommentsQueryRepository.getById(commentId);
+    if (!comment){
+      return {
+        status: ResultCode.NotFound,
+        errorMessage: "Not found comment with id " + commentId,
+        }
+    }
+    const commentLikes = await LikesQueryRepository.getById(commentId);
+    if (!commentLikes){
       return {
         status: ResultCode.NotFound,
         errorMessage: "Cant read database with likes ",
         }
     }
 
-
-//     --------commentsLikes--------
-// [ { id: '65f0798f29143caaadc8d69b', commentId: '555' } ]
-    console.log("--------commentsLikes--------")
-    console.log(commentsLikes)
-
     let likesCount = 0;
     let dislikesCount = 0;
-    commentsLikes.forEach(like=>{ 
-      if (like.commentId !== commentId) {
+    commentLikes.forEach(like=>{ 
+      if (like.myStatus === likeStatusEnum.Like) {
         likesCount  += 1
       }
-      if (like.commentId !== commentId) {
+      if (like.myStatus === likeStatusEnum.Dislike) {
         dislikesCount  += 1
       }
     })
 
-    
-    const result = {
-    id: "string",
-    content: "string",
+    const resultComment = {
+    id: commentId,
+    content: comment.content,
     commentatorInfo: {
-      userId: "string",
-      userLogin: "string",
+      userId: comment.commentatorInfo.userId,
+      userLogin: comment.commentatorInfo.userLogin,
     },
     likesInfo: {
       likesCount: likesCount,
       dislikesCount: dislikesCount,
       },
-    createdAt: "string",
+    createdAt: comment.createdAt,
     }
-
 
     return {
       status: ResultCode.Success,
-      data: result
+      data: resultComment
     }
   }
 
@@ -179,8 +171,6 @@ export class CommentsServices {
   static async addLike(commentId:string, likeStatus: typeof likeStatusEnum, userId:string): Promise<ResultLikeType> {
     
     const commentForValidation = await CommentModel.findOne({ _id: new ObjectId(commentId) });
-                                                    console.log("commentForValidation")
-                                                    console.log(commentForValidation)
         if (!commentForValidation){
       return {
         status: ResultCode.NotFound,

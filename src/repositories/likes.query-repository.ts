@@ -53,13 +53,11 @@ export class LikesQueryRepository {
   //   }
   // }
 
-  static async getById(id: string): Promise<[OutputLikesType] | null> {
-    const likes:WithId<LikesDB> | null = await LikesModel.find({ commentId: id }).lean();
+  static async getById(id: string): Promise<OutputLikesType[] | null> {
+    const likes:[WithId<LikesDB>] | null = await LikesModel.find({ commentId: id }).lean();
     if (!likes) {
       return null;
     }
-
-// @ts-ignore
     return likes.map(likesMapper);
   }
 

@@ -56,14 +56,11 @@ commentsRoute.get(
       res.sendStatus(404);
       return;
     }
-    const comment = await CommentsServices.composeComment(id);
-    // const comment = await CommentsQueryRepository.getById(id);
-    if (!comment) {
-      res.sendStatus(404);
-      return;
+    const result = await CommentsServices.composeComment(id);
+    if (result.status === ResultCode.Success){
+      res.sendStatus(200)
     }
-    // @ts-ignore
-    res.status(200).send(comment);
+      else {sendCustomError(res, result)}
   }
 );
 
