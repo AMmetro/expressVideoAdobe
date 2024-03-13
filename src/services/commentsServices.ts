@@ -9,7 +9,8 @@ import { LikesQueryRepository } from "../repositories/likes.query-repository";
 import { CommentModel, LikesModel } from "../BD/db";
 import { likeStatusEnum } from "../models/likes/db/likes-db";
 import { ResultLikeType } from "../models/likes/output/likes.output";
-import { ObjectId } from "mongodb";
+import { ObjectId, WithId } from "mongodb";
+import { LikesDB } from '../models/likes/db/likes-db';
 
 
 export class CommentsServices {
@@ -138,6 +139,7 @@ export class CommentsServices {
 
     let likesCount = 0;
     let dislikesCount = 0;
+    let myStatus;
     commentLikes.forEach(like=>{ 
       if (like.myStatus === likeStatusEnum.Like) {
         likesCount  += 1
@@ -145,12 +147,8 @@ export class CommentsServices {
       if (like.myStatus === likeStatusEnum.Dislike) {
         dislikesCount  += 1
       }
-    })
-
-   let myStatus;
-    commentLikes.forEach(like=>{ 
-      if (comment.commentatorInfo.userId === like.userId) {
-        myStatus = like.myStatus
+      if (like.userId === comment.commentatorInfo.userId) {
+        myStatus = like.myStatus  
       }
     })
 
@@ -178,29 +176,59 @@ export class CommentsServices {
 
   static async addLike(commentId:string, likeStatus: typeof likeStatusEnum, userId:string): Promise<ResultLikeType> {
     
-    const commentForValidation = await CommentModel.findOne({ _id: new ObjectId(commentId) });
-        if (!commentForValidation){
+    const commentForAddingLike = await CommentModel.findOne({ _id: new ObjectId(commentId) });
+        if (!commentForAddingLike){
       return {
         status: ResultCode.NotFound,
         errorMessage: "Not found comment with id " + commentId,
         }
     }
 
-    const newLike = {
-    userId: userId,
-    commentId: commentId,
-    myStatus:  likeStatus,
+
+    const existingCommentLike: WithId<LikesDB> | null = await LikesModel.findOne({ commentId: commentId, userId: userId });
+    const LikeInstance = new LikesModel()
+    
+    if (!existingCommentLike){
+      return {
+        status: ResultCode.NotFound,
+        errorMessage: "Not found like info for comment" + commentId,
+        }
+    }
+    if (existingCommentLike.myStatus === likeStatus) {
+      return {
+        status: ResultCode.Success,
+        data: true
+      }
+    }
+    if (likeStatus.Like === likeStatusEnum.Like ) {
+      // LikeInstance.myStatus = likeStatus.Like
+      // LikeInstance.Save()
+      return {
+        status: ResultCode.Success,
+        data: true
+      }
+    }
+    if (likeStatus.Like === likeStatusEnum.Dislike) {
+     // LikeInstance.myStatus = likeStatus.Dislike
+     // LikeInstance.Save()
+     return {
+      status: ResultCode.Success,
+      data: true
+    }
     }
 
-     const LikeInstance = new LikesModel(newLike)
-     await LikeInstance.save()
 
-    // if (!comment){
-    //   return {
-    //     status: ResultCode.NotFound,
-    //     errorMessage: "Not found comment with id " + commentId,
-    //     }
+
+    // const newedLike = {
+    // userId: userId,
+    // commentId: commentId,
+    // myStatus:  likeStatus,
     // }
+
+    //  const LikeInstance = new LikesModel(newedLike)
+    //  await LikeInstance.save()
+
+
 
     return {
       status: ResultCode.Success,

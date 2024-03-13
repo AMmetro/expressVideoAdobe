@@ -19,7 +19,7 @@ export const commentsRoute = Router({});
 commentsRoute.put(
   "/:commentId/like-status",
   jwtValidationAcssTokenMiddleware,
-  commentBelongToUserValidation, // ????
+  // commentBelongToUserValidation, // ????
   async (
     req: RequestWithParams<{commentId: string}>,
     res: Response,
