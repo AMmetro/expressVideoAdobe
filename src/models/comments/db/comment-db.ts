@@ -12,7 +12,7 @@ export type CommentDB = {
   content: string;
   postId: string;
   commentatorInfo: commentatorInfoType;
-  likesInfo: likesInfoType;
+  // likesInfo: likesInfoType;
   createdAt: string;
 };
 
@@ -31,6 +31,6 @@ export const CommentSchema = new mongoose.Schema<WithId<CommentDB>>({
   content: { type: String, require: true },
   postId: { type: String, require: true },
   commentatorInfo: { type: commentatorInfoChema, require: true },
-  likesInfo: { type: likesInfoChema, require: true },
+  // likesInfo: { type: likesInfoChema, require: true },
   createdAt: { type: String, require: true },
 })

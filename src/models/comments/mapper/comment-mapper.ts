@@ -12,10 +12,10 @@ export const commentMapper = (
       userId: comment.commentatorInfo.userId,
       userLogin: comment.commentatorInfo.userLogin,
     },
-    likesInfo: {
-      likesCount: comment.likesInfo.likesCount,
-      dislikesCount: comment.likesInfo.dislikesCount,
-    },
+    // likesInfo: {
+    //   likesCount: comment.likesInfo.likesCount,
+    //   dislikesCount: comment.likesInfo.dislikesCount,
+    // },
     createdAt: comment.createdAt,
   };
 };

@@ -169,6 +169,7 @@ export class CommentsServices {
 
     return {
       status: ResultCode.Success,
+      // @ts-ignore
       data: resultComment
     }
   }
@@ -194,6 +195,7 @@ export class CommentsServices {
         errorMessage: "Not found like info for comment" + commentId,
         }
     }
+    // @ts-ignore
     if (existingCommentLike.myStatus === likeStatus) {
       return {
         status: ResultCode.Success,
