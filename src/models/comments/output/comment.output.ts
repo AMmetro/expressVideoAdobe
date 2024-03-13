@@ -5,14 +5,23 @@ export type OutputCommentType = {
       userId: string;
       userLogin: string;
     };
-    // likesInfo: {
-    //   likesCount: number;
-    //   dislikesCount: number;
-    //   myStatus: string;
-    //   };
+    likesInfo: {
+      likesCount: number;
+      dislikesCount: number;
+      myStatus: string;
+      };
     createdAt: string;
   };
 
+export type MapperOutputCommentType = {
+    id: string,
+    content: string;
+    commentatorInfo: {
+      userId: string;
+      userLogin: string;
+    };
+    createdAt: string;
+  };
 
 export type ResultCommentType = {
   status: string,

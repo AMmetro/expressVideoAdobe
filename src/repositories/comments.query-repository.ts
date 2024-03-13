@@ -6,7 +6,7 @@ import { UserDB } from "../models/user/db/user-db";
 import { AuthUserInputModel } from "../models/user/input/authUser-input-model";
 import { CommentDB } from "../models/comments/db/comment-db";
 import { commentMapper } from "../models/comments/mapper/comment-mapper";
-import { OutputCommentType } from "../models/comments/output/comment.output";
+import { MapperOutputCommentType, OutputCommentType } from "../models/comments/output/comment.output";
 import { OutputBasicSortQueryType } from "../utils/sortQeryUtils";
 
 
@@ -16,7 +16,7 @@ type SortDataType = OutputBasicSortQueryType & { id: string };
 export class CommentsQueryRepository {
   static async getPostComments(
     sortData: SortDataType
-  ): Promise<PaginationType<OutputCommentType> | null> {
+  ): Promise<PaginationType<MapperOutputCommentType> | null> {
 
     const { 
       id,
@@ -35,7 +35,7 @@ export class CommentsQueryRepository {
         .limit(pageSize)
         .lean();
       const totalCount = await CommentModel.countDocuments(filter);
-      const pagesCount = Math.ceil(totalCount / pageSize);
+      const pagesCount = Math.ceil(totalCount / pageSize);    
 
       return {
         pagesCount: pagesCount,
@@ -50,7 +50,7 @@ export class CommentsQueryRepository {
     }
   }
 
-  static async getById(id: string): Promise<OutputCommentType | null> {
+  static async getById(id: string): Promise<MapperOutputCommentType | null> {
     const comment:WithId<CommentDB> | null = await CommentModel.findOne({ _id: new ObjectId(id) });
     if (!comment) {
       return null;
