@@ -207,9 +207,8 @@ export class CommentsServices {
     });
 
     if (!commentForAddingLike) {
-      console.log("--------commentForAddingLike");
-      console.log(commentForAddingLike);
-
+      // console.log("--------commentForAddingLike");
+      // console.log(commentForAddingLike);
       return {
         status: ResultCode.NotFound,
         errorMessage: "Not found comment with id " + commentId,
@@ -220,12 +219,21 @@ export class CommentsServices {
       await LikesModel.findOne({ commentId: commentId, userId: userId });
     const LikeInstance = new LikesModel();
 
+    let newLike = {}
+    // если не сущ. создай и сохрани
     if (!existingCommentLike) {
-      return {
-        status: ResultCode.NotFound,
-        errorMessage: "Not found like info for comment" + commentId,
+      newLike = {
+        commentId: commentId,
+        userId: userId,
+        myStatus: likeStatus,
       };
+      // LikeInstance.save()
+      // return {
+      //   status: ResultCode.NotFound,
+      //   errorMessage: "Not found like info for comment" + commentId,
+      // };
     }
+
     // @ts-ignore
     if (existingCommentLike.myStatus === likeStatus) {
       return {
