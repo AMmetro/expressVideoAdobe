@@ -139,7 +139,7 @@ export class CommentsServices {
 
     let likesCount = 0;
     let dislikesCount = 0;
-    let myStatus;
+    let myStatus = likeStatusEnum.None;
     commentLikes.forEach(like=>{ 
       if (like.myStatus === likeStatusEnum.Like) {
         likesCount  += 1
@@ -178,7 +178,14 @@ export class CommentsServices {
   static async addLike(commentId:string, likeStatus: typeof likeStatusEnum, userId:string): Promise<ResultLikeType> {
     
     const commentForAddingLike = await CommentModel.findOne({ _id: new ObjectId(commentId) });
+
+
         if (!commentForAddingLike){
+
+          
+    console.log("--------commentForAddingLike")
+    console.log(commentForAddingLike)
+
       return {
         status: ResultCode.NotFound,
         errorMessage: "Not found comment with id " + commentId,

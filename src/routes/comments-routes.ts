@@ -37,11 +37,10 @@ commentsRoute.put(
       return;
     }
     const result = await CommentsServices.addLike(commentId, likeStatus, userId);
-    if (!result) {
-      res.sendStatus(401);
-      return;
+    if (result.status === ResultCode.Success){
+      res.sendStatus(204);
     }
-    res.sendStatus(204)
+    else {sendCustomError(res, result)}
   }
 );
 
