@@ -197,9 +197,11 @@ export class CommentsServices {
     };
   }
 
+
+
   static async addLike(
     commentId: string,
-    likeStatus: typeof likeStatusEnum,
+    likeStatus: string,
     userId: string
   ): Promise<ResultLikeType> {
     const commentForAddingLike = await CommentModel.findOne({
@@ -215,9 +217,10 @@ export class CommentsServices {
       };
     }
 
-    const existingCommentLike: WithId<LikesDB> | null =
+    // const existingCommentLike: WithId<LikesDB> | null =
+    const existingCommentLike =
       await LikesModel.findOne({ commentId: commentId, userId: userId });
-    const LikeInstance = new LikesModel();
+    // const LikeInstance = new LikesModel();
 
     let newLike = {}
     // если не сущ. создай и сохрани
@@ -227,29 +230,31 @@ export class CommentsServices {
         userId: userId,
         myStatus: likeStatus,
       };
-      // LikeInstance.save()
-      // return {
-      //   status: ResultCode.NotFound,
-      //   errorMessage: "Not found like info for comment" + commentId,
-      // };
+
+       let LikeInstance = new LikesModel(newLike);
+       LikeInstance.save();
+      return {
+        status: ResultCode.Success,
+        data: true,
+      };
     }
 
-    // @ts-ignore
     if (existingCommentLike.myStatus === likeStatus) {
       return {
         status: ResultCode.Success,
         data: true,
       };
     }
-    if (likeStatus.Like === likeStatusEnum.Like) {
-      // LikeInstance.myStatus = likeStatus.Like
-      // LikeInstance.Save()
+
+    if (likeStatus === likeStatusEnum.Like) {
+      existingCommentLike.myStatus = likeStatus
+      existingCommentLike.save()
       return {
         status: ResultCode.Success,
         data: true,
       };
     }
-    if (likeStatus.Like === likeStatusEnum.Dislike) {
+    if (likeStatus === likeStatusEnum.Dislike) {
       // LikeInstance.myStatus = likeStatus.Dislike
       // LikeInstance.Save()
       return {
