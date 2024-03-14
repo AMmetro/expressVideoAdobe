@@ -29,7 +29,14 @@ commentsRoute.put(
     if (!likeStatus &&  !likeStatusEnum.hasOwnProperty(likeStatus)) {
       const error = {
         status: ResultCode.ClientError,
-        errorMessage: "Not found comment with id " + commentId
+        errorMessage: JSON.stringify({
+          errorsMessages: [
+            {
+              message: `Like status is wrong`,
+              field: "likeStatus",
+            },
+          ],
+        })
       }
       sendCustomError(res, error)
       return;
