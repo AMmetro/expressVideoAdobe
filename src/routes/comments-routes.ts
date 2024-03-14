@@ -13,6 +13,7 @@ import { ResultCode } from '../validators/error-validators';
 import { sendCustomError } from '../utils/sendResponse';
 import { commentBelongToUserValidation, commentValidation } from '../validators/comment-validators';
 import { likeStatusEnum } from "../models/likes/db/likes-db";
+import { AuthServices } from "../services/authServices";
 
 export const commentsRoute = Router({});
 
@@ -46,6 +47,7 @@ commentsRoute.put(
 
 commentsRoute.get(
   "/:id",
+  jwtValidationAcssTokenMiddleware,
   async (
     req: RequestWithParams<Params>,
     res: ResposesType<OutputCommentType | null>
@@ -55,7 +57,20 @@ commentsRoute.get(
       res.sendStatus(404);
       return;
     }
-    const result = await CommentsServices.composeComment(id);
+
+    // ---------------------------------------------------
+    const userAuthToken = req.headers.authorization;
+    let userId: string | null = null;
+    if (userAuthToken) {
+      const userData = await AuthServices.checkAcssesToken(userAuthToken);
+      if (userData.data && userData.status === ResultCode.Success) {
+        userId = userData.data.id;
+      }
+    }
+    // ---------------------------------------------------
+
+
+    const result = await CommentsServices.composeComment(id, userId);
     if (result.status === ResultCode.Success){
       // res.sendStatus(205)
       res.status(200).send(result.data as OutputCommentType);
