@@ -144,7 +144,7 @@ export class CommentsServices {
     };
   }
 
-  static async composeComment(commentId: string, userId: null|string): Promise<ResultCommentType> {
+  static async composeComment(commentId: string, userId: null | string): Promise<ResultCommentType> {
     const comment = await CommentsQueryRepository.getById(commentId);
     if (!comment) {
       return {
@@ -172,7 +172,7 @@ export class CommentsServices {
         dislikesCount += 1;
       }
       if (like.userId === comment.commentatorInfo.userId) {
-        myStatus = like.myStatus;
+        myStatus = userId ? like.myStatus : likeStatusEnum.None;
       }
     });
 

@@ -47,7 +47,6 @@ commentsRoute.put(
 
 commentsRoute.get(
   "/:id",
-  jwtValidationAcssTokenMiddleware,
   async (
     req: RequestWithParams<Params>,
     res: ResposesType<OutputCommentType | null>
@@ -58,19 +57,19 @@ commentsRoute.get(
       return;
     }
 
-    // ---------------------------------------------------
-    // const userAuthToken = req.headers.authorization;
-    // let userId: string | null = null;
-    // if (userAuthToken) {
-    //   const userData = await AuthServices.checkAcssesToken(userAuthToken);
-    //   if (userData.data && userData.status === ResultCode.Success) {
-    //     userId = userData.data.id;
-    //   }
-    // }
-    // ---------------------------------------------------
+    // ---------------------------------------------------------------------
+    const userAuthToken = req.headers.authorization;
+    let userId: string | null = null;
+    if (userAuthToken) {
+      const userData = await AuthServices.checkAcssesToken(userAuthToken);
+      if (userData.data && userData.status === ResultCode.Success) {
+        userId = userData.data.id;
+      }
+    }
+    // -------------------------------------------------------------------
 
 
-    const result = await CommentsServices.composeComment(id);
+    const result = await CommentsServices.composeComment(id, userId);
     if (result.status === ResultCode.Success){
       // res.sendStatus(205)
       res.status(200).send(result.data as OutputCommentType);
