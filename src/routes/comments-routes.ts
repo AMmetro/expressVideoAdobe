@@ -26,7 +26,6 @@ commentsRoute.put(
     const userId = req.user!.id;
     const commentId = req.params.commentId;
     const { likeStatus } = req.body;
-    if (!likeStatus &&  !likeStatusEnum.hasOwnProperty(likeStatus)) {
       if (!likeStatus ||  !likeStatusEnum.hasOwnProperty(likeStatus)) {
         const error = {
           status: ResultCode.ClientError,
@@ -42,7 +41,6 @@ commentsRoute.put(
         sendCustomError(res, error)
         return;
       }
-    }
     if (!commentId) {
       res.sendStatus(400);
       return;
