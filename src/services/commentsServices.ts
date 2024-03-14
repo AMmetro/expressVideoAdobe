@@ -214,10 +214,10 @@ export class CommentsServices {
       };
     }
 
-    const existingCommentLike =
+    const existingLikeForComment =
       await LikesModel.findOne({ commentId: commentId, userId: userId });
 
-    if (!existingCommentLike) {
+    if (!existingLikeForComment) {
       const newLike = {
         commentId: commentId,
         userId: userId,
@@ -231,7 +231,7 @@ export class CommentsServices {
       };
     }
 
-    if (existingCommentLike.myStatus === sendedLikeStatus) {
+    if (existingLikeForComment.myStatus === sendedLikeStatus) {
       return {
         status: ResultCode.Success,
         data: true,
@@ -239,16 +239,16 @@ export class CommentsServices {
     }
 
     if (sendedLikeStatus === likeStatusEnum.Like) {
-      existingCommentLike.myStatus = sendedLikeStatus
-      existingCommentLike.save()
+      existingLikeForComment.myStatus = sendedLikeStatus
+      existingLikeForComment.save()
       return {
         status: ResultCode.Success,
         data: true,
       };
     }
     if (sendedLikeStatus === likeStatusEnum.Dislike) {
-      existingCommentLike.myStatus = sendedLikeStatus
-      existingCommentLike.save()
+      existingLikeForComment.myStatus = sendedLikeStatus
+      existingLikeForComment.save()
       return {
         status: ResultCode.Success,
         data: true,

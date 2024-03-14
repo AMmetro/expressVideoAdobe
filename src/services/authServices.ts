@@ -9,7 +9,6 @@ import { emailAdaper } from "../utils/emailAdaper";
 import { DevicesServices } from "./devicesServices";
 import { UserServices } from "./userServices";
 import { AuthUserInputModel } from "../models/user/input/authUser-input-model";
-import { JWTDecodedType, ResultType } from "../models/user/output/user.output";
 import { DevicesQueryRepository } from "../repositories/devices.query-repository";
 
 type OutputType = {

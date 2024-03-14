@@ -20,12 +20,10 @@ export const commentsRoute = Router({});
 commentsRoute.put(
   "/:commentId/like-status",
   jwtValidationAcssTokenMiddleware,
-  // commentBelongToUserValidation, // ????
   async (
     req: RequestWithParams<{commentId: string}>,
     res: Response,
   ) => {
-      // Как проверить что 401 ?????? где авторизация
     const userId = req.user!.id;
     const commentId = req.params.commentId;
     const { likeStatus } = req.body;
@@ -57,7 +55,6 @@ commentsRoute.get(
       return;
     }
 
-    // ---------------------------------------------------------------------
     const userAuthToken = req.headers.authorization;
     let userId: string | null = null;
     if (userAuthToken) {
@@ -66,12 +63,9 @@ commentsRoute.get(
         userId = userData.data.id;
       }
     }
-    // -------------------------------------------------------------------
-
 
     const result = await CommentsServices.composeComment(id, userId);
     if (result.status === ResultCode.Success){
-      // res.sendStatus(205)
       res.status(200).send(result.data as OutputCommentType);
     }
     else {sendCustomError(res, result)}
