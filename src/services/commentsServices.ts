@@ -238,25 +238,32 @@ export class CommentsServices {
       };
     }
 
-    if (sendedLikeStatus === likeStatusEnum.Like) {
-      existingLikeForComment.myStatus = sendedLikeStatus
-      existingLikeForComment.save()
-      return {
-        status: ResultCode.Success,
-        data: true,
-      };
-    }
-    if (sendedLikeStatus === likeStatusEnum.Dislike) {
-      existingLikeForComment.myStatus = sendedLikeStatus
-      existingLikeForComment.save()
-      return {
-        status: ResultCode.Success,
-        data: true,
-      };
-    }
+    existingLikeForComment.myStatus = sendedLikeStatus
+    existingLikeForComment.save()
     return {
       status: ResultCode.Success,
       data: true,
     };
+
+    // if (sendedLikeStatus === likeStatusEnum.Like) {
+    //   existingLikeForComment.myStatus = sendedLikeStatus
+    //   existingLikeForComment.save()
+    //   return {
+    //     status: ResultCode.Success,
+    //     data: true,
+    //   };
+    // }
+    // if (sendedLikeStatus === likeStatusEnum.Dislike) {
+    //   existingLikeForComment.myStatus = sendedLikeStatus
+    //   existingLikeForComment.save()
+    //   return {
+    //     status: ResultCode.Success,
+    //     data: true,
+    //   };
+    // }
+    // return {
+    //   status: ResultCode.Success,
+    //   data: true,
+    // };
   }
 }
