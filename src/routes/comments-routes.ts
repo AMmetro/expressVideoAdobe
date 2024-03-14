@@ -5,13 +5,12 @@ import {
   RequestWithParams,
   ResposesType,
 } from "../models/common";
-import { CommentsQueryRepository } from '../repositories/comments.query-repository';
 import { OutputCommentType } from '../models/comments/output/comment.output';
 import { jwtValidationAcssTokenMiddleware } from '../auth/jwtAuth-middleware';
 import { CommentsServices } from '../services/commentsServices';
 import { ResultCode } from '../validators/error-validators';
 import { sendCustomError } from '../utils/sendResponse';
-import { commentBelongToUserValidation, commentValidation } from '../validators/comment-validators';
+import { commentValidation } from '../validators/comment-validators';
 import { likeStatusEnum } from "../models/likes/db/likes-db";
 import { AuthServices } from "../services/authServices";
 
@@ -28,7 +27,11 @@ commentsRoute.put(
     const commentId = req.params.commentId;
     const { likeStatus } = req.body;
     if (!likeStatus &&  !likeStatusEnum.hasOwnProperty(likeStatus)) {
-      res.sendStatus(400);
+      const error = {
+        status: ResultCode.ClientError,
+        errorMessage: "Not found comment with id " + commentId
+      }
+      sendCustomError(res, error)
       return;
     }
     if (!commentId) {
