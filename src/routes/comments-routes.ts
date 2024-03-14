@@ -27,18 +27,7 @@ commentsRoute.put(
     const commentId = req.params.commentId;
     const { likeStatus } = req.body;
     if (!likeStatus &&  !likeStatusEnum.hasOwnProperty(likeStatus)) {
-      const error = {
-        status: ResultCode.ClientError,
-        errorMessage: JSON.stringify({
-          errorsMessages: [
-            {
-              message: `Like status is wrong`,
-              field: "likeStatus",
-            },
-          ],
-        })
-      }
-      sendCustomError(res, error)
+      res.sendStatus(444);
       return;
     }
     if (!commentId) {
