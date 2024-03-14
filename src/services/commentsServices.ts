@@ -172,7 +172,7 @@ export class CommentsServices {
         dislikesCount += 1;
       }
       if (like.userId === comment.commentatorInfo.userId) {
-        myStatus = userId ? like.myStatus : likeStatusEnum.None;
+        myStatus = like.myStatus;
       }
     });
 

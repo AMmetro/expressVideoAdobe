@@ -59,18 +59,18 @@ commentsRoute.get(
     }
 
     // ---------------------------------------------------
-    const userAuthToken = req.headers.authorization;
-    let userId: string | null = null;
-    if (userAuthToken) {
-      const userData = await AuthServices.checkAcssesToken(userAuthToken);
-      if (userData.data && userData.status === ResultCode.Success) {
-        userId = userData.data.id;
-      }
-    }
+    // const userAuthToken = req.headers.authorization;
+    // let userId: string | null = null;
+    // if (userAuthToken) {
+    //   const userData = await AuthServices.checkAcssesToken(userAuthToken);
+    //   if (userData.data && userData.status === ResultCode.Success) {
+    //     userId = userData.data.id;
+    //   }
+    // }
     // ---------------------------------------------------
 
 
-    const result = await CommentsServices.composeComment(id, userId);
+    const result = await CommentsServices.composeComment(id);
     if (result.status === ResultCode.Success){
       // res.sendStatus(205)
       res.status(200).send(result.data as OutputCommentType);
