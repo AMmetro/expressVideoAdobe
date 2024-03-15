@@ -6,7 +6,7 @@ import {
   ResposesType,
 } from "../models/common";
 import { OutputCommentType } from '../models/comments/output/comment.output';
-import { jwtValidationAcssTokenMiddleware } from '../auth/jwtAuth-middleware';
+import { jwtValidationAcssTokenMiddleware, jwtValidationAcssTokenMiddlewareOptional } from '../auth/jwtAuth-middleware';
 import { CommentsServices } from '../services/commentsServices';
 import { ResultCode } from '../validators/error-validators';
 import { sendCustomError } from '../utils/sendResponse';
@@ -55,26 +55,28 @@ commentsRoute.put(
 
 commentsRoute.get(
   "/:id",
+  jwtValidationAcssTokenMiddlewareOptional,
   async (
     req: RequestWithParams<Params>,
     res: ResposesType<OutputCommentType | null>
   ) => {
+    const userOptionalId = req.user?.id || null;
     const id = req.params.id;
     if (!ObjectId.isValid(id)) {
       res.sendStatus(404);
       return;
     }
 
-    const userAuthToken = req.headers.authorization;
-    let userId: string | null = null;
-    if (userAuthToken) {
-      const userData = await AuthServices.checkAcssesToken(userAuthToken);
-      if (userData.data && userData.status === ResultCode.Success) {
-        userId = userData.data.id;
-      }
-    }
+    // const userAuthToken = req.headers.authorization;
+    // let userId: string | null = null;
+    // if (userAuthToken) {
+    //   const userData = await AuthServices.checkAcssesToken(userAuthToken);
+    //   if (userData.data && userData.status === ResultCode.Success) {
+    //     userId = userData.data.id;
+    //   }
+    // }
 
-    const result = await CommentsServices.composeComment(id, userId);
+    const result = await CommentsServices.composeComment(id, userOptionalId);
     if (result.status === ResultCode.Success){
       res.status(200).send(result.data as OutputCommentType);
     }
