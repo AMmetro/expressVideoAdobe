@@ -27,6 +27,7 @@ import { jwtValidationAcssTokenMiddleware } from "../auth/jwtAuth-middleware";
 import { commentValidation } from "../validators/comment-validators";
 import { ResultCode } from "../validators/error-validators";
 import { sendCustomError } from "../utils/sendResponse";
+import { AuthServices } from "../services/authServices";
 
 export const postRoute = Router({});
 
@@ -63,6 +64,7 @@ postRoute.get(
   }
 );
 
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 postRoute.get(
   "/:postId/comments",
   async (req: RequestWithParams<CommentParams>, res: Response) => {
@@ -77,13 +79,21 @@ postRoute.get(
       return;
     }
     const basicSortData = basicSortQuery(req.query);
-    const sortData = { id: postId, ...basicSortData };
-    const comments = await CommentsQueryRepository.getPostComments(sortData);
-    if (!comments) {
-      res.sendStatus(404);
-      return;
+
+    const userAuthToken = req.headers.authorization;
+    let userId: string | null = null;
+    if (userAuthToken) {
+      const userData = await AuthServices.checkAcssesToken(userAuthToken);
+      if (userData.data && userData.status === ResultCode.Success) {
+        userId = userData.data.id;
+      }
     }
-    res.status(200).send(comments);
+    const result = await PostServices.composePostComments(postId, basicSortData, userId);
+    if (result.status === ResultCode.Success){
+      res.status(200).send(result.data);
+    } else {
+      sendCustomError(res, result)
+    }
   }
 );
 

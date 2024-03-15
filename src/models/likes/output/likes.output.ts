@@ -1,3 +1,5 @@
+import { LikesDB } from "../db/likes-db";
+
 export type OutputLikesType = {
   commentId: string;
   id: string;
@@ -17,27 +19,12 @@ export type ResultLikeType = {
   data?: likesInfoType
   };
 
+export type ResultCreateLikeType = {
+  status: string,
+  errorMessage?: string,
+  data?: LikesDB
+  };
 
-//   export type MapperOutputCommentType = {
-//     id: string,
-//     content: string;
-//     commentatorInfo: {
-//       userId: string;
-//       userLogin: string;
-//     };
-//     createdAt: string;
-//   };
-
-// export type ResultCommentType = {
-//   status: string,
-//   errorMessage?: string,
-//   data?: OutputCommentType | Boolean,
-//   };
-
-//   export type likesInfoType = {
-//     likesCount: number;
-//     dislikesCount: number;
-//     }
 
 
 

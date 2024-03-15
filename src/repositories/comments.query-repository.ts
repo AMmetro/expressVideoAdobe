@@ -1,5 +1,5 @@
 import { WithId, ObjectId } from "mongodb";
-import { CommentModel } from "../BD/db";
+import { CommentModel, LikesModel } from "../BD/db";
 import { SortDirection } from "mongodb";
 import { PaginationType } from "../models/common";
 import { UserDB } from "../models/user/db/user-db";
@@ -8,6 +8,8 @@ import { CommentDB } from "../models/comments/db/comment-db";
 import { commentMapper } from "../models/comments/mapper/comment-mapper";
 import { MapperOutputCommentType, OutputCommentType } from "../models/comments/output/comment.output";
 import { OutputBasicSortQueryType } from "../utils/sortQeryUtils";
+import { LikeCommentsServices } from "../services/likeCommentServices";
+import { ResultCode } from "../validators/error-validators";
 
 
 
@@ -17,7 +19,6 @@ export class CommentsQueryRepository {
   static async getPostComments(
     sortData: SortDataType
   ): Promise<PaginationType<MapperOutputCommentType> | null> {
-
     const { 
       id,
       sortBy,
@@ -35,12 +36,8 @@ export class CommentsQueryRepository {
         .limit(pageSize)
         .lean();
       const totalCount = await CommentModel.countDocuments(filter);
-      const pagesCount = Math.ceil(totalCount / pageSize);   
-      
-      // ------------------------------------------------------------------
-      const commentLikes = []
-      // ------------------------------------------------------------------
-
+      const pagesCount = Math.ceil(totalCount / pageSize);  
+     
       return {
         pagesCount: pagesCount,
         page: pageNumber,

@@ -7,8 +7,12 @@ import {
 
 import { PostRepository } from "../repositories/post-repository";
 import { PostQueryRepository } from "../repositories/post.query-repository";
-import { BlogModel } from "../BD/db";
+import { BlogModel, LikesModel } from "../BD/db";
 import { BlogQueryRepository } from "../repositories/blog.query-repository";
+import { CommentsQueryRepository } from "../repositories/comments.query-repository";
+import { OutputBasicSortQueryType } from "../utils/sortQeryUtils";
+import { ResultCode } from "../validators/error-validators";
+import { likeStatusEnum } from "../models/likes/db/likes-db";
 
 export class PostServices {
 
@@ -52,6 +56,44 @@ export class PostServices {
     return postIsUpdated
   }
   
+  static async composePostComments(postId: string, basicSortData: OutputBasicSortQueryType, userId: string|null): Promise<any> {
+    const sortData = { id: postId, ...basicSortData };
+    const comments = await CommentsQueryRepository.getPostComments(sortData);
+    // pagesCount: pagesCount,
+    // page: pageNumber,
+    // pageSize: pageSize,
+    // totalCount: totalCount,
+    // items: comments.map(commentMapper),
+    if (!comments) {
+      return {
+        status: ResultCode.NotFound,
+        errorMessage: "Can not read comments",
+      };
+    }
+   
+      const сommentsWithLikes = comments.items.forEach(async (comment) => {
+        const likeCounts = await LikesModel.countDocuments({commentId: comment.id})
+        const dislikeCounts = await LikesModel.countDocuments({commentId: comment.id})
+
+        let currentLikeStatus = likeStatusEnum.None
+        if (userId) {
+          const currentLike = await LikesModel.findOne({userId: userId, commentId: comment.id })
+          currentLikeStatus = currentLike ? currentLike.myStatus : likeStatusEnum.None
+        } 
+       
+        return {comment, likesInfo:{likeCounts, dislikeCounts, myStatus: сommentsWithLikes } }
+      }) 
+      
+   const result = {...comments, items: сommentsWithLikes }
+   return {
+    status: ResultCode.Success,
+    data: result
+  };
+
+
+  }
+
+
   static async delete(id: string): Promise<Boolean | null> {
     const isPostdeleted = await PostRepository.delete(id);
     return isPostdeleted;

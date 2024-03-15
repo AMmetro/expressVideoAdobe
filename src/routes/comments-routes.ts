@@ -45,7 +45,7 @@ commentsRoute.put(
       res.sendStatus(400);
       return;
     }
-    const result = await CommentsServices.addLike(commentId, likeStatus, userId);
+    const result = await CommentsServices.addLikeToComment(commentId, likeStatus, userId);
     if (result.status === ResultCode.Success){
       res.sendStatus(204);
     }
