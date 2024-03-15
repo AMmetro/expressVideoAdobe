@@ -36,7 +36,6 @@ export class PostServices {
     if (!newPostId) {
       return null;
     }
-    // нужно ли эта проверка ???
     const createdPost = await PostQueryRepository.getById(newPostId);
     if (!createdPost) {
       return null;
@@ -59,32 +58,34 @@ export class PostServices {
   static async composePostComments(postId: string, basicSortData: OutputBasicSortQueryType, userId: string|null): Promise<any> {
     const sortData = { id: postId, ...basicSortData };
     const comments = await CommentsQueryRepository.getPostComments(sortData);
-    // pagesCount: pagesCount,
-    // page: pageNumber,
-    // pageSize: pageSize,
-    // totalCount: totalCount,
-    // items: comments.map(commentMapper),
     if (!comments) {
       return {
         status: ResultCode.NotFound,
         errorMessage: "Can not read comments",
       };
     }
-   
-      const сommentsWithLikes:any = comments.items.map(async (comment) => {
-        const likeCounts = await LikesModel.countDocuments({commentId: comment.id})
-        const dislikeCounts = await LikesModel.countDocuments({commentId: comment.id})
-        let currentLikeStatus = likeStatusEnum.None
-        if (userId) {
-          const currentLike = await LikesModel.findOne({userId: userId, commentId: comment.id })
-          currentLikeStatus = currentLike ? currentLike.myStatus : likeStatusEnum.None
-        } 
-        return {...comment, likesInfo:{likeCounts, dislikeCounts, myStatus: currentLikeStatus } }
-      }) 
+          const сommentsWithLikes:any = await Promise.all( comments.items.map(async (comment) => {
+            const likeCounts = await LikesModel.countDocuments({commentId: comment.id, myStatus: likeStatusEnum.Like})
+            const dislikeCounts = await LikesModel.countDocuments({commentId: comment.id, myStatus: likeStatusEnum.Dislike})
+            
+            // const [  likeCounts, dislikeCounts] =  await Promise.all (
+            //   [
+            //     LikesModel.countDocuments({commentId: comment.id, myStatus: likeStatusEnum.Like }),
+            //     LikesModel.countDocuments({commentId: comment.id,  myStatus: likeStatusEnum.Dislike})
+            //   ]
+            // )
 
 
-
+            let currentLikeStatus = likeStatusEnum.None
+            if (userId) {
+              const currentLike = await LikesModel.findOne({userId: userId, commentId: comment.id })
+              currentLikeStatus = currentLike ? currentLike.myStatus : likeStatusEnum.None
+            } 
+            return {...comment, likesInfo:{likeCounts, dislikeCounts, myStatus: currentLikeStatus } }
+          }) 
+          )
    const result = {...comments, items: сommentsWithLikes }
+
    return {
     status: ResultCode.Success,
     data: result
