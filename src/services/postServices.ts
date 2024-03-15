@@ -79,7 +79,7 @@ export class PostServices {
           const currentLike = await LikesModel.findOne({userId: userId, commentId: comment.id })
           currentLikeStatus = currentLike ? currentLike.myStatus : likeStatusEnum.None
         } 
-        return {comment, likesInfo:{likeCounts, dislikeCounts, myStatus: currentLikeStatus } }
+        return {...comment, likesInfo:{likeCounts, dislikeCounts, myStatus: currentLikeStatus } }
       }) 
 
 
