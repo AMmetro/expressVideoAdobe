@@ -35,7 +35,11 @@ export class CommentsQueryRepository {
         .limit(pageSize)
         .lean();
       const totalCount = await CommentModel.countDocuments(filter);
-      const pagesCount = Math.ceil(totalCount / pageSize);    
+      const pagesCount = Math.ceil(totalCount / pageSize);   
+      
+      // ------------------------------------------------------------------
+      const commentLikes = []
+      // ------------------------------------------------------------------
 
       return {
         pagesCount: pagesCount,

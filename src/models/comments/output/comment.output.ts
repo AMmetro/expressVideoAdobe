@@ -26,7 +26,7 @@ export type MapperOutputCommentType = {
 export type ResultCommentType = {
   status: string,
   errorMessage?: string,
-  data?: OutputCommentType | Boolean,
+  data?: OutputCommentType,
   };
 
   export type likesInfoType = {

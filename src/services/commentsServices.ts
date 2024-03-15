@@ -10,8 +10,10 @@ import { likeStatusEnum } from "../models/likes/db/likes-db";
 import { ResultLikeType } from "../models/likes/output/likes.output";
 import { ObjectId, WithId } from "mongodb";
 import { LikesDB } from "../models/likes/db/likes-db";
+import { LikeCommentsServices } from "./likeCommentServices";
 
 export class CommentsServices {
+
   static async create(
     commentedPostId: string,
     userCommentatorId: string,
@@ -108,6 +110,7 @@ export class CommentsServices {
     }
     return {
       status: ResultCode.Success,
+         // @ts-ignore
       data: commentIsUpdate,
     };
   }
@@ -140,6 +143,7 @@ export class CommentsServices {
     }
     return {
       status: ResultCode.Success,
+         // @ts-ignore
       data: commentIsDelete,
     };
   }
@@ -152,30 +156,11 @@ export class CommentsServices {
         errorMessage: "Not found comment with id " + commentId,
       };
     }
-    const commentLikes = await LikesQueryRepository.getById(commentId);
-    if (!commentLikes) {
-      return {
-        status: ResultCode.NotFound,
-        errorMessage: "Cant read database with likes",
-      };
+    const composedCommentLikes = await LikeCommentsServices.composeCommentLikes(commentId, userId)
+    if (composedCommentLikes.status !== ResultCode.Success ) {
+      // @ts-ignore
+      return composedCommentLikes;
     }
-
-    let likesCount = 0;
-    let dislikesCount = 0;
-    let myStatus = likeStatusEnum.None;
-
-    commentLikes.forEach((like) => {
-      if (like.myStatus === likeStatusEnum.Like) {
-        likesCount += 1;
-      }
-      if (like.myStatus === likeStatusEnum.Dislike) {
-        dislikesCount += 1;
-      }
-      if (like.userId === userId) {
-        myStatus = like.myStatus;
-      }
-    });
-
     const resultComment = {
       id: commentId,
       content: comment.content,
@@ -183,16 +168,12 @@ export class CommentsServices {
         userId: comment.commentatorInfo.userId,
         userLogin: comment.commentatorInfo.userLogin,
       },
-      likesInfo: {
-        likesCount: likesCount,
-        dislikesCount: dislikesCount,
-        myStatus: myStatus,
-      },
+      likesInfo: composedCommentLikes.data,
       createdAt: comment.createdAt,
     };
-
     return {
       status: ResultCode.Success,
+         // @ts-ignore
       data: resultComment,
     };
   }
@@ -227,6 +208,7 @@ export class CommentsServices {
        LikeInstance.save();
       return {
         status: ResultCode.Success,
+        // @ts-ignore
         data: true,
       };
     }
@@ -234,6 +216,7 @@ export class CommentsServices {
     if (existingLikeForComment.myStatus === sendedLikeStatus) {
       return {
         status: ResultCode.Success,
+        // @ts-ignore
         data: true,
       };
     }
@@ -242,28 +225,9 @@ export class CommentsServices {
     existingLikeForComment.save()
     return {
       status: ResultCode.Success,
+      // @ts-ignore
       data: true,
     };
 
-    // if (sendedLikeStatus === likeStatusEnum.Like) {
-    //   existingLikeForComment.myStatus = sendedLikeStatus
-    //   existingLikeForComment.save()
-    //   return {
-    //     status: ResultCode.Success,
-    //     data: true,
-    //   };
-    // }
-    // if (sendedLikeStatus === likeStatusEnum.Dislike) {
-    //   existingLikeForComment.myStatus = sendedLikeStatus
-    //   existingLikeForComment.save()
-    //   return {
-    //     status: ResultCode.Success,
-    //     data: true,
-    //   };
-    // }
-    // return {
-    //   status: ResultCode.Success,
-    //   data: true,
-    // };
   }
 }
