@@ -2,14 +2,11 @@ import { PostQueryRepository } from "../repositories/post.query-repository";
 import { UserQueryRepository } from "../repositories/user.query-repository";
 import { CommentRepository } from "../repositories/comment-repository";
 import { CommentsQueryRepository } from "../repositories/comments.query-repository";
-import { ResultCommentType } from "../models/comments/output/comment.output";
+import { OutputCommentType, ResultCommentType } from "../models/comments/output/comment.output";
 import { Result, ResultCode } from "../validators/error-validators";
-import { LikesQueryRepository } from "../repositories/likes.query-repository";
 import { CommentModel, LikesModel } from "../BD/db";
-import { likeStatusEnum } from "../models/likes/db/likes-db";
 import { ResultCreateLikeType, ResultLikeType } from "../models/likes/output/likes.output";
 import { ObjectId, WithId } from "mongodb";
-import { LikesDB } from "../models/likes/db/likes-db";
 import { LikeCommentsServices } from "./likeCommentServices";
 
 export class CommentsServices {
@@ -110,8 +107,7 @@ export class CommentsServices {
     }
     return {
       status: ResultCode.Success,
-         // @ts-ignore
-      data: commentIsUpdate,
+      data: {} as OutputCommentType ,
     };
   }
 
@@ -143,8 +139,7 @@ export class CommentsServices {
     }
     return {
       status: ResultCode.Success,
-         // @ts-ignore
-      data: commentIsDelete,
+      data: {} as OutputCommentType,
     };
   }
 
