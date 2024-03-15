@@ -71,26 +71,24 @@ export class PostServices {
       };
     }
    
-      const сommentsWithLikes = comments.items.forEach(async (comment) => {
+      const сommentsWithLikes:any = comments.items.map(async (comment) => {
         const likeCounts = await LikesModel.countDocuments({commentId: comment.id})
         const dislikeCounts = await LikesModel.countDocuments({commentId: comment.id})
-
         let currentLikeStatus = likeStatusEnum.None
         if (userId) {
           const currentLike = await LikesModel.findOne({userId: userId, commentId: comment.id })
           currentLikeStatus = currentLike ? currentLike.myStatus : likeStatusEnum.None
         } 
-       
         return {comment, likesInfo:{likeCounts, dislikeCounts, myStatus: сommentsWithLikes } }
       }) 
-      
+
+
+
    const result = {...comments, items: сommentsWithLikes }
    return {
     status: ResultCode.Success,
     data: result
   };
-
-
   }
 
 
