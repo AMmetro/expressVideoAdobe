@@ -3,6 +3,22 @@ import { ResultCode } from "../validators/error-validators";
 import { sendCustomError } from "../utils/sendResponse";
 import { AuthServices } from "../services/authServices";
 
+export const jwtValidationAcssTokenMiddlewareOptional = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  if (req.headers.authorization) {
+    const result = await AuthServices.checkAcssesToken(req.headers.authorization);
+    if (result.data && result.status === ResultCode.Success) {
+      req.user = result.data;
+      return next();
+    }
+  }
+  return next();
+};
+
+
 export const jwtValidationAcssTokenMiddleware = async (
   req: Request,
   res: Response,
@@ -20,6 +36,7 @@ export const jwtValidationAcssTokenMiddleware = async (
    return sendCustomError(res, result);
   }
 };
+
 
 export const jwtValidationRefreshTokenMiddleware = async (
   req: Request,

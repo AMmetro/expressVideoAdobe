@@ -23,7 +23,7 @@ import { QueryPostInputModel } from "../models/blog/input/queryBlog-input-model"
 import { basicSortQuery } from "../utils/sortQeryUtils";
 import { CommentsQueryRepository } from "../repositories/comments.query-repository";
 import { CommentsServices } from "../services/commentsServices";
-import { jwtValidationAcssTokenMiddleware } from "../auth/jwtAuth-middleware";
+import { jwtValidationAcssTokenMiddleware, jwtValidationAcssTokenMiddlewareOptional } from "../auth/jwtAuth-middleware";
 import { commentValidation } from "../validators/comment-validators";
 import { ResultCode } from "../validators/error-validators";
 import { sendCustomError } from "../utils/sendResponse";
@@ -64,11 +64,12 @@ postRoute.get(
   }
 );
 
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 postRoute.get(
   "/:postId/comments",
+  jwtValidationAcssTokenMiddlewareOptional,
   async (req: RequestWithParams<CommentParams>, res: Response) => {
     const postId = req.params.postId;
+    const userOptionalId = req.user?.id || null;
     if (!ObjectId.isValid(postId)) {
       res.sendStatus(404);
       return;
@@ -80,15 +81,18 @@ postRoute.get(
     }
     const basicSortData = basicSortQuery(req.query);
 
-    const userAuthToken = req.headers.authorization;
-    let userId: string | null = null;
-    if (userAuthToken) {
-      const userData = await AuthServices.checkAcssesToken(userAuthToken);
-      if (userData.data && userData.status === ResultCode.Success) {
-        userId = userData.data.id;
-      }
-    }
-    const result = await PostServices.composePostComments(postId, basicSortData, userId);
+    // -------------------------------------------------------------
+    // const userAuthToken = req.headers.authorization;
+    // let userId: string | null = null;
+    // if (userAuthToken) {
+    //   const userData = await AuthServices.checkAcssesToken(userAuthToken);
+    //   if (userData.data && userData.status === ResultCode.Success) {
+    //     userId = userData.data.id;
+    //   }
+    // }
+    // -------------------------------------------------------------
+
+    const result = await PostServices.composePostComments(postId, basicSortData, userOptionalId);
     if (result.status === ResultCode.Success){
       res.status(200).send(result.data);
     } else {
