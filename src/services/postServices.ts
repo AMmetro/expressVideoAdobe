@@ -65,8 +65,8 @@ export class PostServices {
       };
     }
           const сommentsWithLikes:any = await Promise.all( comments.items.map(async (comment) => {
-            const likeCounts = await LikesModel.countDocuments({commentId: comment.id, myStatus: likeStatusEnum.Like})
-            const dislikeCounts = await LikesModel.countDocuments({commentId: comment.id, myStatus: likeStatusEnum.Dislike})
+            const likesCounts = await LikesModel.countDocuments({commentId: comment.id, myStatus: likeStatusEnum.Like})
+            const dislikesCounts = await LikesModel.countDocuments({commentId: comment.id, myStatus: likeStatusEnum.Dislike})
             
             // const [  likeCounts, dislikeCounts] =  await Promise.all (
             //   [
