@@ -156,7 +156,7 @@ export class CommentsServices {
     if (!commentLikes) {
       return {
         status: ResultCode.NotFound,
-        errorMessage: "Cant read database with likes ",
+        errorMessage: "Cant read database with likes",
       };
     }
 
@@ -171,9 +171,9 @@ export class CommentsServices {
       if (like.myStatus === likeStatusEnum.Dislike) {
         dislikesCount += 1;
       }
-      if (like.userId === comment.commentatorInfo.userId) {
-        myStatus = userId ? like.myStatus : likeStatusEnum.None;
-      }
+      if (like.userId === userId) {
+        myStatus = like.myStatus;
+      } else { myStatus = likeStatusEnum.None}
     });
 
     const resultComment = {
