@@ -173,7 +173,7 @@ export class CommentsServices {
       }
       if (like.userId === userId) {
         myStatus = like.myStatus;
-      } else { myStatus = likeStatusEnum.None}
+      }
     });
 
     const resultComment = {
