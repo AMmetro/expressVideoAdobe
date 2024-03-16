@@ -1,16 +1,29 @@
-import mongoose from 'mongoose'
+import mongoose, { ObjectId } from 'mongoose'
 import { WithId } from 'mongodb'
 
 export type blackListTokenType = string[]
 
-export type UserDB = {
-  login: string;
-  passwordHash: string;
-  passwordSalt: string;
-  blackListToken: blackListTokenType;
-  email: string;
-  createdAt: string;
-  emailConfirmation: emailConfirmationType;
+// export type UserDB = {
+//   login: string;
+//   passwordHash: string;
+//   passwordSalt: string;
+//   blackListToken: blackListTokenType;
+//   email: string;
+//   createdAt: string;
+//   emailConfirmation: emailConfirmationType;
+// };
+
+export class UserDB {
+  constructor (
+    // public _id: ObjectId, 
+    public login: string,
+    public passwordHash: string,
+    public passwordSalt: string,
+    // public blackListToken: blackListTokenType,
+    public email: string,
+    public createdAt: string,
+    public emailConfirmation: emailConfirmationType,
+  ) {}
 };
 
 type emailConfirmationType = {
@@ -31,7 +44,7 @@ export const UserSchema = new mongoose.Schema<WithId<UserDB>>({
   login: { type: String, require: true },
   passwordHash: { type: String, require: true },
   passwordSalt: { type: String, require: true },
-  blackListToken: { type: [String], require: true },
+  // blackListToken: { type: [String], require: true },
   email: { type: String, require: true },
   createdAt: { type: String, require: true },
   emailConfirmation: { type: EmailConfirmationsChema, require: true },

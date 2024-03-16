@@ -16,7 +16,7 @@ type OutputType = {
   login: string;
   email: string;
   createdAt: string;
-  blackListToken: string[];
+  // blackListToken: string[];
   emailConfirmation: any;
   deviceId: string;
   iat: number;

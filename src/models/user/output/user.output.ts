@@ -3,7 +3,7 @@ export type OutputUserType = {
   login: string;
   email: string;
   createdAt: string;
-  blackListToken: string[];
+  // blackListToken: string[];
   emailConfirmation: emailConfirmationType;
 };
 

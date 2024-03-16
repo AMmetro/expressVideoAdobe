@@ -26,7 +26,7 @@ export class UserServices {
       email: email,
       passwordHash: passwordHash,
       passwordSalt: passwordSalt,
-      blackListToken: [],
+      // blackListToken: [],
       createdAt: new Date().toISOString(),
       emailConfirmation: {
         confirmationCode: randomUUID(),

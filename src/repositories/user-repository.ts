@@ -46,16 +46,16 @@ export class UserRepository {
     return user.modifiedCount === 1;
   }
 
-  static async addTokenToBlackListById(
-    refreshToken: string,
-    userId: string
-  ): Promise<boolean> {
-    const user = await UserModel.updateOne(
-      { _id: new ObjectId(userId) },
-      {$push: {blackListToken: refreshToken}}
-      )
-    return user.modifiedCount === 1;
-  }
+  // static async addTokenToBlackListById(
+  //   refreshToken: string,
+  //   userId: string
+  // ): Promise<boolean> {
+  //   const user = await UserModel.updateOne(
+  //     { _id: new ObjectId(userId) },
+  //     {$push: {blackListToken: refreshToken}}
+  //     )
+  //   return user.modifiedCount === 1;
+  // }
 
   static async updatePswdRecoveryConfirmationCode(
     userId: ObjectId,
