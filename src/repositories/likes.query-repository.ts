@@ -1,5 +1,5 @@
 import { WithId, ObjectId } from "mongodb";
-import { CommentModel, LikesModel } from "../BD/db";
+import { CommentModel, CommentLikesModel } from "../BD/db";
 import { SortDirection } from "mongodb";
 import { PaginationType } from "../models/common";
 import { UserDB } from "../models/user/db/user-db";
@@ -54,7 +54,7 @@ export class LikesQueryRepository {
   // }
 
   static async getById(id: string): Promise<OutputLikesType[] | null> {
-    const likes:[WithId<LikesDB>] | null = await LikesModel.find({ commentId: id }).lean();
+    const likes:[WithId<LikesDB>] | null = await CommentLikesModel.find({ commentId: id }).lean();
     if (!likes) {
       return null;
     }

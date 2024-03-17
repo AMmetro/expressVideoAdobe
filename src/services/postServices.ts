@@ -7,7 +7,7 @@ import {
 
 import { PostRepository } from "../repositories/post-repository";
 import { PostQueryRepository } from "../repositories/post.query-repository";
-import { BlogModel, LikesModel } from "../BD/db";
+import { BlogModel, CommentLikesModel } from "../BD/db";
 import { BlogQueryRepository } from "../repositories/blog.query-repository";
 import { CommentsQueryRepository } from "../repositories/comments.query-repository";
 import { OutputBasicSortQueryType } from "../utils/sortQeryUtils";
@@ -65,8 +65,8 @@ export class PostServices {
       };
     }
           const сommentsWithLikes:any = await Promise.all( comments.items.map(async (comment) => {
-            const likesCount = await LikesModel.countDocuments({commentId: comment.id, myStatus: likeStatusEnum.Like})
-            const dislikesCount = await LikesModel.countDocuments({commentId: comment.id, myStatus: likeStatusEnum.Dislike})
+            const likesCount = await CommentLikesModel.countDocuments({commentId: comment.id, myStatus: likeStatusEnum.Like})
+            const dislikesCount = await CommentLikesModel.countDocuments({commentId: comment.id, myStatus: likeStatusEnum.Dislike})
             
             // const [  likeCounts, dislikeCounts] =  await Promise.all (
             //   [
@@ -78,7 +78,7 @@ export class PostServices {
 
             let currentLikeStatus = likeStatusEnum.None
             if (userId) {
-              const currentLike = await LikesModel.findOne({userId: userId, commentId: comment.id })
+              const currentLike = await CommentLikesModel.findOne({userId: userId, commentId: comment.id })
               currentLikeStatus = currentLike ? currentLike.myStatus : likeStatusEnum.None
             } 
             return {...comment, likesInfo:{likesCount, dislikesCount, myStatus: currentLikeStatus } }

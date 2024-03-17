@@ -4,7 +4,7 @@ import { CommentRepository } from "../repositories/comment-repository";
 import { CommentsQueryRepository } from "../repositories/comments.query-repository";
 import { OutputCommentType, ResultCommentType } from "../models/comments/output/comment.output";
 import { Result, ResultCode } from "../validators/error-validators";
-import { CommentModel, LikesModel } from "../BD/db";
+import { CommentModel, CommentLikesModel } from "../BD/db";
 import { ResultCreateLikeType, ResultLikeType } from "../models/likes/output/likes.output";
 import { ObjectId, WithId } from "mongodb";
 import { LikeCommentsServices } from "./likeCommentServices";

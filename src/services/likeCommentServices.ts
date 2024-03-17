@@ -5,7 +5,7 @@ import { CommentsQueryRepository } from "../repositories/comments.query-reposito
 import { ResultCommentType } from "../models/comments/output/comment.output";
 import { Result, ResultCode } from "../validators/error-validators";
 import { LikesQueryRepository } from "../repositories/likes.query-repository";
-import { CommentModel, LikesModel } from "../BD/db";
+import { CommentModel, CommentLikesModel } from "../BD/db";
 import { likeStatusEnum } from "../models/likes/db/likes-db";
 import { OutputLikesType, ResultCreateLikeType, ResultLikeType } from "../models/likes/output/likes.output";
 import { ObjectId, WithId } from "mongodb";
@@ -46,14 +46,14 @@ export class LikeCommentsServices {
 
   static async createCommentLike(commentId: string, userId: string, sendedLikeStatus: string): Promise<ResultCreateLikeType> {
     const existingLikeForComment =
-      await LikesModel.findOne({ commentId: commentId, userId: userId });
+      await CommentLikesModel.findOne({ commentId: commentId, userId: userId });
       let newLike = {
         commentId: commentId,
         userId: userId,
         myStatus: sendedLikeStatus,
       };
     if (!existingLikeForComment) {
-       let LikeInstance = new LikesModel(newLike);
+       let LikeInstance = new CommentLikesModel(newLike);
        LikeInstance.save();
       return {
         status: ResultCode.Success,
