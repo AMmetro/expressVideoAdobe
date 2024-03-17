@@ -71,7 +71,7 @@ class BlogsController {
         res.sendStatus(404);
         return;
       }
-      res.status(201).send({createdPost, wwwwwwwwwwwwww: "wwwwwwwwwwwwwww" });
+      res.status(201).send({...createdPost, wwwwwwwwwwwwww: "wwwwwwwwwwwwwww" });
     }
 
 
