@@ -108,9 +108,6 @@ export class PostServices {
     //   })
     // );
     // const result = { ...comments, items: сommentsWithLikes };
-
-
-
   }
 
 
@@ -149,6 +146,7 @@ export class PostServices {
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // @ts-ignore
     return {...createdPost, extendedLikesInfo: extendedLikesInfo };
+    // return createdPost;
   }
 
   static async update(
