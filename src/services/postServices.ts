@@ -139,7 +139,16 @@ export class PostServices {
     if (!createdPost) {
       return null;
     }
-    return createdPost;
+
+    const extendedLikesInfo = {
+      newestLikes: [],
+      likesCount: 0,
+      dislikesCount: 0,
+      myStatus:  likeStatusEnum.Dislike,
+    }
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// @ts-ignore
+    return {...createdPost, extendedLikesInfo: extendedLikesInfo };
   }
 
   static async update(
