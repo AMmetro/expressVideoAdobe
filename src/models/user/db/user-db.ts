@@ -3,34 +3,37 @@ import { WithId } from 'mongodb'
 
 export type blackListTokenType = string[]
 
-export type UserDB = {
-  login: string;
-  passwordHash: string;
-  passwordSalt: string;
-  // blackListToken: blackListTokenType;
-  email: string;
-  createdAt: string;
-  emailConfirmation: emailConfirmationType;
-};
-
-// export class UserDB {
-//   constructor (
-//     // public _id: ObjectId, 
-//     public login: string,
-//     public passwordHash: string,
-//     public passwordSalt: string,
-//     // public blackListToken: blackListTokenType,
-//     public email: string,
-//     public createdAt: string,
-//     public emailConfirmation: emailConfirmationType,
-//   ) {}
+// export type UserDB = {
+//   login: string;
+//   passwordHash: string;
+//   passwordSalt: string;
+//   // blackListToken: blackListTokenType;
+//   email: string;
+//   createdAt: string;
+//   emailConfirmation: emailConfirmationType;
 // };
+
 
 type emailConfirmationType = {
   confirmationCode: string;
   expirationDate: any;
   isConfirmed: boolean;
 };
+
+export class UserDB {
+  constructor (
+    // public _id: ObjectId, 
+    public login: string,
+    public passwordHash: string,
+    public passwordSalt: string,
+    // public blackListToken: blackListTokenType,
+    public email: string,
+    public createdAt: string,
+    public emailConfirmation: emailConfirmationType,
+  ) {}
+};
+
+
 
 // export const BlackListTokenSchema = new mongoose.Schema<blackListTokenType>() // wrong!!
 
