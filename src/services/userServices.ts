@@ -23,32 +23,32 @@ import { DevicesRepository } from "../repositories/devices-repository";
     const passwordSalt = await hashServise.generateSalt();
     const passwordHash = await hashServise.generateHash(password, passwordSalt);
 
-    const newUserModal = new UserDB(
-      login,
-      email,
-      passwordHash,
-      passwordSalt,
-      new Date().toISOString(),
-      {
-        confirmationCode: randomUUID(),
-        expirationDate: new Date().toISOString(),
-        isConfirmed: true,
-      }
-    );
-
-    // const newUserModal: UserDB = {
-    //   login: login,
-    //   email: email,
-    //   passwordHash: passwordHash,
-    //   passwordSalt: passwordSalt,
-    //   // blackListToken: [],
-    //   createdAt: new Date().toISOString(),
-    //   emailConfirmation: {
+    // const newUserModal = new UserDB(
+    //   login,
+    //   email,
+    //   passwordHash,
+    //   passwordSalt,
+    //   new Date().toISOString(),
+    //   {
     //     confirmationCode: randomUUID(),
     //     expirationDate: new Date().toISOString(),
     //     isConfirmed: true,
-    //   },
-    // };
+    //   }
+    // );
+
+    const newUserModal: UserDB = {
+      login: login,
+      email: email,
+      passwordHash: passwordHash,
+      passwordSalt: passwordSalt,
+      // blackListToken: [],
+      createdAt: new Date().toISOString(),
+      emailConfirmation: {
+        confirmationCode: randomUUID(),
+        expirationDate: new Date().toISOString(),
+        isConfirmed: true,
+      },
+    };
 
     const newUserId = await UserRepository.createWithOutConfirmation(
       newUserModal
