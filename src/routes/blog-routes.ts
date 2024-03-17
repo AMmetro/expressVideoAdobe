@@ -50,7 +50,7 @@ class BlogsController {
 
     const specificiedBlogPosts = await PostQueryRepository.getAll(basicSortData, blogId);
 
-    res.status(200).send({...specificiedBlogPosts, extendedLikesInfo:{dislikesCount: 123456} });
+    res.status(200).send({...specificiedBlogPosts, wwwwwwwwwwwwww: "wwwwwwwwwwwwwww" });
   }
 }
 
