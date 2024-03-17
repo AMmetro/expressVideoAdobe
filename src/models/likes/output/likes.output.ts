@@ -5,6 +5,13 @@ export type OutputLikesType = {
   id: string;
   myStatus: string;
   userId: string;
+};
+
+export type OutputPostLikesType = {
+  commentId: string;
+  id: string;
+  myStatus: string;
+  userId: string;
   addetAt: string;
 };
 
