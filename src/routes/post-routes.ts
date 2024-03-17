@@ -28,6 +28,7 @@ import { commentValidation } from "../validators/comment-validators";
 import { ResultCode } from "../validators/error-validators";
 import { sendCustomError } from "../utils/sendResponse";
 import { AuthServices } from "../services/authServices";
+import { PostLikesModel } from "../BD/db";
 
 export const postRoute = Router({});
 
@@ -97,7 +98,9 @@ postRoute.get("/", postsController.getAllPosts );
 
 
 
-postRoute.get("/:id",jwtValidationAcssTokenMiddlewareOptional, postsController.getPost );
+postRoute.get("/:id",
+// jwtValidationAcssTokenMiddlewareOptional,
+ postsController.getPost );
 // postRoute.get(
 //   "/:id",
 //   async (

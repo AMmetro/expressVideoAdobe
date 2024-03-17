@@ -43,20 +43,26 @@ export class PostServices {
       myStatus = requesterUserLike?.myStatus ? requesterUserLike?.myStatus : likeStatusEnum.Dislike
     }
 
-    const newestLikes = [{
-      addetAt: "qqqqqqqq",
-      userId: "rrrrrrrr",
-      login: "nnnnnnn",
-    }]
+            const newestLikes  =await PostLikesModel.find().sort({ addetAt: 1 }).limit(3).lean()
+        // const newestLikes  = await PostLikesModel.find({})
 
-    const test  = PostLikesModel.find().sort({ addetAt: 1 }).limit(3)
-    console.log("---------test--------")
-    console.log(test)
+        // console.log("---------newestLikes--------")
+        // console.log(newestLikes) 
+
+    // const newestLikes = [{
+    //   addetAt: "qqqqqqqq",
+    //   userId: "rrrrrrrr",
+    //   login: "nnnnnnn",
+    // }]
+
+    // const test  = PostLikesModel.find().sort({ addetAt: 1 }).limit(3)
+    // console.log("---------test--------")
+    // console.log(test)
 
     const composedPost = {
       ...post,
       extendedLikesInfo: {
-        ...newestLikes,
+        newestLikes: newestLikes,
         likesCount: likesCount,
         dislikesCount: dislikesCount,
         myStatus: myStatus,
