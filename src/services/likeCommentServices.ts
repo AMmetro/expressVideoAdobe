@@ -51,6 +51,7 @@ export class LikeCommentsServices {
         commentId: commentId,
         userId: userId,
         myStatus: sendedLikeStatus,
+        addetAt: new Date(),
       };
     if (!existingLikeForComment) {
        let LikeInstance = new CommentLikesModel(newLike);

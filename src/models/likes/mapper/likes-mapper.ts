@@ -9,6 +9,7 @@ export const likesMapper = (like:WithId<LikesDB>):OutputLikesType => {
         commentId: like.commentId,
         myStatus: like.myStatus,
         userId: like.userId,
+        addetAt: like.addetAt.toISOString(),
     }
 }
 

@@ -5,6 +5,7 @@ export type OutputLikesType = {
   id: string;
   myStatus: string;
   userId: string;
+  addetAt: string;
 };
 
 export type likesInfoType = {
