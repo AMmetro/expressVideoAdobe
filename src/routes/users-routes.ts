@@ -16,6 +16,34 @@ import { userServices } from "../services/userServices";
 
 export const usersRoute = Router({});
 
+class UsersController {
+
+
+  async createUser(req: RequestWithBody<RequestInputUserType>, res: Response) {
+    const { login, password, email } = req.body;
+    const InputUserModel = {
+      login: login,
+      password: password,
+      email: email,
+    };
+    const createdUser = await userServices.create(InputUserModel);
+    if (!createdUser) {
+      res.sendStatus(400);
+      return;
+    }
+    const transformdedUser = {
+       id: createdUser.id,
+       login: createdUser.login,
+       email: createdUser.email,
+       createdAt: createdUser.createdAt,
+    }
+    res.status(201).send(transformdedUser);
+  }
+
+}
+
+const UsersControllerInstance = new UsersController();
+
 usersRoute.get(
   "/",
   async (req: RequestWithQuery<QueryUserInputModel>, res: Response) => {
@@ -36,27 +64,33 @@ usersRoute.post(
   "/",
   authMiddleware,
   userValidation(),
-  async (req: RequestWithBody<RequestInputUserType>, res: Response) => {
-    const { login, password, email } = req.body;
-    const InputUserModel = {
-      login: login,
-      password: password,
-      email: email,
-    };
-    const createdUser = await userServices.create(InputUserModel);
-    if (!createdUser) {
-      res.sendStatus(400);
-      return;
-    }
-    const transformdedUser = {
-       id: createdUser.id,
-       login: createdUser.login,
-       email: createdUser.email,
-       createdAt: createdUser.createdAt,
-    }
-    res.status(201).send(transformdedUser);
-  }
+  UsersControllerInstance.createUser
 );
+// usersRoute.post(
+//   "/",
+//   authMiddleware,
+//   userValidation(),
+//   async (req: RequestWithBody<RequestInputUserType>, res: Response) => {
+//     const { login, password, email } = req.body;
+//     const InputUserModel = {
+//       login: login,
+//       password: password,
+//       email: email,
+//     };
+//     const createdUser = await userServices.create(InputUserModel);
+//     if (!createdUser) {
+//       res.sendStatus(400);
+//       return;
+//     }
+//     const transformdedUser = {
+//        id: createdUser.id,
+//        login: createdUser.login,
+//        email: createdUser.email,
+//        createdAt: createdUser.createdAt,
+//     }
+//     res.status(201).send(transformdedUser);
+//   }
+// );
 
 usersRoute.delete(
   "/:id",
