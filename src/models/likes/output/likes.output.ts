@@ -8,7 +8,7 @@ export type OutputLikesType = {
 };
 
 export type OutputPostLikesType = {
-  commentId: string;
+  postId: string;
   id: string;
   myStatus: string;
   userId: string;

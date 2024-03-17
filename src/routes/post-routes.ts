@@ -67,9 +67,7 @@ class PostsController {
           return;
         }
     const userOptionalId = req.user?.id || null;
-    // const postsRequestsSortData = basicSortQuery(req.query)
     const posts = await PostServices.composePost(postId, userOptionalId);
-    // const posts = await PostQueryRepository.getAll(postsRequestsSortData);
     if (!posts) {
       res.status(404);
       return;

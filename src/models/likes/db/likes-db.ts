@@ -13,7 +13,7 @@ export type LikesDB = {
   myStatus: string;
 };
 
-export const LikesSchema = new mongoose.Schema<WithId<LikesDB>>({
+export const CommentLikesSchema = new mongoose.Schema<WithId<LikesDB>>({
   userId: { type: String, require: true },
   myStatus: { type: String, require: true },
   commentId: { type: String, require: true },
@@ -21,7 +21,7 @@ export const LikesSchema = new mongoose.Schema<WithId<LikesDB>>({
 
 
 export type PostLikesDB = {
-  commentId: string;
+  postId: string;
   userId: string;
   myStatus: string;
   addetAt: Date;
@@ -30,7 +30,7 @@ export type PostLikesDB = {
 export const PostLikesSchema = new mongoose.Schema<WithId<PostLikesDB>>({
   userId: { type: String, require: true },
   myStatus: { type: String, require: true },
-  commentId: { type: String, require: true },
+  postId: { type: String, require: true },
   addetAt: { type: Date, require: true },
 })
   

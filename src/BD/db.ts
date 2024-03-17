@@ -11,7 +11,7 @@ import { CommentDB, CommentSchema } from '../models/comments/db/comment-db';
 import { appConfig } from '../appConfig';
 import { SecurityDevicesDB, SecurityDevicesSchema } from '../models/devices/db/devices-db';
 import { RateLimitDB, RateLimitSchema } from '../models/rateLimit/db/rateLimit-db';
-import { LikesDB, LikesSchema } from '../models/likes/db/likes-db';
+import { CommentLikesSchema, LikesDB, PostLikesDB, PostLikesSchema } from '../models/likes/db/likes-db';
 
 dotenv.config()
 const mongoURI = appConfig.mongoURI; 
@@ -20,7 +20,8 @@ if (!mongoURI){
 }
 
 export const UserModel = mongoose.model<WithId<UserDB>>('users', UserSchema)
-export const CommentLikesModel = mongoose.model<WithId<LikesDB>>('commentLikes', LikesSchema)
+export const CommentLikesModel = mongoose.model<WithId<LikesDB>>('commentLikes', CommentLikesSchema)
+export const PostLikesModel = mongoose.model<WithId<PostLikesDB>>('postLikes', PostLikesSchema)
 export const RateLimitModel = mongoose.model<WithId<RateLimitDB>>("ratelimit", RateLimitSchema)
 export const BlogModel = mongoose.model<WithId<BlogDB>>("blogs", BlogDBSchema)
 export const PostModel = mongoose.model<WithId<PostDB>>("posts", PostSchema)

@@ -10,7 +10,7 @@ import { OutputCommentType } from "../models/comments/output/comment.output";
 import { OutputBasicSortQueryType } from "../utils/sortQeryUtils";
 import { OutputLikesType } from "../models/likes/output/likes.output";
 import { LikesDB } from "../models/likes/db/likes-db";
-import { likesMapper } from "../models/likes/mapper/likes-mapper";
+import { commentlikesMapper } from "../models/likes/mapper/likes-mapper";
 
 
 
@@ -58,7 +58,7 @@ export class LikesQueryRepository {
     if (!likes) {
       return null;
     }
-    return likes.map(likesMapper);
+    return likes.map(commentlikesMapper);
   }
 
 }
