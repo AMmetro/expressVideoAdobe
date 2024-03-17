@@ -43,11 +43,15 @@ export class PostServices {
       myStatus = requesterUserLike?.myStatus ? requesterUserLike?.myStatus : likeStatusEnum.Dislike
     }
 
-    const newestLikes = {
+    const newestLikes = [{
       addetAt: "qqqqqqqq",
       userId: "rrrrrrrr",
       login: "nnnnnnn",
-    }
+    }]
+
+    const test  = PostLikesModel.find().sort({ addetAt: 1 }).limit(3)
+    console.log("---------test--------")
+    console.log(test)
 
     const composedPost = {
       ...post,
