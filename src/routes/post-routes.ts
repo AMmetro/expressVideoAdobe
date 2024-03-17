@@ -31,6 +31,26 @@ import { AuthServices } from "../services/authServices";
 
 export const postRoute = Router({});
 
+class PostsController {
+  async createPosts(req: RequestWithBody<RequestInputPostType>, res: Response) {
+    const { title, shortDescription, content, blogId } = req.body;
+    const newPostModal = {
+      title: title,
+      shortDescription: shortDescription,
+      content: content,
+      blogId: blogId,
+    };
+    const newPost = await PostServices.create(newPostModal);
+    if (!newPost) {
+      res.sendStatus(404);
+      return;
+    }
+    res.status(201).send(newPost);
+  }
+}
+
+const postsController = new PostsController()
+
 postRoute.get(
   "/",
   async (req: RequestWithQuery<QueryPostInputModel>, res: Response) => {
@@ -81,17 +101,6 @@ postRoute.get(
     }
     const basicSortData = basicSortQuery(req.query);
 
-    // -------------------------------------------------------------
-    // const userAuthToken = req.headers.authorization;
-    // let userId: string | null = null;
-    // if (userAuthToken) {
-    //   const userData = await AuthServices.checkAcssesToken(userAuthToken);
-    //   if (userData.data && userData.status === ResultCode.Success) {
-    //     userId = userData.data.id;
-    //   }
-    // }
-    // -------------------------------------------------------------
-
     const result = await PostServices.composePostComments(postId, basicSortData, userOptionalId);
     if (result.status === ResultCode.Success){
       res.status(200).send(result.data);
@@ -101,26 +110,34 @@ postRoute.get(
   }
 );
 
+
 postRoute.post(
   "/",
   authMiddleware,
   postValidation(),
-  async (req: RequestWithBody<RequestInputPostType>, res: Response) => {
-    const { title, shortDescription, content, blogId } = req.body;
-    const newPostModal = {
-      title: title,
-      shortDescription: shortDescription,
-      content: content,
-      blogId: blogId,
-    };
-    const newPost = await PostServices.create(newPostModal);
-    if (!newPost) {
-      res.sendStatus(404);
-      return;
-    }
-    res.status(201).send(newPost);
-  }
+  postsController.createPosts
 );
+
+// postRoute.post(
+//   "/",
+//   authMiddleware,
+//   postValidation(),
+//   async (req: RequestWithBody<RequestInputPostType>, res: Response) => {
+//     const { title, shortDescription, content, blogId } = req.body;
+//     const newPostModal = {
+//       title: title,
+//       shortDescription: shortDescription,
+//       content: content,
+//       blogId: blogId,
+//     };
+//     const newPost = await PostServices.create(newPostModal);
+//     if (!newPost) {
+//       res.sendStatus(404);
+//       return;
+//     }
+//     res.status(201).send(newPost);
+//   }
+// );
 
 postRoute.post(
   "/:postId/comments",
