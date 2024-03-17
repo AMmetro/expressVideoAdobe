@@ -30,7 +30,8 @@ export const blogRoute = Router({});
 
 
 class BlogsController {
-  async getBlogsPosts (
+
+  async getBlogPosts (
     req: RequestWithQueryAndParams<{blogId:string}, QueryPostInputModel>,
     res: Response
   )  {
@@ -45,13 +46,39 @@ class BlogsController {
       return;
     }
     const basicSortData = basicSortQuery(req.query)
-
     // добавить сервис с "extendedLikesInfo"
-
     const specificiedBlogPosts = await PostQueryRepository.getAll(basicSortData, blogId);
-
-    res.status(200).send({...specificiedBlogPosts, wwwwwwwwwwwwww: "wwwwwwwwwwwwwww" });
+    res.status(200).send(specificiedBlogPosts);
   }
+
+
+  async createBlogForPost (
+      req: RequestWithBodyAndParams<{blogId: string}, RequestInputBlogPostType>,
+      res: Response
+    ) {
+      const blogId = req.params.blogId;
+      if (!ObjectId.isValid(blogId)) {
+        res.sendStatus(404);
+        return;
+      }
+      const createPostModel = {
+        title: req.body.title,
+        shortDescription: req.body.shortDescription,
+        content: req.body.content,
+      };
+      const createdPost = await BlogServices.createPostToBlog(blogId, createPostModel);
+      if (!createdPost) {
+        res.sendStatus(404);
+        return;
+      }
+      res.status(201).send({createdPost, wwwwwwwwwwwwww: "wwwwwwwwwwwwwww" });
+    }
+
+
+
+
+
+
 }
 
 const blogsController = new BlogsController()
@@ -70,28 +97,8 @@ blogRoute.get(
   }
 );
 
-blogRoute.get("/:blogId/posts", blogsController.getBlogsPosts);
-// blogRoute.get(
-//   "/:blogId/posts",
-//   async (
-//     req: RequestWithQueryAndParams<{blogId:string}, QueryPostInputModel>,
-//     res: Response
-//   ) => {
-//     const blogId = req.params.blogId;
-//     if (!ObjectId.isValid(blogId)) {
-//       res.sendStatus(404);
-//       return;
-//     }
-//     const specificiedBlog = await BlogQueryRepository.getById(blogId);
-//     if (!specificiedBlog) {
-//       res.sendStatus(404);
-//       return;
-//     }
-//     const basicSortData = basicSortQuery(req.query)
-//     const specificiedBlogPosts = await PostQueryRepository.getAll(basicSortData, blogId);
-//     res.status(200).send(specificiedBlogPosts);
-//   }
-// );
+blogRoute.get("/:blogId/posts", blogsController.getBlogPosts);
+
 
 blogRoute.get(
   "/:id",
@@ -137,28 +144,34 @@ blogRoute.post(
   "/:blogId/posts",
   authMiddleware,
   createPostFromBlogValidation(),
-  async (
-    req: RequestWithBodyAndParams<{blogId: string}, RequestInputBlogPostType>,
-    res: Response
-  ) => {
-    const blogId = req.params.blogId;
-    if (!ObjectId.isValid(blogId)) {
-      res.sendStatus(404);
-      return;
-    }
-    const createPostModel = {
-      title: req.body.title,
-      shortDescription: req.body.shortDescription,
-      content: req.body.content,
-    };
-    const createdPost = await BlogServices.createPostToBlog(blogId, createPostModel);
-    if (!createdPost) {
-      res.sendStatus(404);
-      return;
-    }
-    res.status(201).send(createdPost);
-  }
+  blogsController.createBlogForPost
 );
+// blogRoute.post(
+//   "/:blogId/posts",
+//   authMiddleware,
+//   createPostFromBlogValidation(),
+//   async (
+//     req: RequestWithBodyAndParams<{blogId: string}, RequestInputBlogPostType>,
+//     res: Response
+//   ) => {
+//     const blogId = req.params.blogId;
+//     if (!ObjectId.isValid(blogId)) {
+//       res.sendStatus(404);
+//       return;
+//     }
+//     const createPostModel = {
+//       title: req.body.title,
+//       shortDescription: req.body.shortDescription,
+//       content: req.body.content,
+//     };
+//     const createdPost = await BlogServices.createPostToBlog(blogId, createPostModel);
+//     if (!createdPost) {
+//       res.sendStatus(404);
+//       return;
+//     }
+//     res.status(201).send(createdPost);
+//   }
+// );
 
 blogRoute.put(
   "/:id",
