@@ -143,10 +143,7 @@ export class PostServices {
       dislikesCount: 0,
       myStatus:  likeStatusEnum.Dislike,
     }
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// @ts-ignore
     return {...createdPost, extendedLikesInfo: extendedLikesInfo };
-    // return createdPost;
   }
 
   static async update(

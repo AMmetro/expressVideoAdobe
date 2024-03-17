@@ -1,4 +1,4 @@
-import { OutputPostType } from "./../models/post/output/post.output";
+import { OutputPostType, OutputPostTypeMapper } from "./../models/post/output/post.output";
 import { PostDB } from "../models/post/db/post-db";
 import { RequestInputBlogPostType } from "../models/post/input/updateposts-input-model";
 import { BlogRepository } from "../repositories/blog-repository";
@@ -33,7 +33,7 @@ export class BlogServices {
   static async createPostToBlog(
     blogId: string,
     createPostModel: RequestInputBlogPostType
-  ): Promise<OutputPostType | null> {
+  ): Promise<OutputPostTypeMapper | null> {
     const { title, shortDescription, content } = createPostModel;
     const currentBlog = await BlogRepository.getById(blogId);
     if (!currentBlog) {
@@ -49,6 +49,8 @@ export class BlogServices {
     };
     const createdPostId = await PostRepository.create(newPost);
     const createdPost = await PostQueryRepository.getById(createdPostId);
+
+
     return createdPost;
   }
 
