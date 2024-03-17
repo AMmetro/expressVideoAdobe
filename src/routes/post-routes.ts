@@ -32,6 +32,7 @@ import { AuthServices } from "../services/authServices";
 export const postRoute = Router({});
 
 class PostsController {
+
   async createPosts(req: RequestWithBody<RequestInputPostType>, res: Response) {
     const { title, shortDescription, content, blogId } = req.body;
     const newPostModal = {
@@ -47,13 +48,8 @@ class PostsController {
     }
     res.status(201).send(newPost);
   }
-}
 
-const postsController = new PostsController()
-
-postRoute.get(
-  "/",
-  async (req: RequestWithQuery<QueryPostInputModel>, res: Response) => {
+  async getPosts(req: RequestWithQuery<QueryPostInputModel>, res: Response) {
     const postsRequestsSortData = basicSortQuery(req.query)
     const posts = await PostQueryRepository.getAll(postsRequestsSortData);
     if (!posts) {
@@ -62,7 +58,27 @@ postRoute.get(
     }
     res.status(200).send(posts);
   }
-);
+
+
+}
+
+const postsController = new PostsController()
+
+// postRoute.get(
+//   "/",
+//   async (req: RequestWithQuery<QueryPostInputModel>, res: Response) => {
+//     const postsRequestsSortData = basicSortQuery(req.query)
+//     const posts = await PostQueryRepository.getAll(postsRequestsSortData);
+//     if (!posts) {
+//       res.status(404);
+//       return;
+//     }
+//     res.status(200).send(posts);
+//   }
+// );
+
+
+postRoute.get("/", postsController.getPosts );
 
 postRoute.get(
   "/:id",
