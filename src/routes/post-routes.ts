@@ -49,9 +49,27 @@ class PostsController {
     res.status(201).send(newPost);
   }
 
-  async getPosts(req: RequestWithQuery<QueryPostInputModel>, res: Response) {
+  async getAllPosts(req: RequestWithQuery<QueryPostInputModel>, res: Response) {
+    const userOptionalId = req.user?.id || null;
     const postsRequestsSortData = basicSortQuery(req.query)
     const posts = await PostQueryRepository.getAll(postsRequestsSortData);
+    if (!posts) {
+      res.status(404);
+      return;
+    }
+    res.status(200).send(posts);
+  }
+
+  async getPost(req: RequestWithParams<Params>, res: Response) {
+    const postId = req.params.id;
+        if (!ObjectId.isValid(postId)) {
+          res.sendStatus(404);
+          return;
+        }
+    const userOptionalId = req.user?.id || null;
+    // const postsRequestsSortData = basicSortQuery(req.query)
+    const posts = await PostServices.composePost(postId, userOptionalId);
+    // const posts = await PostQueryRepository.getAll(postsRequestsSortData);
     if (!posts) {
       res.status(404);
       return;
@@ -76,29 +94,31 @@ const postsController = new PostsController()
 //     res.status(200).send(posts);
 //   }
 // );
+postRoute.get("/", postsController.getAllPosts );
 
 
-postRoute.get("/", postsController.getPosts );
 
-postRoute.get(
-  "/:id",
-  async (
-    req: RequestWithParams<Params>,
-    res: ResposesType<OutputPostType | null>
-  ) => {
-    const id = req.params.id;
-    if (!ObjectId.isValid(id)) {
-      res.sendStatus(404);
-      return;
-    }
-    const posts = await PostQueryRepository.getById(id);
-    if (!posts) {
-      res.sendStatus(404);
-      return;
-    }
-    res.status(200).send(posts);
-  }
-);
+
+postRoute.get("/:id",jwtValidationAcssTokenMiddlewareOptional, postsController.getPost );
+// postRoute.get(
+//   "/:id",
+//   async (
+//     req: RequestWithParams<Params>,
+//     res: ResposesType<OutputPostType | null>
+//   ) => {
+//     const id = req.params.id;
+//     if (!ObjectId.isValid(id)) {
+//       res.sendStatus(404);
+//       return;
+//     }
+//     const posts = await PostQueryRepository.getById(id);
+//     if (!posts) {
+//       res.sendStatus(404);
+//       return;
+//     }
+//     res.status(200).send(posts);
+//   }
+// );
 
 postRoute.get(
   "/:postId/comments",

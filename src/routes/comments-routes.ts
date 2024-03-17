@@ -67,15 +67,6 @@ commentsRoute.get(
       return;
     }
 
-    // const userAuthToken = req.headers.authorization;
-    // let userId: string | null = null;
-    // if (userAuthToken) {
-    //   const userData = await AuthServices.checkAcssesToken(userAuthToken);
-    //   if (userData.data && userData.status === ResultCode.Success) {
-    //     userId = userData.data.id;
-    //   }
-    // }
-
     const result = await CommentsServices.composeComment(id, userOptionalId);
     if (result.status === ResultCode.Success){
       res.status(200).send(result.data as OutputCommentType);
@@ -122,7 +113,6 @@ commentsRoute.delete(
       return;
     }
     const result = await CommentsServices.delete(deleteCommentId, removerId );
-    // sendCustomResponse(res, result)
     if (result.status === ResultCode.Success){
       res.sendStatus(204)
     } else {
