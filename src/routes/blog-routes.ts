@@ -27,6 +27,36 @@ import { basicSortQuery } from "../utils/sortQeryUtils";
 
 export const blogRoute = Router({});
 
+
+
+class BlogsController {
+  async getBlogsPosts (
+    req: RequestWithQueryAndParams<{blogId:string}, QueryPostInputModel>,
+    res: Response
+  )  {
+    const blogId = req.params.blogId;
+    if (!ObjectId.isValid(blogId)) {
+      res.sendStatus(404);
+      return;
+    }
+    const specificiedBlog = await BlogQueryRepository.getById(blogId);
+    if (!specificiedBlog) {
+      res.sendStatus(404);
+      return;
+    }
+    const basicSortData = basicSortQuery(req.query)
+
+    // добавить сервис с "extendedLikesInfo"
+
+    const specificiedBlogPosts = await PostQueryRepository.getAll(basicSortData, blogId);
+
+    res.status(200).send({...specificiedBlogPosts, extendedLikesInfo:{dis: "dis"} });
+  }
+}
+
+const blogsController = new BlogsController()
+
+
 blogRoute.get(
   "/",
   async (req: RequestWithQuery<QueryBlogInputModel>, res: Response) => {
@@ -40,27 +70,28 @@ blogRoute.get(
   }
 );
 
-blogRoute.get(
-  "/:blogId/posts",
-  async (
-    req: RequestWithQueryAndParams<{blogId:string}, QueryPostInputModel>,
-    res: Response
-  ) => {
-    const blogId = req.params.blogId;
-    if (!ObjectId.isValid(blogId)) {
-      res.sendStatus(404);
-      return;
-    }
-    const specificiedBlog = await BlogQueryRepository.getById(blogId);
-    if (!specificiedBlog) {
-      res.sendStatus(404);
-      return;
-    }
-    const basicSortData = basicSortQuery(req.query)
-    const specificiedBlogPosts = await PostQueryRepository.getAll(basicSortData, blogId);
-    res.status(200).send(specificiedBlogPosts);
-  }
-);
+blogRoute.get("/:blogId/posts", blogsController.getBlogsPosts);
+// blogRoute.get(
+//   "/:blogId/posts",
+//   async (
+//     req: RequestWithQueryAndParams<{blogId:string}, QueryPostInputModel>,
+//     res: Response
+//   ) => {
+//     const blogId = req.params.blogId;
+//     if (!ObjectId.isValid(blogId)) {
+//       res.sendStatus(404);
+//       return;
+//     }
+//     const specificiedBlog = await BlogQueryRepository.getById(blogId);
+//     if (!specificiedBlog) {
+//       res.sendStatus(404);
+//       return;
+//     }
+//     const basicSortData = basicSortQuery(req.query)
+//     const specificiedBlogPosts = await PostQueryRepository.getAll(basicSortData, blogId);
+//     res.status(200).send(specificiedBlogPosts);
+//   }
+// );
 
 blogRoute.get(
   "/:id",
