@@ -15,7 +15,8 @@ import { DevicesQueryRepository } from "../repositories/devices.query-repository
 import { DevicesRepository } from "../repositories/devices-repository";
 
  class UserServices {
-  static async create(
+  
+   async create(
     createUserModel: RequestInputUserType
   ): Promise<OutputUserType | null> {
     const { login, password, email } = createUserModel;
@@ -48,12 +49,12 @@ import { DevicesRepository } from "../repositories/devices-repository";
     return createdUser;
   }
 
-  static async delete(id: string): Promise<Boolean | null> {
+   async delete(id: string): Promise<Boolean | null> {
     const isUserDeleted = await UserRepository.delete(id);
     return isUserDeleted;
   }
 
-  static async checkCredentials(
+   async checkCredentials(
     authUserData: AuthUserInputModel
   ): Promise<OutputUserType | null> {
     const userSearchData = {
@@ -77,7 +78,7 @@ import { DevicesRepository } from "../repositories/devices-repository";
     return userMapper(user);
   }
 
-  static async logout(refreshToken: string): Promise<ResultType> {
+   async logout(refreshToken: string): Promise<ResultType> {
     const claimantInfo = await jwtServise.getUserFromRefreshToken(refreshToken);
     if (!claimantInfo?.userId) {
       return {

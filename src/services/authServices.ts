@@ -7,7 +7,7 @@ import { add } from "date-fns/add";
 import { UserRepository } from "../repositories/user-repository";
 import { emailAdaper } from "../utils/emailAdaper";
 import { DevicesServices } from "./devicesServices";
-import { UserServices } from "./userServices";
+import { userServices } from "./userServices";
 import { AuthUserInputModel } from "../models/user/input/authUser-input-model";
 import { DevicesQueryRepository } from "../repositories/devices.query-repository";
 
@@ -318,7 +318,7 @@ export class AuthServices {
     userAgent: string,
     userIp: string
   ): Promise<Result<{ newAT: string; newRT: string }>> {
-    const authUsers = await UserServices.checkCredentials(authData);
+    const authUsers = await userServices.checkCredentials(authData);
     if (!authUsers) {
       return {
         status: ResultCode.Unauthorised,

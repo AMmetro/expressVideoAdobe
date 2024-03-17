@@ -4,7 +4,7 @@ import {
   AuthUserInputModel,
   RegistrationUserInputModel,
 } from "../models/user/input/authUser-input-model";
-import { UserServices } from "../services/userServices";
+import { userServices } from "../services/userServices";
 import { UserQueryRepository } from "../repositories/user.query-repository";
 import {
   jwtValidationAcssTokenMiddleware,
@@ -104,7 +104,7 @@ authRoute.post(
       res.sendStatus(401);
       return;
     }
-    const result = await UserServices.logout(oldRefreshToken);
+    const result = await userServices.logout(oldRefreshToken);
     if (result.status === ResultCode.Success) {
       res.clearCookie("refreshToken").sendStatus(204);
       return;

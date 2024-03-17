@@ -12,7 +12,7 @@ import { UserQueryRepository } from "../repositories/user.query-repository";
 import { userValidation } from "../validators/user-validators";
 import { QueryUserInputModel } from "../models/user/input/queryUser-input-model";
 import { RequestInputUserType } from "../models/user/input/updateUser-input-model";
-import { UserServices } from "../services/userServices";
+import { userServices } from "../services/userServices";
 
 export const usersRoute = Router({});
 
@@ -43,7 +43,7 @@ usersRoute.post(
       password: password,
       email: email,
     };
-    const createdUser = await UserServices.create(InputUserModel);
+    const createdUser = await userServices.create(InputUserModel);
     if (!createdUser) {
       res.sendStatus(400);
       return;
@@ -67,7 +67,7 @@ usersRoute.delete(
       res.sendStatus(404);
       return;
     }
-    const isDeleted = await UserServices.delete(deletePostId);
+    const isDeleted = await userServices.delete(deletePostId);
     if (!isDeleted) {
       res.sendStatus(404);
       return;
