@@ -4,7 +4,7 @@ import { RequestInputPostType } from "../models/post/input/updateposts-input-mod
 
 import { PostRepository } from "../repositories/post-repository";
 import { PostQueryRepository } from "../repositories/post.query-repository";
-import { BlogModel, CommentLikesModel } from "../BD/db";
+import { BlogModel, CommentLikesModel, PostLikesModel } from "../BD/db";
 import { BlogQueryRepository } from "../repositories/blog.query-repository";
 import { CommentsQueryRepository } from "../repositories/comments.query-repository";
 import { OutputBasicSortQueryType } from "../utils/sortQeryUtils";
@@ -26,32 +26,41 @@ export class PostServices {
       };
     }
 
-    // const likesCount = await CommentLikesModel.countDocuments({
-    //   commentId: posts.id,
-    //   myStatus: likeStatusEnum.Like,
-    // });
-    // const dislikesCount = await CommentLikesModel.countDocuments({
-    //   commentId: posts.id,
-    //   myStatus: likeStatusEnum.Dislike,
-    // });
+    const likesCount = await PostLikesModel.countDocuments({
+      postId: postId,
+      myStatus: likeStatusEnum.Like,
+    });
+    const dislikesCount = await PostLikesModel.countDocuments({
+      postId: postId,
+      myStatus: likeStatusEnum.Dislike,
+    });
+    let myStatus = likeStatusEnum.Dislike
+    if (userId) {
+      const requesterUserLike = await PostLikesModel.findOne({
+        postId: postId,
+        userId: userId,
+      });
+      myStatus = requesterUserLike?.myStatus ? requesterUserLike?.myStatus : likeStatusEnum.Dislike
+    }
 
-    const newPostModal: PostDB = {
-      title: "title",
-      shortDescription: "shortDescription",
-      content: "content",
-      blogId: "blogId",
-      blogName: "name",
-      createdAt: new Date().toISOString(),
+    const newestLikes = {
+      addetAt: "qqqqqqqq",
+      userId: "rrrrrrrr",
+      login: "nnnnnnn",
+    }
+
+    const composedPost = {
+      ...post,
+      extendedLikesInfo: {
+        ...newestLikes,
+        likesCount: likesCount,
+        dislikesCount: dislikesCount,
+        myStatus: myStatus,
+      },
     };
-    const newPostId = await PostRepository.create(newPostModal);
-    if (!newPostId) {
-      return null;
-    }
-    const createdPost = await PostQueryRepository.getById(newPostId);
-    if (!createdPost) {
-      return null;
-    }
-    return createdPost;
+
+
+    return composedPost;
   
     
     // const postsWithLikes: any = await Promise.all(
