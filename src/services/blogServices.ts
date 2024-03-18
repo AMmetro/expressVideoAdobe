@@ -50,11 +50,13 @@ export class BlogServices {
     };
     const createdPostId = await PostRepository.create(newPost);
     const createdPost = await PostQueryRepository.getById(createdPostId);
-
+    if (!createdPost) {
+      return null;
+    }
     const extendedLikesInfo = {
       dislikesCount: 0,
       likesCount: 0,
-      myStatus: likeStatusEnum.None,
+      myStatus: likeStatusEnum.Dislike,
       newestLikes: [],
        }
     return {...createdPost, extendedLikesInfo: extendedLikesInfo};
