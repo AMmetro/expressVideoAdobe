@@ -56,7 +56,7 @@ export class BlogServices {
     const extendedLikesInfo = {
       dislikesCount: 0,
       likesCount: 0,
-      myStatus: likeStatusEnum.Dislike,
+      myStatus: likeStatusEnum.None,
       newestLikes: [],
        }
     return {...createdPost, extendedLikesInfo: extendedLikesInfo};
