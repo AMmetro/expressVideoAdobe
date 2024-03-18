@@ -8,6 +8,7 @@ import { RequestInputBlogType, UpdateBlogType } from "../models/blog/input/updat
 import { BlogDB } from "../models/blog/db/blog-db";
 import { BlogQueryRepository } from "../repositories/blog.query-repository";
 import { OutputBlogType } from "../models/blog/output/blog.output";
+import { likeStatusEnum } from "../models/likes/db/likes-db";
 
 export class BlogServices {
 
@@ -33,7 +34,7 @@ export class BlogServices {
   static async createPostToBlog(
     blogId: string,
     createPostModel: RequestInputBlogPostType
-  ): Promise<OutputPostTypeMapper | null> {
+  ): Promise<OutputPostType | null> {
     const { title, shortDescription, content } = createPostModel;
     const currentBlog = await BlogRepository.getById(blogId);
     if (!currentBlog) {
@@ -50,8 +51,14 @@ export class BlogServices {
     const createdPostId = await PostRepository.create(newPost);
     const createdPost = await PostQueryRepository.getById(createdPostId);
 
-
-    return createdPost;
+    const extendedLikesInfo = {
+      dislikesCount: 0,
+      likesCount: 0,
+      myStatus: likeStatusEnum.None,
+      newestLikes: ["1", "2"],
+       }
+      //  @ts-ignore
+    return {...createdPost, extendedLikesInfo: extendedLikesInfo};
   }
 
   static async updateBlog(
