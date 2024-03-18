@@ -20,7 +20,7 @@ export class PostServices {
   static async addLikeToComment(
     postId: string,
     sendedLikeStatus: string,
-    userId: string
+    userId: string,
   ): Promise<ResultCreatePostLikeType> {
     const postForLike = await PostModel.findOne({
       _id: new ObjectId(postId),
@@ -43,11 +43,11 @@ export class PostServices {
     const post = await PostQueryRepository.getById(postId);
     if (!post) {
       return {
-        status: ResultCode.NotFound,
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        status: ResultCode.Forbidden,
         errorMessage: "Can not read post from database",
       };
     }
-
     const likesCount = await PostLikesModel.countDocuments({
       postId: postId,
       myStatus: likeStatusEnum.Like,
@@ -56,13 +56,13 @@ export class PostServices {
       postId: postId,
       myStatus: likeStatusEnum.Dislike,
     });
-    let myStatus = likeStatusEnum.Dislike
+    let myStatus = likeStatusEnum.None
     if (userId) {
       const requesterUserLike = await PostLikesModel.findOne({
         postId: postId,
         userId: userId,
       });
-      myStatus = requesterUserLike?.myStatus ? requesterUserLike?.myStatus : likeStatusEnum.Dislike
+      myStatus = requesterUserLike?.myStatus ? requesterUserLike?.myStatus : likeStatusEnum.None
     }
 
     const newestLikes  =await PostLikesModel.find().sort({ addetAt: 1 }).limit(3).lean()

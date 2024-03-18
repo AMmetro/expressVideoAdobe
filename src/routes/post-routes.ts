@@ -65,6 +65,7 @@ class PostsController {
   async getPost(req: RequestWithParams<Params>, res: Response) {
     const postId = req.params.id;
         if (!ObjectId.isValid(postId)) {
+          // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
           res.sendStatus(444);
           return;
         }
