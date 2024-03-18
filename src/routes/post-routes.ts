@@ -72,7 +72,8 @@ class PostsController {
     const userOptionalId = req.user?.id || null;
     const posts = await PostServices.composePost(postId, userOptionalId);
     if (!posts) {
-      res.status(404);
+      // !!!!!!!!!!!!!!!!!!!!!!!!
+      res.status(433);
       return;
     }
     res.status(200).send(posts);
