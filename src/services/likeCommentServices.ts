@@ -1,15 +1,8 @@
-import { PostQueryRepository } from "../repositories/post.query-repository";
-import { UserQueryRepository } from "../repositories/user.query-repository";
-import { CommentRepository } from "../repositories/comment-repository";
-import { CommentsQueryRepository } from "../repositories/comments.query-repository";
-import { ResultCommentType } from "../models/comments/output/comment.output";
-import { Result, ResultCode } from "../validators/error-validators";
+import { ResultCode } from "../validators/error-validators";
 import { LikesQueryRepository } from "../repositories/likes.query-repository";
-import { CommentModel, CommentLikesModel } from "../BD/db";
+import { CommentLikesModel } from "../BD/db";
 import { likeStatusEnum } from "../models/likes/db/likes-db";
-import { OutputLikesType, ResultCreateLikeType, ResultLikeType } from "../models/likes/output/likes.output";
-import { ObjectId, WithId } from "mongodb";
-import { LikesDB } from "../models/likes/db/likes-db";
+import { ResultCreateLikeType, ResultLikeType } from "../models/likes/output/likes.output";
 
 export class LikeCommentsServices {
 

@@ -1,4 +1,4 @@
-import { LikesDB } from "../db/likes-db";
+import { LikesDB, PostLikesDB } from "../db/likes-db";
 
 export type OutputLikesType = {
   commentId: string;
@@ -31,6 +31,12 @@ export type ResultCreateLikeType = {
   status: string,
   errorMessage?: string,
   data?: LikesDB
+  };
+
+export type ResultCreatePostLikeType = {
+  status: string,
+  errorMessage?: string,
+  data?: PostLikesDB
   };
 
 

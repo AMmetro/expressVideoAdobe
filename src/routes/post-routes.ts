@@ -29,6 +29,7 @@ import { ResultCode } from "../validators/error-validators";
 import { sendCustomError } from "../utils/sendResponse";
 import { AuthServices } from "../services/authServices";
 import { PostLikesModel } from "../BD/db";
+import { likeStatusEnum } from "../models/likes/db/likes-db";
 
 export const postRoute = Router({});
 
@@ -77,49 +78,48 @@ class PostsController {
   }
 
 
+  async likePost(req: RequestWithParams<Params>, res: Response) {
+    const postId = req.params.id;
+        if (!postId) {
+          res.sendStatus(404);
+          return;
+        }
+    const userId = req.user!.id;
+    const likeStatus = req.body.likeStatus;
+    if (!likeStatus ||  !likeStatusEnum.hasOwnProperty(likeStatus)) {
+      const error = {
+        status: ResultCode.ClientError,
+        errorMessage: JSON.stringify({
+          errorsMessages: [
+            {
+              message: `Like status is wrong`,
+              field: "likeStatus",
+            },
+          ],
+        })
+      }
+      sendCustomError(res, error)
+      return;
+    }
+    const likes = await PostServices.addLikeToComment(postId, likeStatus, userId);
+    if (!likes) {
+      res.status(404);
+      return;
+    }
+    res.status(200).send(likes);
+  }
+
 }
 
 const postsController = new PostsController()
 
-// postRoute.get(
-//   "/",
-//   async (req: RequestWithQuery<QueryPostInputModel>, res: Response) => {
-//     const postsRequestsSortData = basicSortQuery(req.query)
-//     const posts = await PostQueryRepository.getAll(postsRequestsSortData);
-//     if (!posts) {
-//       res.status(404);
-//       return;
-//     }
-//     res.status(200).send(posts);
-//   }
-// );
+
 postRoute.get("/", postsController.getAllPosts );
-
-
-
 
 postRoute.get("/:id",
 // jwtValidationAcssTokenMiddlewareOptional,
  postsController.getPost );
-// postRoute.get(
-//   "/:id",
-//   async (
-//     req: RequestWithParams<Params>,
-//     res: ResposesType<OutputPostType | null>
-//   ) => {
-//     const id = req.params.id;
-//     if (!ObjectId.isValid(id)) {
-//       res.sendStatus(404);
-//       return;
-//     }
-//     const posts = await PostQueryRepository.getById(id);
-//     if (!posts) {
-//       res.sendStatus(404);
-//       return;
-//     }
-//     res.status(200).send(posts);
-//   }
-// );
+
 
 postRoute.get(
   "/:postId/comments",
@@ -194,6 +194,10 @@ postRoute.post(
     } else {sendCustomError(res, result)}
   }
 );
+
+postRoute.put("/:postId/like-status",
+jwtValidationAcssTokenMiddleware,
+ postsController.likePost);
 
 postRoute.put(
   "/:id",

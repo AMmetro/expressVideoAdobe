@@ -4,14 +4,36 @@ import { RequestInputPostType } from "../models/post/input/updateposts-input-mod
 
 import { PostRepository } from "../repositories/post-repository";
 import { PostQueryRepository } from "../repositories/post.query-repository";
-import { BlogModel, CommentLikesModel, PostLikesModel } from "../BD/db";
+import { BlogModel, CommentLikesModel, PostLikesModel, PostModel } from "../BD/db";
 import { BlogQueryRepository } from "../repositories/blog.query-repository";
 import { CommentsQueryRepository } from "../repositories/comments.query-repository";
 import { OutputBasicSortQueryType } from "../utils/sortQeryUtils";
 import { ResultCode } from "../validators/error-validators";
 import { likeStatusEnum } from "../models/likes/db/likes-db";
+import { ObjectId } from "mongodb";
+import { PostCommentsServices } from "./postCommentServices";
+import { ResultCreateLikeType, ResultCreatePostLikeType } from "../models/likes/output/likes.output";
 
 export class PostServices {
+
+
+  static async addLikeToComment(
+    postId: string,
+    sendedLikeStatus: string,
+    userId: string
+  ): Promise<ResultCreatePostLikeType> {
+    const postForLike = await PostModel.findOne({
+      _id: new ObjectId(postId),
+    });
+    if (!postForLike) {
+      return {
+        status: ResultCode.NotFound,
+        errorMessage: "Not found post with id " + postId,
+      };
+    }
+    const createdLikeResponse = await PostCommentsServices.createPostLike(postId, userId, sendedLikeStatus )
+    return createdLikeResponse
+  }
 
 
   static async composePost(
@@ -43,21 +65,7 @@ export class PostServices {
       myStatus = requesterUserLike?.myStatus ? requesterUserLike?.myStatus : likeStatusEnum.Dislike
     }
 
-            const newestLikes  =await PostLikesModel.find().sort({ addetAt: 1 }).limit(3).lean()
-        // const newestLikes  = await PostLikesModel.find({})
-
-        // console.log("---------newestLikes--------")
-        // console.log(newestLikes) 
-
-    // const newestLikes = [{
-    //   addetAt: "qqqqqqqq",
-    //   userId: "rrrrrrrr",
-    //   login: "nnnnnnn",
-    // }]
-
-    // const test  = PostLikesModel.find().sort({ addetAt: 1 }).limit(3)
-    // console.log("---------test--------")
-    // console.log(test)
+    const newestLikes  =await PostLikesModel.find().sort({ addetAt: 1 }).limit(3).lean()
 
     const composedPost = {
       ...post,
@@ -68,46 +76,7 @@ export class PostServices {
         myStatus: myStatus,
       },
     };
-
-
     return composedPost;
-  
-    
-    // const postsWithLikes: any = await Promise.all(
-    //   posts.items.map(async (posts) => {
-    //     const likesCount = await CommentLikesModel.countDocuments({
-    //       commentId: posts.id,
-    //       myStatus: likeStatusEnum.Like,
-    //     });
-    //     const dislikesCount = await CommentLikesModel.countDocuments({
-    //       commentId: posts.id,
-    //       myStatus: likeStatusEnum.Dislike,
-    //     });
-
-    //     // const [  likeCounts, dislikeCounts] =  await Promise.all (
-    //     //   [
-    //     //     LikesModel.countDocuments({commentId: comment.id, myStatus: likeStatusEnum.Like }),
-    //     //     LikesModel.countDocuments({commentId: comment.id,  myStatus: likeStatusEnum.Dislike})
-    //     //   ]
-    //     // )
-
-    //     let currentLikeStatus = likeStatusEnum.None;
-    //     if (userId) {
-    //       const currentLike = await CommentLikesModel.findOne({
-    //         userId: userId,
-    //         commentId: comment.id,
-    //       });
-    //       currentLikeStatus = currentLike
-    //         ? currentLike.myStatus
-    //         : likeStatusEnum.None;
-    //     }
-    //     return {
-    //       ...comment,
-    //       likesInfo: { likesCount, dislikesCount, myStatus: currentLikeStatus },
-    //     };
-    //   })
-    // );
-    // const result = { ...comments, items: сommentsWithLikes };
   }
 
 

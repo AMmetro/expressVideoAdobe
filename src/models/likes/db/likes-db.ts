@@ -13,6 +13,7 @@ export type LikesDB = {
   myStatus: string;
 };
 
+
 export const CommentLikesSchema = new mongoose.Schema<WithId<LikesDB>>({
   userId: { type: String, require: true },
   myStatus: { type: String, require: true },
