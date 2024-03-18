@@ -65,7 +65,7 @@ class PostsController {
   async getPost(req: RequestWithParams<Params>, res: Response) {
     const postId = req.params.id;
         if (!ObjectId.isValid(postId)) {
-          res.sendStatus(404);
+          res.sendStatus(444);
           return;
         }
     const userOptionalId = req.user?.id || null;
@@ -117,7 +117,7 @@ const postsController = new PostsController()
 postRoute.get("/", postsController.getAllPosts );
 
 postRoute.get("/:id",
-// jwtValidationAcssTokenMiddlewareOptional,
+jwtValidationAcssTokenMiddlewareOptional,
  postsController.getPost );
 
 
