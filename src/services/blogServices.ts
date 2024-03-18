@@ -55,9 +55,8 @@ export class BlogServices {
       dislikesCount: 0,
       likesCount: 0,
       myStatus: likeStatusEnum.None,
-      newestLikes: ["1", "2"],
+      newestLikes: [],
        }
-      //  @ts-ignore
     return {...createdPost, extendedLikesInfo: extendedLikesInfo};
   }
 
