@@ -35,6 +35,7 @@ export class PostServices {
     return createdLikeResponse
   }
 
+  
 
   static async composePost(
     postId: string,
@@ -62,7 +63,7 @@ export class PostServices {
         postId: postId,
         userId: userId,
       });
-      myStatus = requesterUserLike?.myStatus ? requesterUserLike?.myStatus : likeStatusEnum.None
+      myStatus = requesterUserLike?.myStatus ? requesterUserLike.myStatus : likeStatusEnum.None
     }
 
     const newestLikes  =await PostLikesModel.find().sort({ addetAt: 1 }).limit(3).lean()
@@ -73,7 +74,7 @@ export class PostServices {
         newestLikes: newestLikes,
         likesCount: likesCount,
         dislikesCount: dislikesCount,
-        myStatus: myStatus,
+        myStatus: "myStatus",
       },
     };
     return composedPost;
