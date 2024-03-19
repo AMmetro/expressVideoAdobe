@@ -1,6 +1,12 @@
+import { Response } from "express";
 import { ResultCode } from "../validators/error-validators";
 
-export function sendCustomError(res: any, result: any) {
+type IncomResultType = {
+  status: string;
+  errorMessage?: string;
+}
+
+export function sendCustomError(res: Response, result: IncomResultType) {
   if (result.status === ResultCode.NotFound) {
     res.status(404).send(result.errorMessage);
     return;
@@ -15,6 +21,9 @@ export function sendCustomError(res: any, result: any) {
     return;
   } else if (result.status === ResultCode.Conflict) {
     res.status(409).send(result.errorMessage);
+    return;
+  } else if (result.status === ResultCode.ExpectationFailed) {
+    res.status(417).send(result.errorMessage);
     return;
   } else if (result.status === ResultCode.ServerError) {
     res.status(503).send(result.errorMessage);

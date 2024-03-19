@@ -23,75 +23,19 @@ import { QueryPostInputModel } from "../models/blog/input/queryBlog-input-model"
 import { basicSortQuery } from "../utils/sortQeryUtils";
 import { CommentsQueryRepository } from "../repositories/comments.query-repository";
 import { CommentsServices } from "../services/commentsServices";
-import { jwtValidationMiddleware } from "../auth/jwtAuth-middleware";
+import { jwtValidationAcssTokenMiddleware, jwtValidationAcssTokenMiddlewareOptional } from "../auth/jwtAuth-middleware";
 import { commentValidation } from "../validators/comment-validators";
 import { ResultCode } from "../validators/error-validators";
 import { sendCustomError } from "../utils/sendResponse";
+import { AuthServices } from "../services/authServices";
+import { PostLikesModel } from "../BD/db";
+import { likeStatusEnum } from "../models/likes/db/likes-db";
 
 export const postRoute = Router({});
 
-postRoute.get(
-  "/",
-  async (req: RequestWithQuery<QueryPostInputModel>, res: Response) => {
-    const postsRequestsSortData = basicSortQuery(req.query)
-    const posts = await PostQueryRepository.getAll(postsRequestsSortData);
-    if (!posts) {
-      res.status(404);
-      return;
-    }
-    res.status(200).send(posts);
-  }
-);
+class PostsController {
 
-postRoute.get(
-  "/:id",
-  async (
-    req: RequestWithParams<Params>,
-    res: ResposesType<OutputPostType | null>
-  ) => {
-    const id = req.params.id;
-    if (!ObjectId.isValid(id)) {
-      res.sendStatus(404);
-      return;
-    }
-    const posts = await PostQueryRepository.getById(id);
-    if (!posts) {
-      res.sendStatus(404);
-      return;
-    }
-    res.status(200).send(posts);
-  }
-);
-
-postRoute.get(
-  "/:postId/comments",
-  async (req: RequestWithParams<CommentParams>, res: Response) => {
-    const postId = req.params.postId;
-    if (!ObjectId.isValid(postId)) {
-      res.sendStatus(404);
-      return;
-    }
-    const postOwner = await PostQueryRepository.getById(postId)
-    if (!postOwner) {
-      res.sendStatus(404);
-      return;
-    }
-    const basicSortData = basicSortQuery(req.query);
-    const sortData = { id: postId, ...basicSortData };
-    const comments = await CommentsQueryRepository.getPostComments(sortData);
-    if (!comments) {
-      res.sendStatus(404);
-      return;
-    }
-    res.status(200).send(comments);
-  }
-);
-
-postRoute.post(
-  "/",
-  authMiddleware,
-  postValidation(),
-  async (req: RequestWithBody<RequestInputPostType>, res: Response) => {
+  async createPosts(req: RequestWithBody<RequestInputPostType>, res: Response) {
     const { title, shortDescription, content, blogId } = req.body;
     const newPostModal = {
       title: title,
@@ -106,11 +50,137 @@ postRoute.post(
     }
     res.status(201).send(newPost);
   }
+
+  async getAllPosts(req: RequestWithQuery<QueryPostInputModel>, res: Response) {
+    const userOptionalId = req.user?.id || null;
+    const postsRequestsSortData = basicSortQuery(req.query)
+    const posts = await PostQueryRepository.getAll(postsRequestsSortData);
+    if (!posts) {
+      res.status(404);
+      return;
+    }
+    res.status(200).send(posts);
+  }
+
+  async getPost(req: RequestWithParams<Params>, res: Response) {
+    const postId = req.params.id;
+        if (!ObjectId.isValid(postId)) {
+          // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+          res.sendStatus(444);
+          return;
+        }
+    const userOptionalId = req.user?.id || null;
+    const posts = await PostServices.composePost(postId, userOptionalId);
+    if (!posts) {
+      // !!!!!!!!!!!!!!!!!!!!!!!!
+      res.status(433);
+      return;
+    }
+    res.status(200).send(posts);
+  }
+
+
+  async likePost(req: RequestWithParams<Params>, res: Response) {
+    const postId = req.params.id;
+        if (!postId) {
+          res.sendStatus(404);
+          return;
+        }
+    const userId = req.user!.id;
+    const likeStatus = req.body.likeStatus;
+    if (!likeStatus ||  !likeStatusEnum.hasOwnProperty(likeStatus)) {
+      const error = {
+        status: ResultCode.ClientError,
+        errorMessage: JSON.stringify({
+          errorsMessages: [
+            {
+              message: `Like status is wrong`,
+              field: "likeStatus",
+            },
+          ],
+        })
+      }
+      sendCustomError(res, error)
+      return;
+    }
+    const likes = await PostServices.addLikeToComment(postId, likeStatus, userId);
+    if (!likes) {
+      res.status(404);
+      return;
+    }
+    res.status(200).send(likes);
+  }
+
+}
+
+const postsController = new PostsController()
+
+
+postRoute.get("/", postsController.getAllPosts );
+
+postRoute.get("/:id",
+jwtValidationAcssTokenMiddlewareOptional,
+ postsController.getPost );
+
+
+postRoute.get(
+  "/:postId/comments",
+  jwtValidationAcssTokenMiddlewareOptional,
+  async (req: RequestWithParams<CommentParams>, res: Response) => {
+    const postId = req.params.postId;
+    const userOptionalId = req.user?.id || null;
+    if (!ObjectId.isValid(postId)) {
+      res.sendStatus(404);
+      return;
+    }
+    const postOwner = await PostQueryRepository.getById(postId)
+    if (!postOwner) {
+      res.sendStatus(404);
+      return;
+    }
+    const basicSortData = basicSortQuery(req.query);
+
+    const result = await PostServices.composePostComments(postId, basicSortData, userOptionalId);
+    if (result.status === ResultCode.Success){
+      res.status(200).send(result.data);
+    } else {
+      sendCustomError(res, result)
+    }
+  }
 );
+
+
+postRoute.post(
+  "/",
+  authMiddleware,
+  postValidation(),
+  postsController.createPosts
+);
+
+// postRoute.post(
+//   "/",
+//   authMiddleware,
+//   postValidation(),
+//   async (req: RequestWithBody<RequestInputPostType>, res: Response) => {
+//     const { title, shortDescription, content, blogId } = req.body;
+//     const newPostModal = {
+//       title: title,
+//       shortDescription: shortDescription,
+//       content: content,
+//       blogId: blogId,
+//     };
+//     const newPost = await PostServices.create(newPostModal);
+//     if (!newPost) {
+//       res.sendStatus(404);
+//       return;
+//     }
+//     res.status(201).send(newPost);
+//   }
+// );
 
 postRoute.post(
   "/:postId/comments",
-  jwtValidationMiddleware,
+  jwtValidationAcssTokenMiddleware,
   commentValidation(),
   async (req: RequestWithParams<CommentParams>, res: Response) => {
     const commentedPostId = req.params.postId;
@@ -126,6 +196,10 @@ postRoute.post(
     } else {sendCustomError(res, result)}
   }
 );
+
+postRoute.put("/:postId/like-status",
+jwtValidationAcssTokenMiddleware,
+ postsController.likePost);
 
 postRoute.put(
   "/:id",

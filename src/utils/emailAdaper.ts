@@ -3,15 +3,10 @@ const nodemailer = require("nodemailer");
 export type emailInfoType = {
   email: string,
   subject: string,
-  confirmationCode: string,
+  code: string,
   }
   
-  export type emailDebugType = {
-    email: string,
-    subject: string,
-    confirmationCode: string,
-    debug?: string,
-    }
+export type emailDebugType = emailInfoType & { debug?: any }
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -45,6 +40,26 @@ export const emailAdaper = {
   },
 
 
+  async sendRecoveryCode(emailInfo: emailInfoType) {
+    const mailLayout = HTML_TEMPLATE_RECOVERY(emailInfo);
+     try {
+        const info = await transporter.sendMail({
+         from: "nodeMailer <nodemailerstud@gmail.com>",
+         to: emailInfo.email,
+         subject: emailInfo.subject,
+         html: mailLayout,
+       });
+       console.log("Message sent: %s", info);
+       return info
+     } catch (e) {
+       console.log(e);
+     }
+   },
+
+
+  
+
+
 
   async sendEmailDebug(emailInfo: emailDebugType) {
 
@@ -66,7 +81,7 @@ export const emailAdaper = {
 };
 
 const HTML_TEMPLATE_CONFIRMATION = (emailInfo: emailInfoType) => {
-  const confirmationCode = emailInfo.confirmationCode
+  const confirmationCode = emailInfo.code
   return `
   <h1>Thank for your registration</h1>
   <p>To finish registration please follow the link below:
@@ -76,9 +91,20 @@ const HTML_TEMPLATE_CONFIRMATION = (emailInfo: emailInfoType) => {
 }
 
 
+const HTML_TEMPLATE_RECOVERY = (emailInfo: emailInfoType) => {
+  const recoveryCode = emailInfo.code
+  return `
+  <h1>Password recovry</h1>
+  <p>To finish password recovery please follow the link below:
+   <a href='https://somesite.com/password-recovery?recoveryCode=${recoveryCode}'>recovery password</a>
+</p>
+  `;
+}
+
+
 
 const HTML_TEMPLATE_DEBUG = (emailInfo: emailDebugType) => {
-  const confirmationCode = emailInfo.confirmationCode
+  const confirmationCode = emailInfo.code
   return `
     <!DOCTYPE html>
     <html>

@@ -7,11 +7,12 @@ export enum ResultCode {
     Unauthorised = "Unauthorised",
     Conflict = "Conflict",
     ServerError = "ServerError",
+    ExpectationFailed = "ExpectationFailed",
 }
 
 export type Result <T = null> = {
     status: ResultCode;
-    ErrorMessage: string;
-    data: T;
+    errorMessage?: string;
+    data?: T;
 }
 
