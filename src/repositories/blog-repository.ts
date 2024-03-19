@@ -1,5 +1,5 @@
 import { WithId, ObjectId } from "mongodb";
-import { BlogModel } from "../BD/db";
+import { blogsCollection, db } from "../BD/db";
 import { OutputBlogType } from "../models/blog/output/blog.output";
 import { BlogDB } from "../models/blog/db/blog-db";
 import { blogMapper } from "../models/blog/mapper/blog-mapper";
@@ -9,11 +9,8 @@ export class BlogRepository {
   
   static async create(newBlog: InputBlogType): Promise<string | null> {
       try{
-    const blogId = await BlogModel.create(newBlog); 
-    console.log("===========blogId=========")
-    console.log(blogId._id)
-    return blogId._id.toString();
-    // return blogId.insertedId.toString();
+    const blogId = await blogsCollection.insertOne(newBlog); 
+    return blogId.insertedId.toString();
     } catch(e){
       console.log(e) 
       return null
@@ -21,7 +18,7 @@ export class BlogRepository {
   }
 
   static async getById(id: string): Promise<OutputBlogType | null> {
-    const blog = await BlogModel.findOne({ _id: new ObjectId(id)});
+    const blog = await blogsCollection.findOne({ _id: new ObjectId(id)});
     if (!blog) {
       return null;
     }
@@ -33,7 +30,7 @@ export class BlogRepository {
     updatedBlogData: UpdateBlogType 
   ): Promise<Boolean> { 
     try { 
-      const blogForUpd = await BlogModel.updateOne(
+      const blogForUpd = await blogsCollection.updateOne(
         { _id: new ObjectId(updatedBlogId) },
         {
           $set: {
@@ -51,7 +48,7 @@ export class BlogRepository {
   }
 
   static async delete(deleteBlogId: string): Promise<Boolean> {
-    const blogForDelete = await BlogModel.deleteOne({
+    const blogForDelete = await blogsCollection.deleteOne({
       _id: new ObjectId(deleteBlogId),
     });
 

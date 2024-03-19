@@ -1,85 +1,25 @@
+import { ObjectId, SortDirection } from 'mongodb';
 import { OutputPostType } from "./../models/post/output/post.output";
 import { PostDB } from "../models/post/db/post-db";
-import { RequestInputPostType } from "../models/post/input/updateposts-input-model";
-
+import {
+  RequestInputPostType,
+  postsSortDataType,
+} from "../models/post/input/updateposts-input-model";
+import { BlogRepository } from "../repositories/blog-repository";
 import { PostRepository } from "../repositories/post-repository";
 import { PostQueryRepository } from "../repositories/post.query-repository";
-import { BlogModel, CommentLikesModel, PostLikesModel, PostModel } from "../BD/db";
+import {
+  InputBlogType,
+  RequestInputBlogType,
+  UpdateBlogType,
+} from "../models/blog/input/updateblog-input-model";
+import { blogsCollection } from "../BD/db";
+import { BlogDB } from "../models/blog/db/blog-db";
 import { BlogQueryRepository } from "../repositories/blog.query-repository";
-import { CommentsQueryRepository } from "../repositories/comments.query-repository";
-import { OutputBasicSortQueryType } from "../utils/sortQeryUtils";
-import { ResultCode } from "../validators/error-validators";
-import { likeStatusEnum } from "../models/likes/db/likes-db";
-import { ObjectId } from "mongodb";
-import { PostCommentsServices } from "./postCommentServices";
-import { ResultCreateLikeType, ResultCreatePostLikeType } from "../models/likes/output/likes.output";
+import { OutputBlogType } from "../models/blog/output/blog.output";
+import { postMapper } from "../models/post/mapper/post-mapper";
 
 export class PostServices {
-
-
-  static async addLikeToComment(
-    postId: string,
-    sendedLikeStatus: string,
-    userId: string,
-  ): Promise<ResultCreatePostLikeType> {
-    const postForLike = await PostModel.findOne({
-      _id: new ObjectId(postId),
-    });
-    if (!postForLike) {
-      return {
-        status: ResultCode.NotFound,
-        errorMessage: "Not found post with id " + postId,
-      };
-    }
-    const createdLikeResponse = await PostCommentsServices.createPostLike(postId, userId, sendedLikeStatus )
-    return createdLikeResponse
-  }
-
-
-  static async composePost(
-    postId: string,
-    userId: null | string
-  ): Promise<any | null> {
-    const post = await PostQueryRepository.getById(postId);
-    if (!post) {
-      return {
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        status: ResultCode.Forbidden,
-        errorMessage: "Can not read post from database",
-      };
-    }
-    const likesCount = await PostLikesModel.countDocuments({
-      postId: postId,
-      myStatus: likeStatusEnum.Like,
-    });
-    const dislikesCount = await PostLikesModel.countDocuments({
-      postId: postId,
-      myStatus: likeStatusEnum.Dislike,
-    });
-    let myStatus = likeStatusEnum.None
-    if (userId) {
-      const requesterUserLike = await PostLikesModel.findOne({
-        postId: postId,
-        userId: userId,
-      });
-      myStatus = requesterUserLike?.myStatus ? requesterUserLike?.myStatus : likeStatusEnum.None
-    }
-
-    const newestLikes  =await PostLikesModel.find().sort({ addetAt: 1 }).limit(3).lean()
-
-    const composedPost = {
-      ...post,
-      extendedLikesInfo: {
-        newestLikes: newestLikes,
-        likesCount: likesCount,
-        dislikesCount: dislikesCount,
-        myStatus: myStatus,
-      },
-    };
-    return composedPost;
-  }
-
-
 
   static async create(
     createPostModel: RequestInputPostType
@@ -101,89 +41,37 @@ export class PostServices {
     if (!newPostId) {
       return null;
     }
+    // нужно ли эта проверка ???
     const createdPost = await PostQueryRepository.getById(newPostId);
     if (!createdPost) {
       return null;
     }
-
-    const extendedLikesInfo = {
-      newestLikes: [],
-      likesCount: 0,
-      dislikesCount: 0,
-      myStatus:  likeStatusEnum.Dislike,
-    }
-    return {...createdPost, extendedLikesInfo: extendedLikesInfo };
+    return createdPost;
   }
 
   static async update(
     updatedPostId: string,
-    updatePostModel: RequestInputPostType
+    updatePostModel: RequestInputPostType,
   ): Promise<Boolean | null> {
-    const postForUpd = PostQueryRepository.getById(updatedPostId);
+    const postForUpd = PostQueryRepository.getById(updatedPostId)
     if (!postForUpd) {
       return null;
     }
-    const postIsUpdated = PostRepository.update(updatedPostId, updatePostModel);
-    return postIsUpdated;
+    // const updatePostBody = {
+    //   title: updatePostModel.title,
+    //   shortDescription: updatePostModel.shortDescription,
+    //   content: updatePostModel.content,
+    //   blogId: updatePostModel.blogId,
+    // }
+    const postIsUpdated = PostRepository.update(updatedPostId, updatePostModel)
+    console.log("postIsUpdated")
+    console.log(postIsUpdated)
+    return postIsUpdated
   }
-
-  static async composePostComments(
-    postId: string,
-    basicSortData: OutputBasicSortQueryType,
-    userId: string | null
-  ): Promise<any> {
-    const sortData = { id: postId, ...basicSortData };
-    const comments = await CommentsQueryRepository.getPostComments(sortData);
-    if (!comments) {
-      return {
-        status: ResultCode.NotFound,
-        errorMessage: "Can not read comments",
-      };
-    }
-    const сommentsWithLikes: any = await Promise.all(
-      comments.items.map(async (comment) => {
-        const likesCount = await CommentLikesModel.countDocuments({
-          commentId: comment.id,
-          myStatus: likeStatusEnum.Like,
-        });
-        const dislikesCount = await CommentLikesModel.countDocuments({
-          commentId: comment.id,
-          myStatus: likeStatusEnum.Dislike,
-        });
-
-        // const [  likeCounts, dislikeCounts] =  await Promise.all (
-        //   [
-        //     LikesModel.countDocuments({commentId: comment.id, myStatus: likeStatusEnum.Like }),
-        //     LikesModel.countDocuments({commentId: comment.id,  myStatus: likeStatusEnum.Dislike})
-        //   ]
-        // )
-
-        let currentLikeStatus = likeStatusEnum.None;
-        if (userId) {
-          const currentLike = await CommentLikesModel.findOne({
-            userId: userId,
-            commentId: comment.id,
-          });
-          currentLikeStatus = currentLike
-            ? currentLike.myStatus
-            : likeStatusEnum.None;
-        }
-        return {
-          ...comment,
-          likesInfo: { likesCount, dislikesCount, myStatus: currentLikeStatus },
-        };
-      })
-    );
-    const result = { ...comments, items: сommentsWithLikes };
-
-    return {
-      status: ResultCode.Success,
-      data: result,
-    };
-  }
-
+  
   static async delete(id: string): Promise<Boolean | null> {
     const isPostdeleted = await PostRepository.delete(id);
     return isPostdeleted;
   }
+
 }

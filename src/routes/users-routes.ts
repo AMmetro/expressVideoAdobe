@@ -12,37 +12,9 @@ import { UserQueryRepository } from "../repositories/user.query-repository";
 import { userValidation } from "../validators/user-validators";
 import { QueryUserInputModel } from "../models/user/input/queryUser-input-model";
 import { RequestInputUserType } from "../models/user/input/updateUser-input-model";
-import { userServices } from "../services/userServices";
+import { UserServices } from "../services/userServices";
 
 export const usersRoute = Router({});
-
-class UsersController {
-
-
-  async createUser(req: RequestWithBody<RequestInputUserType>, res: Response) {
-    const { login, password, email } = req.body;
-    const InputUserModel = {
-      login: login,
-      password: password,
-      email: email,
-    };
-    const createdUser = await userServices.create(InputUserModel);
-    if (!createdUser) {
-      res.sendStatus(400);
-      return;
-    }
-    const transformdedUser = {
-       id: createdUser.id,
-       login: createdUser.login,
-       email: createdUser.email,
-       createdAt: createdUser.createdAt,
-    }
-    res.status(201).send(transformdedUser);
-  }
-
-}
-
-const UsersControllerInstance = new UsersController();
 
 usersRoute.get(
   "/",
@@ -64,33 +36,27 @@ usersRoute.post(
   "/",
   authMiddleware,
   userValidation(),
-  UsersControllerInstance.createUser
+  async (req: RequestWithBody<RequestInputUserType>, res: Response) => {
+    const { login, password, email } = req.body;
+    const InputUserModel = {
+      login: login,
+      password: password,
+      email: email,
+    };
+    const createdUser = await UserServices.create(InputUserModel);
+    if (!createdUser) {
+      res.sendStatus(400);
+      return;
+    }
+    const transformdedUser = {
+      id: createdUser.id,
+      login: createdUser.login,
+      email: createdUser.login,
+      createdAt: createdUser.createdAt,
+   }
+   res.status(201).send(transformdedUser);
+  }
 );
-// usersRoute.post(
-//   "/",
-//   authMiddleware,
-//   userValidation(),
-//   async (req: RequestWithBody<RequestInputUserType>, res: Response) => {
-//     const { login, password, email } = req.body;
-//     const InputUserModel = {
-//       login: login,
-//       password: password,
-//       email: email,
-//     };
-//     const createdUser = await userServices.create(InputUserModel);
-//     if (!createdUser) {
-//       res.sendStatus(400);
-//       return;
-//     }
-//     const transformdedUser = {
-//        id: createdUser.id,
-//        login: createdUser.login,
-//        email: createdUser.email,
-//        createdAt: createdUser.createdAt,
-//     }
-//     res.status(201).send(transformdedUser);
-//   }
-// );
 
 usersRoute.delete(
   "/:id",
@@ -101,7 +67,7 @@ usersRoute.delete(
       res.sendStatus(404);
       return;
     }
-    const isDeleted = await userServices.delete(deletePostId);
+    const isDeleted = await UserServices.delete(deletePostId);
     if (!isDeleted) {
       res.sendStatus(404);
       return;

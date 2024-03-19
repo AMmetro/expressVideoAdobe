@@ -1,8 +1,7 @@
 import { body, param } from "express-validator";
 import { ObjectId } from "mongodb";
 import { inputValidationMiddleware } from "../inputValidation/input-validation-middleware";
-import { BlogModel } from "../BD/db";
-// import { blogsCollection } from "../BD/db";
+import { blogsCollection } from "../BD/db";
 
 const titleValidator = body("title").isString().withMessage("title must be a string").trim().
 isLength({min:1, max:30}).withMessage("Incorect length of name")
@@ -19,7 +18,7 @@ const blogValidator = body("blogId").custom(async (value)=>{
         //return false
         throw new Error("incorect blogId")
     }
-    const blog = await BlogModel.findOne({_id:new ObjectId(value)});
+    const blog = await blogsCollection.findOne({_id:new ObjectId(value)});
     if (!blog) {
         // false
          throw Error ("incorect blogId")
@@ -34,7 +33,7 @@ const blogValidatorParam = param("blogId").custom(async (value: string)=>{
         //return false
         throw new Error("incorect blogId Query1")
     }
-    const blog = await BlogModel.findOne({_id:new ObjectId(value)});
+    const blog = await blogsCollection.findOne({_id:new ObjectId(value)});
     if (!blog) {
         // false
          throw Error ("incorect blogId Query2")

@@ -1,11 +1,12 @@
 import { WithId, ObjectId } from "mongodb";
-import { UserModel } from "../BD/db";
+import { usersCollection } from "../BD/db";
 import { SortDirection } from "mongodb";
 import { PaginationType } from "../models/common";
 import { UserDB } from "../models/user/db/user-db";
 import { userMapper } from "../models/user/mapper/user-mapper";
 import { OutputUserType } from "../models/user/output/user.output";
 import { searchDataType } from "../models/user/input/queryUser-input-model";
+// import { AuthUserFindModel, AuthUserInputModel } from "../models/user/input/authUser-input-model";
 
 type SortDataType = {
   searchEmailTerm?: string | null;
@@ -17,15 +18,6 @@ type SortDataType = {
 };
 
 export class UserQueryRepository {
-
-  static async getOneByPasswordRecoveryCode(recoveryCode: string): Promise<UserDB | null> {
-    const user = await UserModel.findOne({ passwordRecoveryConfirmationCode: recoveryCode });
-    if (!user) {
-      return null;
-    }
-    return user;
-  }
-
   static async getAll(
     sortData: SortDataType
   ): Promise<PaginationType<OutputUserType> | null> {
@@ -64,13 +56,13 @@ export class UserQueryRepository {
       };
     }
     try {
-      const users: WithId<UserDB>[] = await UserModel
+      const users: WithId<UserDB>[] = await usersCollection
         .find(filter)
-        .sort({[sortBy]: sortDirection})
+        .sort(sortBy, sortDirection)
         .skip((pageNumber - 1) * pageSize)
         .limit(pageSize)
-        .lean();
-      const totalCount = await UserModel.countDocuments(filter);
+        .toArray();
+      const totalCount = await usersCollection.countDocuments(filter);
       const pagesCount = Math.ceil(totalCount / pageSize);
 
       return {
@@ -87,15 +79,7 @@ export class UserQueryRepository {
   }
 
   static async getById(id: string): Promise<OutputUserType | null> {
-    const user = await UserModel.findOne({ _id: new ObjectId(id) });
-    if (!user) {
-      return null;
-    }
-    return userMapper(user);
-  }
-
-  static async isTokenInUserBlackList(token: string, id: string): Promise<OutputUserType | null> {
-    const user = await UserModel.findOne({ _id: new ObjectId(id) });
+    const user = await usersCollection.findOne({ _id: new ObjectId(id) });
     if (!user) {
       return null;
     }
@@ -103,7 +87,7 @@ export class UserQueryRepository {
   }
 
   static async getByConfirmationCode(code: string): Promise<OutputUserType | null> {
-    const user = await UserModel.findOne({ "emailConfirmation.confirmationCode": code });
+    const user = await usersCollection.findOne({ "emailConfirmation.confirmationCode": code });
     if (!user) {
       return null;
     }
@@ -117,7 +101,7 @@ export class UserQueryRepository {
         { login: { $regex: searchData.login, $options: "i" } },
       ],
     };
-    const user = await UserModel.findOne(filter);
+    const user = await usersCollection.findOne(filter);
     if (!user) {
       return null;
     }

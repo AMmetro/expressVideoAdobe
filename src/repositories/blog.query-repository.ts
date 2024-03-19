@@ -1,5 +1,5 @@
 import { WithId, ObjectId } from "mongodb";
-import { BlogModel } from "../BD/db";
+import { blogsCollection, db } from "../BD/db";
 import { OutputBlogType } from "../models/blog/output/blog.output";
 import { BlogDB } from "../models/blog/db/blog-db";
 import { blogMapper } from "../models/blog/mapper/blog-mapper";
@@ -31,14 +31,14 @@ export class BlogQueryRepository {
         }
       }
     try {
-    const blogs: WithId<BlogDB>[] = await BlogModel
+    const blogs: WithId<BlogDB>[] = await blogsCollection
     .find(filter)
-    .sort({[sortBy]: sortDirection})
+    .sort(sortBy, sortDirection)
     .skip((pageNumber-1) * pageSize)
     .limit(pageSize)
-    .lean()
+    .toArray();
 
-    const totalCount = await BlogModel.countDocuments(filter)
+    const totalCount = await blogsCollection.countDocuments(filter)
     const pagesCount = Math.ceil(totalCount / pageSize);
     return {
       pagesCount: pagesCount,
@@ -54,7 +54,7 @@ export class BlogQueryRepository {
   }
 
   static async getById(id: string): Promise<OutputBlogType | null> {
-    const blog = await BlogModel.findOne({ _id: new ObjectId(id)});
+    const blog = await blogsCollection.findOne({ _id: new ObjectId(id)});
     if (!blog) {
       return null;
     }
@@ -63,9 +63,9 @@ export class BlogQueryRepository {
   
   static async create(newBlog: InputBlogType): Promise<string> {
     //   try{
-    const blogId = await BlogModel.create(newBlog); 
+    const blogId = await blogsCollection.insertOne(newBlog); 
     // console.log(blogId)
-    return blogId._id.toString();
+    return blogId.insertedId.toString();
     // } catch(e){
     //   console.log(e) 
     // }
