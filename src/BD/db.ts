@@ -37,6 +37,7 @@ export const runDB = async ()=>{
     catch(e) {
         console.log(e)
         await mongoose.disconnect();
+        throw new Error("disconect")
     }
 } 
 
