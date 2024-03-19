@@ -1,5 +1,4 @@
 import dotenv from 'dotenv';
-import { MongoClient } from 'mongodb';
 import { WithId } from 'mongodb'
 import  mongoose  from 'mongoose';
 import { BlogDB, BlogDBSchema } from '../models/blog/db/blog-db';

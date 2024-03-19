@@ -89,12 +89,11 @@ blogRoute.get(
   async (req: RequestWithQuery<QueryBlogInputModel>, res: Response) => {
     const basicSortData = basicSortQuery(req.query)
     const sortData = {...basicSortData, searchNameTerm: req.query.searchNameTerm ?? null}
-    // const blogs = await BlogQueryRepository.getAll(sortData);
-    // if (!blogs) {
-    //   res.status(404);
-    // }
-    // res.status(200).send(blogs);
-    res.status(200).send({});
+    const blogs = await BlogQueryRepository.getAll(sortData);
+    if (!blogs) {
+      res.status(404);
+    }
+    res.status(200).send(blogs);
   }
 );
 
