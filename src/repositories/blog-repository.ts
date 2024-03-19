@@ -10,8 +10,8 @@ export class BlogRepository {
   static async create(newBlog: InputBlogType): Promise<string | null> {
       try{
     const blogId = await BlogModel.create(newBlog); 
-    console.log("===========blogId=========")
-    console.log(blogId._id)
+    // console.log("===========blogId=========")
+    // console.log(blogId._id)
     return blogId._id.toString();
     // return blogId.insertedId.toString();
     } catch(e){

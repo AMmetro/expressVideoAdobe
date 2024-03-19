@@ -7,6 +7,7 @@ import {
   SecurityDevicesModel,
   UserModel,
   CommentLikesModel,
+  PostLikesModel,
 } from "../BD/db";
 
 type ResponseType<P> = Response<P, Record<string, any>>;
@@ -23,6 +24,7 @@ testingRoute.delete(
     await SecurityDevicesModel.deleteMany({});
     await CommentModel.deleteMany({});
     await CommentLikesModel.deleteMany({});
+    await PostLikesModel.deleteMany({});
     //    await drop.darabase() - если есть права админа (в докере по умолчанию в атласе назначить)
     res.sendStatus(204);
   }

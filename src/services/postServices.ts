@@ -4,7 +4,7 @@ import { RequestInputPostType } from "../models/post/input/updateposts-input-mod
 
 import { PostRepository } from "../repositories/post-repository";
 import { PostQueryRepository } from "../repositories/post.query-repository";
-import { BlogModel, CommentLikesModel, PostLikesModel, PostModel } from "../BD/db";
+import { BlogModel, CommentLikesModel, PostLikesModel, PostModel, UserModel } from "../BD/db";
 import { BlogQueryRepository } from "../repositories/blog.query-repository";
 import { CommentsQueryRepository } from "../repositories/comments.query-repository";
 import { OutputBasicSortQueryType } from "../utils/sortQeryUtils";
@@ -32,7 +32,17 @@ export class PostServices {
       };
     }
     const createdLikeResponse = await PostCommentsServices.createPostLike(postId, userId, sendedLikeStatus )
-    return createdLikeResponse
+    
+    if (createdLikeResponse.status !== ResultCode.Success ) {
+      return {
+        status: createdLikeResponse.status,
+        errorMessage: createdLikeResponse.errorMessage,
+      };
+    }
+    return {
+      status: ResultCode.Success,
+      data: createdLikeResponse.data,
+    };
   }
 
   
@@ -63,20 +73,36 @@ export class PostServices {
         postId: postId,
         userId: userId,
       });
+
       myStatus = requesterUserLike?.myStatus ? requesterUserLike.myStatus : likeStatusEnum.None
     }
 
-    const newestLikes  =await PostLikesModel.find().sort({ addetAt: 1 }).limit(3).lean()
+    const newestLikes =await PostLikesModel.find({postId: postId}).sort({ addetAt: 1 }).limit(3).lean() 
+    
+    const newestLikesUpd = await Promise.all(  newestLikes.map(async like => {
+      const userLogin = await UserModel.findOne({ _id: like.userId })
+      return {
+        userId: like.userId,
+        addetAt: like.addetAt,
+        login: userLogin?.login ? userLogin.login : "no login",
+      }
+    })
+    )
+    console.log("----myStatus----")
+    console.log(myStatus)
 
     const composedPost = {
       ...post,
       extendedLikesInfo: {
-        newestLikes: newestLikes,
+        newestLikes: newestLikesUpd,
         likesCount: likesCount,
         dislikesCount: dislikesCount,
-        myStatus: "myStatus",
+        myStatus: myStatus,
       },
     };
+    console.log("----composedPost----")
+    console.log(composedPost)
+
     return composedPost;
   }
 
@@ -111,7 +137,7 @@ export class PostServices {
       newestLikes: [],
       likesCount: 0,
       dislikesCount: 0,
-      myStatus:  likeStatusEnum.Dislike,
+      myStatus:  likeStatusEnum.None,
     }
     return {...createdPost, extendedLikesInfo: extendedLikesInfo };
   }

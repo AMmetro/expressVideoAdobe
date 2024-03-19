@@ -59,24 +59,28 @@ class PostsController {
       res.status(404);
       return;
     }
-    res.status(200).send(posts);
+    // res.status(200).send(posts);
   }
 
   async getPost(req: RequestWithParams<Params>, res: Response) {
     const postId = req.params.id;
         if (!ObjectId.isValid(postId)) {
-          // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-          res.sendStatus(444);
+          res.sendStatus(404);
           return;
         }
     const userOptionalId = req.user?.id || null;
-    const posts = await PostServices.composePost(postId, userOptionalId);
-    if (!posts) {
+   const result = await PostServices.composePost(postId, userOptionalId);
+  // if (result.status === ResultCode.Success){
+  //   res.status(200).send(result.data);
+  // } else {
+  //   sendCustomError(res, result)
+  // }
+    if (!result) {
       // !!!!!!!!!!!!!!!!!!!!!!!!
-      res.status(433);
+      res.status(404);
       return;
     }
-    res.status(200).send(posts);
+    res.status(200).send(result);
   }
 
 
@@ -87,6 +91,7 @@ class PostsController {
           return;
         }
     const userId = req.user!.id;
+
     const likeStatus = req.body.likeStatus;
     if (!likeStatus ||  !likeStatusEnum.hasOwnProperty(likeStatus)) {
       const error = {
@@ -103,12 +108,18 @@ class PostsController {
       sendCustomError(res, error)
       return;
     }
-    const likes = await PostServices.addLikeToComment(postId, likeStatus, userId);
-    if (!likes) {
-      res.status(404);
-      return;
+    const result = await PostServices.addLikeToComment(postId, likeStatus, userId);
+    if (result.status === ResultCode.Success){
+      res.status(204).send(result.data);
+    } else {
+      sendCustomError(res, result)
     }
-    res.status(200).send(likes);
+
+    // if (!likes) {
+    //   res.status(434);
+    //   return;
+    // }
+    // res.status(200).send(likes);
   }
 
 }
@@ -197,7 +208,7 @@ postRoute.post(
   }
 );
 
-postRoute.put("/:postId/like-status",
+postRoute.put("/:id/like-status",
 jwtValidationAcssTokenMiddleware,
  postsController.likePost);
 
