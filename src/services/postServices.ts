@@ -5,11 +5,9 @@ import { RequestInputPostType } from "../models/post/input/updateposts-input-mod
 import { PostRepository } from "../repositories/post-repository";
 import { PostQueryRepository } from "../repositories/post.query-repository";
 import {
-  BlogModel,
   CommentLikesModel,
   PostLikesModel,
   PostModel,
-  UserModel,
 } from "../BD/db";
 import { BlogQueryRepository } from "../repositories/blog.query-repository";
 import { CommentsQueryRepository } from "../repositories/comments.query-repository";
@@ -17,9 +15,9 @@ import { OutputBasicSortQueryType } from "../utils/sortQeryUtils";
 import { ResultCode } from "../validators/error-validators";
 import { likeStatusEnum } from "../models/likes/db/likes-db";
 import { ObjectId } from "mongodb";
-import { PostCommentsServices } from "./postCommentServices";
 import { ResultCreatePostLikeType } from "../models/likes/output/likes.output";
 import { newestLikesServices } from "./newestLikesServices";
+import { PostLikesServices } from "./postLikesServices";
 
 export class PostServices {
 
@@ -38,7 +36,7 @@ export class PostServices {
         errorMessage: "Not found post with id " + postId,
       };
     }
-    const createdLikeResponse = await PostCommentsServices.createPostLike(
+    const createdLikeResponse = await PostLikesServices.createPostLike(
       postId,
       userId,
       sendedLikeStatus
@@ -67,26 +65,6 @@ export class PostServices {
         errorMessage: "Can not read post from database",
       };
     }
-    const likesCount = await PostLikesModel.countDocuments({
-      postId: postId,
-      myStatus: likeStatusEnum.Like,
-    });
-    const dislikesCount = await PostLikesModel.countDocuments({
-      postId: postId,
-      myStatus: likeStatusEnum.Dislike,
-    });
-    let myStatus = likeStatusEnum.None;
-    if (userId) {
-      const requesterUserLike = await PostLikesModel.findOne({
-        postId: postId,
-        userId: userId,
-      });
-
-      myStatus = requesterUserLike?.myStatus
-        ? requesterUserLike.myStatus
-        : likeStatusEnum.None;
-    }
-
     const newestLikes = await PostLikesModel.find({
       postId: postId,
       myStatus: likeStatusEnum.Like,
@@ -96,31 +74,15 @@ export class PostServices {
       .sort({ addedAt: -1 })
       .limit(3)
       .lean();
-
-    const newestLikesWithUser = await newestLikesServices.addUserDataToLike(newestLikes)
-
-    // const newestLikesUpd = await Promise.all(
-    //   newestLikes.map(async (like) => {
-    //     const user = await UserModel.findOne({ _id: like.userId });
-    //     if (user && user.login) {
-    //       return {
-    //         userId: like.userId,
-    //         addedAt: like.addedAt,
-    //         login: user.login,
-    //       };
-    //     } else {
-    //       return null;
-    //     }
-    //   })
-    // );
-
+      const newestLikesWithUser = await newestLikesServices.addUserDataToLike(newestLikes)
+    const countLikes = await PostLikesServices.countLikes(post.id, userId)
     const composedPost = {
       ...post,
       extendedLikesInfo: {
         newestLikes: newestLikesWithUser,
-        likesCount: likesCount,
-        dislikesCount: dislikesCount,
-        myStatus: myStatus,
+        likesCount: countLikes.likesCount,
+        dislikesCount: countLikes.dislikesCount,
+        myStatus: countLikes.myStatus,
       },
     };
     return composedPost;
@@ -141,26 +103,8 @@ export class PostServices {
 
     const postsWithLikes = await Promise.all(
       allPostsObject.items.map(async (post) => {
-        const likesCount = await PostLikesModel.countDocuments({
-          postId: post.id,
-          myStatus: likeStatusEnum.Like,
-        });
-        const dislikesCount = await PostLikesModel.countDocuments({
-          postId: post.id,
-          myStatus: likeStatusEnum.Dislike,
-        });
-        let myStatus = likeStatusEnum.None
 
-        if (userId) {
-          const requesterUserLike = await PostLikesModel.findOne({
-            postId: post.id,
-            userId: userId,
-          });
-          myStatus = requesterUserLike?.myStatus
-            ? requesterUserLike.myStatus
-            : likeStatusEnum.None;
-        }
-
+      const usersLikes = await PostLikesServices.countLikes(post.id, userId)
         const newestLikes = await PostLikesModel.find({
           postId: post.id,
           myStatus: likeStatusEnum.Like,
@@ -172,27 +116,19 @@ export class PostServices {
           .lean();
 
         const newestLikesWithUser = await newestLikesServices.addUserDataToLike(newestLikes)
-        // const newestLikesUpd = await Promise.all(
-        //   newestLikes.map(async (like) => {
-        //     const user = await UserModel.findOne({ _id: like.userId });
-        //     if (user && user.login) {
-        //       return {
-        //         userId: like.userId,
-        //         addedAt: like.addedAt,
-        //         login: user.login,
-        //       };
-        //     } else {
-        //       return null;
-        //     }
-        //   })
-        // );
 
         const extendedLikesInfo = {
           newestLikes: newestLikesWithUser,
-          likesCount: likesCount,
-          dislikesCount: dislikesCount,
-          myStatus: myStatus,
+          likesCount: usersLikes.likesCount,
+          dislikesCount: usersLikes.dislikesCount,
+          myStatus: usersLikes.myStatus,
         };
+        // const extendedLikesInfo = {
+        //   newestLikes: newestLikesWithUser,
+        //   likesCount: likesCount,
+        //   dislikesCount: dislikesCount,
+        //   myStatus: myStatus,
+        // };
         return { ...post, extendedLikesInfo };
       })
     );
@@ -264,6 +200,7 @@ export class PostServices {
     }
     const сommentsWithLikes: any = await Promise.all(
       comments.items.map(async (comment) => {
+
         const likesCount = await CommentLikesModel.countDocuments({
           commentId: comment.id,
           myStatus: likeStatusEnum.Like,
@@ -290,6 +227,8 @@ export class PostServices {
             ? currentLike.myStatus
             : likeStatusEnum.None;
         }
+
+        
         return {
           ...comment,
           likesInfo: { likesCount, dislikesCount, myStatus: currentLikeStatus },

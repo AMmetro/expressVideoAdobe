@@ -118,7 +118,13 @@ export class BlogServices {
           .limit(3)
           .lean();
 
+          console.log("newestLikes")
+          console.log(newestLikes)
+
           const newestLikesWithUser = newestLikesServices.addUserDataToLike(newestLikes)
+
+          console.log("newestLikesWithUser")
+          console.log(newestLikesWithUser)
 
           const extendedLikesInfo = {
             likesCount,

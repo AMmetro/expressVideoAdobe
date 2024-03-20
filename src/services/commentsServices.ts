@@ -7,7 +7,8 @@ import { Result, ResultCode } from "../validators/error-validators";
 import { CommentModel, CommentLikesModel } from "../BD/db";
 import { ResultCreateLikeType, ResultLikeType } from "../models/likes/output/likes.output";
 import { ObjectId, WithId } from "mongodb";
-import { LikeCommentsServices } from "./likeCommentServices";
+import { LikeCommentsServices } from "./commentLikesServices";
+
 
 export class CommentsServices {
 

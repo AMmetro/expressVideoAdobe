@@ -8,7 +8,7 @@ import { CommentDB } from "../models/comments/db/comment-db";
 import { commentMapper } from "../models/comments/mapper/comment-mapper";
 import { MapperOutputCommentType, OutputCommentType } from "../models/comments/output/comment.output";
 import { OutputBasicSortQueryType } from "../utils/sortQeryUtils";
-import { LikeCommentsServices } from "../services/likeCommentServices";
+// import { LikeCommentsServices } from "../services/likeCommentServices";
 import { ResultCode } from "../validators/error-validators";
 
 

@@ -27,8 +27,6 @@ import { jwtValidationAcssTokenMiddleware, jwtValidationAcssTokenMiddlewareOptio
 import { commentValidation } from "../validators/comment-validators";
 import { ResultCode } from "../validators/error-validators";
 import { sendCustomError } from "../utils/sendResponse";
-import { AuthServices } from "../services/authServices";
-import { PostLikesModel } from "../BD/db";
 import { likeStatusEnum } from "../models/likes/db/likes-db";
 
 export const postRoute = Router({});
@@ -60,12 +58,7 @@ class PostsController {
     } else {
       sendCustomError(res, result)
     }
-    // const posts = await PostQueryRepository.getAll(postsRequestsSortData);
-    // if (!posts) {
-    //   res.status(404);
-    //   return;
-    // }
-    // res.status(200).send(posts);
+
   }
 
 
