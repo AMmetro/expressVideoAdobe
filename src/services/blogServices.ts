@@ -9,6 +9,10 @@ import { BlogDB } from "../models/blog/db/blog-db";
 import { BlogQueryRepository } from "../repositories/blog.query-repository";
 import { OutputBlogType } from "../models/blog/output/blog.output";
 import { likeStatusEnum } from "../models/likes/db/likes-db";
+import { OutputBasicSortQueryType } from "../utils/sortQeryUtils";
+import { ResultCode } from "../validators/error-validators";
+import { PostLikesModel } from "../BD/db";
+import { newestLikesServices } from "./newestLikesServices";
 
 export class BlogServices {
 
@@ -61,6 +65,92 @@ export class BlogServices {
        }
     return {...createdPost, extendedLikesInfo: extendedLikesInfo};
   }
+
+  static async composeBlogPosts(
+    blogId: string,
+    basicSortData: OutputBasicSortQueryType,
+    userId: string | null
+  ): Promise<any> {
+    const allBlogPostsObj = await PostQueryRepository.getAll(basicSortData, blogId );
+    if (!allBlogPostsObj?.items) {
+      return {
+        status: ResultCode.NotFound,
+        errorMessage: "Can not read posts in DB by ID",
+      };
+    }
+
+   const postsWithLikes: any = await Promise.all(
+      allBlogPostsObj.items.map(async (post) => {
+        const likesCount = await PostLikesModel.countDocuments({
+          commentId: post.id,
+          myStatus: likeStatusEnum.Like,
+        });
+        const dislikesCount = await PostLikesModel.countDocuments({
+          commentId: post.id,
+          myStatus: likeStatusEnum.Dislike,
+        });
+
+        // const [  likeCounts, dislikeCounts] =  await Promise.all (
+        //   [
+        //     LikesModel.countDocuments({commentId: comment.id, myStatus: likeStatusEnum.Like }),
+        //     LikesModel.countDocuments({commentId: comment.id,  myStatus: likeStatusEnum.Dislike})
+        //   ]
+        // )
+
+        let currentLikeStatus = likeStatusEnum.None;
+        if (userId) {
+          const currentLike = await PostLikesModel.findOne({
+            userId: userId,
+            commentId: post.id,
+          });
+          currentLikeStatus = currentLike
+            ? currentLike.myStatus
+            : likeStatusEnum.None;
+        }
+
+        const newestLikes = await PostLikesModel.find({
+          postId: post.id,
+          myStatus: likeStatusEnum.Like,
+        })
+          // 1 asc старая запись в начале
+          // -1 descend новая в начале
+          .sort({ addedAt: -1 })
+          .limit(3)
+          .lean();
+
+          const newestLikesWithUser = newestLikesServices.addUserDataToLike(newestLikes)
+
+          const extendedLikesInfo = {
+            likesCount,
+            dislikesCount,
+            myStatus: currentLikeStatus,
+            newestLikes: newestLikesWithUser
+          }
+
+        return {...post, extendedLikesInfo: extendedLikesInfo };
+      })
+    );
+
+    const allBlogPostsObjFull = { ...allBlogPostsObj, items: postsWithLikes };
+
+    return {
+      status: ResultCode.Success,
+      data: allBlogPostsObjFull,
+    };
+
+  }
+
+
+
+
+
+
+
+
+
+
+
+
 
   static async updateBlog(
     updatedBlogId: string,

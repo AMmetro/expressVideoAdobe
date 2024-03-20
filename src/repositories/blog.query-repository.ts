@@ -19,7 +19,7 @@ type SortDataType = {
 
 export class BlogQueryRepository {
 
-    static async getAll(sortData: SortDataType): Promise<PaginationType<OutputBlogType> | null> {
+    static async getAllByName(sortData: SortDataType): Promise<PaginationType<OutputBlogType> | null> {
       const { searchNameTerm, sortBy, sortDirection, pageNumber, pageSize } = sortData
       let filter = {}
       if (searchNameTerm){
@@ -39,6 +39,32 @@ export class BlogQueryRepository {
     .lean()
 
     const totalCount = await BlogModel.countDocuments(filter)
+    const pagesCount = Math.ceil(totalCount / pageSize);
+    return {
+      pagesCount: pagesCount,
+      page: pageNumber,
+      pageSize: pageSize,
+      totalCount: totalCount,
+      items: blogs.map(blogMapper),
+    } 
+    }catch (e){
+      console.log(e)
+      return null 
+    }
+  }
+
+
+    static async getAllById(sortData: SortDataType, blogId: string): Promise<PaginationType<OutputBlogType> | null> {
+      const { sortBy, sortDirection, pageNumber, pageSize } = sortData
+    try {
+    const blogs: WithId<BlogDB>[] = await BlogModel
+    .find({_id: new ObjectId(blogId)})
+    .sort({[sortBy]: sortDirection})
+    .skip((pageNumber-1) * pageSize)
+    .limit(pageSize)
+    .lean()
+
+    const totalCount = await BlogModel.countDocuments({_id: new ObjectId(blogId)})
     const pagesCount = Math.ceil(totalCount / pageSize);
     return {
       pagesCount: pagesCount,

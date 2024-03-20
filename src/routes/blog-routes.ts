@@ -24,6 +24,9 @@ import { PostQueryRepository } from "../repositories/post.query-repository";
 import { BlogServices } from "../services/blogServices";
 import { createPostFromBlogValidation } from "../validators/post-validators";
 import { basicSortQuery } from "../utils/sortQeryUtils";
+import { jwtValidationAcssTokenMiddlewareOptional } from "../auth/jwtAuth-middleware";
+import { ResultCode } from "../validators/error-validators";
+import { sendCustomError } from "../utils/sendResponse";
 
 export const blogRoute = Router({});
 
@@ -36,19 +39,28 @@ class BlogsController {
     res: Response
   )  {
     const blogId = req.params.blogId;
+    const userOptionalId = req.user?.id || null;
     if (!ObjectId.isValid(blogId)) {
       res.sendStatus(404);
       return;
     }
-    const specificiedBlog = await BlogQueryRepository.getById(blogId);
-    if (!specificiedBlog) {
-      res.sendStatus(404);
-      return;
-    }
     const basicSortData = basicSortQuery(req.query)
+    const result = await BlogServices.composeBlogPosts(blogId, basicSortData, userOptionalId );
+    if (result.status === ResultCode.Success){
+      res.status(200).send(result.data);
+    } else {
+      sendCustomError(res, result)
+    }
+    // const specificiedBlog = await BlogQueryRepository.getById(blogId);
+
+    // if (!specificiedBlog) {
+    //   res.sendStatus(404);
+    //   return;
+    // }
+    // const basicSortData = basicSortQuery(req.query)
     // добавить сервис с "extendedLikesInfo"
-    const specificiedBlogPosts = await PostQueryRepository.getAll(basicSortData, blogId);
-    res.status(200).send(specificiedBlogPosts);
+    // const specificiedBlogPosts = await PostQueryRepository.getAll(basicSortData, blogId);
+    // res.status(200).send(specificiedBlogPosts);
   }
 
 
@@ -89,7 +101,7 @@ blogRoute.get(
   async (req: RequestWithQuery<QueryBlogInputModel>, res: Response) => {
     const basicSortData = basicSortQuery(req.query)
     const sortData = {...basicSortData, searchNameTerm: req.query.searchNameTerm ?? null}
-    const blogs = await BlogQueryRepository.getAll(sortData);
+    const blogs = await BlogQueryRepository.getAllByName(sortData);
     if (!blogs) {
       res.status(404);
     }
@@ -97,7 +109,9 @@ blogRoute.get(
   }
 );
 
-blogRoute.get("/:blogId/posts", blogsController.getBlogPosts);
+blogRoute.get("/:blogId/posts",
+jwtValidationAcssTokenMiddlewareOptional,
+blogsController.getBlogPosts);
 
 
 blogRoute.get(

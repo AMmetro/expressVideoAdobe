@@ -19,8 +19,11 @@ import { likeStatusEnum } from "../models/likes/db/likes-db";
 import { ObjectId } from "mongodb";
 import { PostCommentsServices } from "./postCommentServices";
 import { ResultCreatePostLikeType } from "../models/likes/output/likes.output";
+import { newestLikesServices } from "./newestLikesServices";
 
 export class PostServices {
+
+
   static async addLikeToComment(
     postId: string,
     sendedLikeStatus: string,
@@ -94,25 +97,27 @@ export class PostServices {
       .limit(3)
       .lean();
 
-    const newestLikesUpd = await Promise.all(
-      newestLikes.map(async (like) => {
-        const user = await UserModel.findOne({ _id: like.userId });
-        if (user && user.login) {
-          return {
-            userId: like.userId,
-            addedAt: like.addedAt,
-            login: user.login,
-          };
-        } else {
-          return null;
-        }
-      })
-    );
+    const newestLikesWithUser = await newestLikesServices.addUserDataToLike(newestLikes)
+
+    // const newestLikesUpd = await Promise.all(
+    //   newestLikes.map(async (like) => {
+    //     const user = await UserModel.findOne({ _id: like.userId });
+    //     if (user && user.login) {
+    //       return {
+    //         userId: like.userId,
+    //         addedAt: like.addedAt,
+    //         login: user.login,
+    //       };
+    //     } else {
+    //       return null;
+    //     }
+    //   })
+    // );
 
     const composedPost = {
       ...post,
       extendedLikesInfo: {
-        newestLikes: newestLikesUpd,
+        newestLikes: newestLikesWithUser,
         likesCount: likesCount,
         dislikesCount: dislikesCount,
         myStatus: myStatus,
@@ -156,7 +161,6 @@ export class PostServices {
             : likeStatusEnum.None;
         }
 
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         const newestLikes = await PostLikesModel.find({
           postId: post.id,
           myStatus: likeStatusEnum.Like,
@@ -167,23 +171,24 @@ export class PostServices {
           .limit(3)
           .lean();
 
-        const newestLikesUpd = await Promise.all(
-          newestLikes.map(async (like) => {
-            const user = await UserModel.findOne({ _id: like.userId });
-            if (user && user.login) {
-              return {
-                userId: like.userId,
-                addedAt: like.addedAt,
-                login: user.login,
-              };
-            } else {
-              return null;
-            }
-          })
-        );
+        const newestLikesWithUser = await newestLikesServices.addUserDataToLike(newestLikes)
+        // const newestLikesUpd = await Promise.all(
+        //   newestLikes.map(async (like) => {
+        //     const user = await UserModel.findOne({ _id: like.userId });
+        //     if (user && user.login) {
+        //       return {
+        //         userId: like.userId,
+        //         addedAt: like.addedAt,
+        //         login: user.login,
+        //       };
+        //     } else {
+        //       return null;
+        //     }
+        //   })
+        // );
 
         const extendedLikesInfo = {
-          newestLikes: newestLikesUpd,
+          newestLikes: newestLikesWithUser,
           likesCount: likesCount,
           dislikesCount: dislikesCount,
           myStatus: myStatus,
@@ -291,13 +296,13 @@ export class PostServices {
         };
       })
     );
-    const result = { ...comments, items: сommentsWithLikes };
-
+    const postCommentsWithLikes = { ...comments, items: сommentsWithLikes };
     return {
       status: ResultCode.Success,
-      data: result,
+      data: postCommentsWithLikes,
     };
   }
+
 
   static async delete(id: string): Promise<Boolean | null> {
     const isPostdeleted = await PostRepository.delete(id);
