@@ -149,7 +149,9 @@ class PostsController {
 const postsController = new PostsController()
 
 
-postRoute.get("/", postsController.getAllPosts );
+postRoute.get("/",
+jwtValidationAcssTokenMiddlewareOptional,
+postsController.getAllPosts );
 
 postRoute.get("/:id",
 jwtValidationAcssTokenMiddlewareOptional,
