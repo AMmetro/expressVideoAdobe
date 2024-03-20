@@ -13,6 +13,7 @@ import { OutputBasicSortQueryType } from "../utils/sortQeryUtils";
 import { ResultCode } from "../validators/error-validators";
 import { PostLikesModel } from "../BD/db";
 import { newestLikesServices } from "./newestLikesServices";
+import { PostLikesServices } from "./postLikesServices";
 
 export class BlogServices {
 
@@ -79,34 +80,9 @@ export class BlogServices {
       };
     }
 
-   const postsWithLikes: any = await Promise.all(
+   const postsWithLikes = await Promise.all(
+    
       allBlogPostsObj.items.map(async (post) => {
-        const likesCount = await PostLikesModel.countDocuments({
-          commentId: post.id,
-          myStatus: likeStatusEnum.Like,
-        });
-        const dislikesCount = await PostLikesModel.countDocuments({
-          commentId: post.id,
-          myStatus: likeStatusEnum.Dislike,
-        });
-
-        // const [  likeCounts, dislikeCounts] =  await Promise.all (
-        //   [
-        //     LikesModel.countDocuments({commentId: comment.id, myStatus: likeStatusEnum.Like }),
-        //     LikesModel.countDocuments({commentId: comment.id,  myStatus: likeStatusEnum.Dislike})
-        //   ]
-        // )
-
-        let currentLikeStatus = likeStatusEnum.None;
-        if (userId) {
-          const currentLike = await PostLikesModel.findOne({
-            userId: userId,
-            commentId: post.id,
-          });
-          currentLikeStatus = currentLike
-            ? currentLike.myStatus
-            : likeStatusEnum.None;
-        }
 
         const newestLikes = await PostLikesModel.find({
           postId: post.id,
@@ -121,15 +97,17 @@ export class BlogServices {
           console.log("newestLikes")
           console.log(newestLikes)
 
-          const newestLikesWithUser = newestLikesServices.addUserDataToLike(newestLikes)
+          const newestLikesWithUser = await newestLikesServices.addUserDataToLike(newestLikes)
+
+         const countLikes = await PostLikesServices.countLikes(post.id, userId)
 
           console.log("newestLikesWithUser")
           console.log(newestLikesWithUser)
 
           const extendedLikesInfo = {
-            likesCount,
-            dislikesCount,
-            myStatus: currentLikeStatus,
+            likesCount: countLikes.likesCount,
+            dislikesCount: countLikes.dislikesCount,
+            myStatus: countLikes.myStatus,
             newestLikes: newestLikesWithUser
           }
 

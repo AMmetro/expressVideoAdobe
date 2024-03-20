@@ -104,7 +104,6 @@ export class PostServices {
     const postsWithLikes = await Promise.all(
       allPostsObject.items.map(async (post) => {
 
-      const usersLikes = await PostLikesServices.countLikes(post.id, userId)
         const newestLikes = await PostLikesModel.find({
           postId: post.id,
           myStatus: likeStatusEnum.Like,
@@ -117,18 +116,14 @@ export class PostServices {
 
         const newestLikesWithUser = await newestLikesServices.addUserDataToLike(newestLikes)
 
+        const countLikes = await PostLikesServices.countLikes(post.id, userId)
+
         const extendedLikesInfo = {
           newestLikes: newestLikesWithUser,
-          likesCount: usersLikes.likesCount,
-          dislikesCount: usersLikes.dislikesCount,
-          myStatus: usersLikes.myStatus,
+          likesCount: countLikes.likesCount,
+          dislikesCount: countLikes.dislikesCount,
+          myStatus: countLikes.myStatus,
         };
-        // const extendedLikesInfo = {
-        //   newestLikes: newestLikesWithUser,
-        //   likesCount: likesCount,
-        //   dislikesCount: dislikesCount,
-        //   myStatus: myStatus,
-        // };
         return { ...post, extendedLikesInfo };
       })
     );
@@ -184,6 +179,7 @@ export class PostServices {
     const postIsUpdated = PostRepository.update(updatedPostId, updatePostModel);
     return postIsUpdated;
   }
+  
 
   static async composePostComments(
     postId: string,
