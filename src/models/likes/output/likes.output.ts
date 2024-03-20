@@ -12,7 +12,7 @@ export type OutputPostLikesType = {
   id: string;
   myStatus: string;
   userId: string;
-  addetAt: string;
+  addedAt: string;
 };
 
 export type likesInfoType = {

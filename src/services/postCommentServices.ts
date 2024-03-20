@@ -6,37 +6,6 @@ import { OutputLikesType, ResultCreateLikeType, ResultCreatePostLikeType, Result
 
 export class PostCommentsServices {
 
-  // static async composeCommentLikes(commentId: string, userId: null | string): Promise<ResultLikeType> {
-  //   const commentLikes = await LikesQueryRepository.getById(commentId);
-  //   if (!commentLikes) {
-  //     return {
-  //       status: ResultCode.NotFound,
-  //       errorMessage: "Cant read database with likes",
-  //     };
-  //   }
-  //   let likesInfo = {
-  //     likesCount: 0,
-  //     dislikesCount: 0,
-  //     myStatus: likeStatusEnum.None,
-  //   }
-  //   commentLikes.forEach((like) => {
-  //     if (like.myStatus === likeStatusEnum.Like) {
-  //       likesInfo.likesCount +=1;
-  //     }
-  //     if (like.myStatus === likeStatusEnum.Dislike) {
-  //       likesInfo.dislikesCount +=1;
-  //     }
-  //     if (like.userId === userId) {
-  //       likesInfo.myStatus = like.myStatus;
-  //     }
-  //   });
-  //   return {
-  //     status: ResultCode.Success,
-  //     data: likesInfo,
-  //   };
-  // }
-
-
   static async createPostLike(postId: string, userId: string, sendedLikeStatus: string): Promise<ResultCreatePostLikeType> {
     const existingLikeForPost =
       await PostLikesModel.findOne({ postId: postId, userId: userId });
@@ -44,8 +13,11 @@ export class PostCommentsServices {
         postId: postId,
         userId: userId,
         myStatus: sendedLikeStatus,
-        addetAt: new Date(),
+        addedAt: new Date(), 
       };
+
+      // const resultLike = {...newLike, addetAt: newLike.addetAt.toISOString() }
+
     if (!existingLikeForPost) {
        let LikeInstance = new PostLikesModel(newLike);
        LikeInstance.save();

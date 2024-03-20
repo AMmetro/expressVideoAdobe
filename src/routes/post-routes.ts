@@ -54,13 +54,42 @@ class PostsController {
   async getAllPosts(req: RequestWithQuery<QueryPostInputModel>, res: Response) {
     const userOptionalId = req.user?.id || null;
     const postsRequestsSortData = basicSortQuery(req.query)
-    const posts = await PostQueryRepository.getAll(postsRequestsSortData);
-    if (!posts) {
-      res.status(404);
-      return;
+    const result = await PostServices.composeAllPosts(postsRequestsSortData, userOptionalId);
+    if (result.status === ResultCode.Success){
+      res.status(200).send(result.data);
+    } else {
+      sendCustomError(res, result)
     }
+    // const posts = await PostQueryRepository.getAll(postsRequestsSortData);
+    // if (!posts) {
+    //   res.status(404);
+    //   return;
+    // }
     // res.status(200).send(posts);
   }
+
+
+  async getPostComments(req: RequestWithParams<CommentParams>, res: Response) {
+    const postId = req.params.postId;
+    const userOptionalId = req.user?.id || null;
+    if (!ObjectId.isValid(postId)) {
+      res.sendStatus(404);
+      return;
+    }
+    const postOwner = await PostQueryRepository.getById(postId)
+    if (!postOwner) {
+      res.sendStatus(404);
+      return;
+    }
+    const basicSortData = basicSortQuery(req.query);
+    const result = await PostServices.composePostComments(postId, basicSortData, userOptionalId);
+    if (result.status === ResultCode.Success){
+      res.status(200).send(result.data);
+    } else {
+      sendCustomError(res, result)
+    }
+  }
+ 
 
   async getPost(req: RequestWithParams<Params>, res: Response) {
     const postId = req.params.id;
@@ -76,7 +105,6 @@ class PostsController {
   //   sendCustomError(res, result)
   // }
     if (!result) {
-      // !!!!!!!!!!!!!!!!!!!!!!!!
       res.status(404);
       return;
     }
@@ -114,12 +142,6 @@ class PostsController {
     } else {
       sendCustomError(res, result)
     }
-
-    // if (!likes) {
-    //   res.status(434);
-    //   return;
-    // }
-    // res.status(200).send(likes);
   }
 
 }
@@ -137,27 +159,7 @@ jwtValidationAcssTokenMiddlewareOptional,
 postRoute.get(
   "/:postId/comments",
   jwtValidationAcssTokenMiddlewareOptional,
-  async (req: RequestWithParams<CommentParams>, res: Response) => {
-    const postId = req.params.postId;
-    const userOptionalId = req.user?.id || null;
-    if (!ObjectId.isValid(postId)) {
-      res.sendStatus(404);
-      return;
-    }
-    const postOwner = await PostQueryRepository.getById(postId)
-    if (!postOwner) {
-      res.sendStatus(404);
-      return;
-    }
-    const basicSortData = basicSortQuery(req.query);
-
-    const result = await PostServices.composePostComments(postId, basicSortData, userOptionalId);
-    if (result.status === ResultCode.Success){
-      res.status(200).send(result.data);
-    } else {
-      sendCustomError(res, result)
-    }
-  }
+  postsController.getPostComments
 );
 
 
@@ -168,26 +170,6 @@ postRoute.post(
   postsController.createPosts
 );
 
-// postRoute.post(
-//   "/",
-//   authMiddleware,
-//   postValidation(),
-//   async (req: RequestWithBody<RequestInputPostType>, res: Response) => {
-//     const { title, shortDescription, content, blogId } = req.body;
-//     const newPostModal = {
-//       title: title,
-//       shortDescription: shortDescription,
-//       content: content,
-//       blogId: blogId,
-//     };
-//     const newPost = await PostServices.create(newPostModal);
-//     if (!newPost) {
-//       res.sendStatus(404);
-//       return;
-//     }
-//     res.status(201).send(newPost);
-//   }
-// );
 
 postRoute.post(
   "/:postId/comments",

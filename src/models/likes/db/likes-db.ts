@@ -25,14 +25,14 @@ export type PostLikesDB = {
   postId: string;
   userId: string;
   myStatus: string;
-  addetAt: Date;
+  addedAt: Date;
 };
 
 export const PostLikesSchema = new mongoose.Schema<WithId<PostLikesDB>>({
   userId: { type: String, require: true },
   myStatus: { type: String, require: true },
   postId: { type: String, require: true },
-  addetAt: { type: Date, require: true },
+  addedAt: { type: Date, require: true },
 })
   
 

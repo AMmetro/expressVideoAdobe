@@ -18,7 +18,7 @@ export const postLikesMapper = (like:WithId<PostLikesDB>):OutputPostLikesType =>
         postId: like.postId,
         myStatus: like.myStatus,
         userId: like.userId,
-        addetAt: like.addetAt.toISOString(),
+        addedAt: like.addedAt.toISOString(),
     }
 }
 
