@@ -1,4 +1,4 @@
-import { OutputPostType, OutputPostTypeMapper } from "./../models/post/output/post.output";
+import { OutputPostType } from "./../models/post/output/post.output";
 import { PostDB } from "../models/post/db/post-db";
 import { RequestInputBlogPostType } from "../models/post/input/updateposts-input-model";
 import { BlogRepository } from "../repositories/blog-repository";
@@ -94,15 +94,9 @@ export class BlogServices {
           .limit(3)
           .lean();
 
-          console.log("newestLikes")
-          console.log(newestLikes)
-
           const newestLikesWithUser = await newestLikesServices.addUserDataToLike(newestLikes)
 
          const countLikes = await PostLikesServices.countLikes(post.id, userId)
-
-          console.log("newestLikesWithUser")
-          console.log(newestLikesWithUser)
 
           const extendedLikesInfo = {
             likesCount: countLikes.likesCount,

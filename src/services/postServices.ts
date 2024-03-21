@@ -197,21 +197,21 @@ export class PostServices {
     const сommentsWithLikes: any = await Promise.all(
       comments.items.map(async (comment) => {
 
-        const likesCount = await CommentLikesModel.countDocuments({
-          commentId: comment.id,
-          myStatus: likeStatusEnum.Like,
-        });
-        const dislikesCount = await CommentLikesModel.countDocuments({
-          commentId: comment.id,
-          myStatus: likeStatusEnum.Dislike,
-        });
+        // const likesCount = await CommentLikesModel.countDocuments({
+        //   commentId: comment.id,
+        //   myStatus: likeStatusEnum.Like,
+        // });
+        // const dislikesCount = await CommentLikesModel.countDocuments({
+        //   commentId: comment.id,
+        //   myStatus: likeStatusEnum.Dislike,
+        // });
 
-        // const [  likeCounts, dislikeCounts] =  await Promise.all (
-        //   [
-        //     LikesModel.countDocuments({commentId: comment.id, myStatus: likeStatusEnum.Like }),
-        //     LikesModel.countDocuments({commentId: comment.id,  myStatus: likeStatusEnum.Dislike})
-        //   ]
-        // )
+        const [  likesCount, dislikesCount] =  await Promise.all (
+          [
+            CommentLikesModel.countDocuments({commentId: comment.id, myStatus: likeStatusEnum.Like }),
+            CommentLikesModel.countDocuments({commentId: comment.id,  myStatus: likeStatusEnum.Dislike})
+          ]
+        )
 
         let currentLikeStatus = likeStatusEnum.None;
         if (userId) {

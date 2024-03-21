@@ -2,7 +2,7 @@ import {
   CommentParams,
   RequestWithQuery,
 } from "./../models/common";
-import { Router, Request, Response } from "express";
+import { Router, Response } from "express";
 import { ObjectId } from "mongodb";
 import { authMiddleware } from "../auth/basicAuth-middleware";
 import { postValidation } from "../validators/post-validators";
@@ -21,7 +21,6 @@ import { PostQueryRepository } from "../repositories/post.query-repository";
 import { PostServices } from "../services/postServices";
 import { QueryPostInputModel } from "../models/blog/input/queryBlog-input-model";
 import { basicSortQuery } from "../utils/sortQeryUtils";
-import { CommentsQueryRepository } from "../repositories/comments.query-repository";
 import { CommentsServices } from "../services/commentsServices";
 import { jwtValidationAcssTokenMiddleware, jwtValidationAcssTokenMiddlewareOptional } from "../auth/jwtAuth-middleware";
 import { commentValidation } from "../validators/comment-validators";
