@@ -194,7 +194,7 @@ export class PostServices {
         errorMessage: "Can not read comments",
       };
     }
-    const сommentsWithLikes: any = await Promise.all(
+    const сommentsWithLikes = await Promise.all(
       comments.items.map(async (comment) => {
 
         // const likesCount = await CommentLikesModel.countDocuments({
